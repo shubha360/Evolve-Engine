@@ -28,7 +28,7 @@ Window::~Window() {
 	deleteWindow();
 }
 
-bool Window::init(const bool fullScreen, const unsigned int windowWidth, const unsigned int windowHeight, const ColorRGBA& clearColor)
+bool Window::init(const bool fullScreen, const unsigned int windowWidth, const unsigned int windowHeight, const ColorRgba& clearColor)
 {	
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
 		REPORT_ERROR("Failed to initialize SDL. SDL_Error: " + std::string(SDL_GetError()), init);

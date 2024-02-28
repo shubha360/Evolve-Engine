@@ -49,7 +49,7 @@ bool Font::initFromBitmap16x16(const std::string& fontName, const std::string& b
 	unsigned int currentCellX = 0, currentCellY = 0;
 	unsigned int currentPixelX = 0, currentPixelY = 0;
 
-	UVDimension currentUV = {};
+	UvDimension currentUV = {};
 
 	unsigned int currentChar = 0;
 	m_uvDimensions.resize(256);
@@ -280,7 +280,7 @@ bool Font::initFromFontFile(const std::string& fontName, const std::string& font
 	m_fontTexture.height = textureHeight;
 	m_fontTexture.bitsPerPixel = 1;
 
-	UVDimension currentUV = {};
+	UvDimension currentUV = {};
 	unsigned int currentChar = 0;
 
 	m_uvDimensions.resize(256);
@@ -363,7 +363,7 @@ bool Font::initFromFontFile(const std::string& fontName, const std::string& font
 }
 
 void Font::drawTextToRenderer(const std::string& text, const int topLeftX, const int topLeftY, 
-	const ColorRGBA& color, TextureRenderer& textureRenderer) {
+	const ColorRgba& color, TextureRenderer& textureRenderer) {
 
 	if (m_fontTexture.id == 0) {
 		REPORT_ERROR("Didn't load any font yet.", drawTextToRenderer);
@@ -373,8 +373,8 @@ void Font::drawTextToRenderer(const std::string& text, const int topLeftX, const
 	/*textureRenderer.draw(
 		GlyphOrigin::BOTTOM_LEFT,
 		RectDimension { 0,0,700,700 },
-		UVDimension { 0.0f, 0.0f, 1.0f, 1.0f },
-		m_fontTexture.id, ColorRGBA { 255,255,255,255 }
+		UvDimension { 0.0f, 0.0f, 1.0f, 1.0f },
+		m_fontTexture.id, ColorRgba { 255,255,255,255 }
 	);*/
 
 	int drawX = topLeftX;

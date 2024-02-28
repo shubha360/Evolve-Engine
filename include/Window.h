@@ -24,7 +24,7 @@ SOFTWARE.
 
 #include "IncludeLibs.h"
 
-#include "ColorRGBA.h"
+#include "ColorRgba.h"
 #include "ErrorReporter.h"
 
 class Window {
@@ -32,7 +32,7 @@ public:
 	Window();
 	~Window();
 
-	bool init(const bool fullScreen, const unsigned int windowWidth, const unsigned int windowHeight, const ColorRGBA& clearColor);
+	bool init(const bool fullScreen, const unsigned int windowWidth, const unsigned int windowHeight, const ColorRgba& clearColor);
 
 	void swapBuffer() const;
 

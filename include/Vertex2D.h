@@ -23,12 +23,12 @@ SOFTWARE.
 #pragma once
 
 #include "Position2D.h"
-#include "ColorRGBA.h"
+#include "ColorRgba.h"
 #include "TextureCoords2D.h"
 
 struct Vertex2D {
 	Position2D position;
-	ColorRGBA color;
+	ColorRgba color;
 	TextureCoords2D textureCoords;
 
 	void setPosition(GLint x, GLint y) {
@@ -39,7 +39,7 @@ struct Vertex2D {
 		color.set(red, green, blue, alpha);
 	}
 
-	void setColor(ColorRGBA& newColor) {
+	void setColor(ColorRgba& newColor) {
 		color.set(newColor.red, newColor.green, newColor.blue, newColor.alpha);
 	}
 

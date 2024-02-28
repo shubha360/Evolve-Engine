@@ -20,18 +20,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "../include/GUI.h"
+#include "../include/Gui.h"
 
-GUI::GUI() {}
+Gui::Gui() {}
 
-GUI::~GUI() {
-	freeGUI();
+Gui::~Gui() {
+	freeGui();
 }
 
-bool GUI::init(Font& font) {
+bool Gui::init(Font& font) {
 
 	if (!font.isInitialized()) {
-		REPORT_ERROR("The font being added to GUI is not initailized.", init);
+		REPORT_ERROR("The font being added to Gui is not initailized.", init);
 		return false;
 	}
 
@@ -45,10 +45,10 @@ bool GUI::init(Font& font) {
 	return true;
 }
 
-int GUI::addFont(Font& font) {
+int Gui::addFont(Font& font) {
 	
 	if (!font.isInitialized()) {
-		REPORT_ERROR("Font adding to GUI is not initailized.", init);
+		REPORT_ERROR("Font adding to Gui is not initailized.", init);
 		return -1;
 	}
 
@@ -56,8 +56,8 @@ int GUI::addFont(Font& font) {
 	return (int) (m_fonts.size() - 1);
 }
 
-int GUI::addTextButton(const std::string& label, const unsigned int fontId, float labelScale,
-	const ColorRGBA& textColor, const ColorRGBA& buttonColor,
+int Gui::addTextButton(const std::string& label, const unsigned int fontId, float labelScale,
+	const ColorRgba& textColor, const ColorRgba& buttonColor,
 	const GlyphOrigin& renderOrigin, const RectDimension& dimension, std::function<void()> buttonFunction) {
 
 	if (fontId < 0 || fontId >= m_fonts.size()) {
@@ -72,8 +72,8 @@ int GUI::addTextButton(const std::string& label, const unsigned int fontId, floa
 	return (int) (m_components.size() - 1);
 }
 
-int GUI::addPlainText(const std::string& text, const unsigned int fontId, float scale,
-	const ColorRGBA& color, const glm::ivec2& topLeftPosition) {
+int Gui::addPlainText(const std::string& text, const unsigned int fontId, float scale,
+	const ColorRgba& color, const glm::ivec2& topLeftPosition) {
 
 	if (fontId < 0 || fontId >= m_fonts.size()) {
 		REPORT_ERROR("Invalid font ID used.", addTextButton);
@@ -87,7 +87,7 @@ int GUI::addPlainText(const std::string& text, const unsigned int fontId, float 
 	return (int) (m_components.size() - 1);
 }
 
-void GUI::setComponentLabel(const int id, const std::string& text) {
+void Gui::setComponentLabel(const int id, const std::string& text) {
 
 	if (id < 0 || id >= m_components.size()) {
 		REPORT_ERROR("Invalid component ID used.", addTextButton);
@@ -96,7 +96,7 @@ void GUI::setComponentLabel(const int id, const std::string& text) {
 	m_components[id]->m_label = text;
 }
 
-void GUI::updateGUI(InputProcessor& inputProcessor, Camera& camera) {
+void Gui::updateGui(InputProcessor& inputProcessor, Camera& camera) {
 
 	glm::ivec2 mouseCoords = camera.convertScreenCoordsToWorldCoords(inputProcessor.getMouseCoords());
 
@@ -144,7 +144,7 @@ void GUI::updateGUI(InputProcessor& inputProcessor, Camera& camera) {
 	}
 }
 
-void GUI::freeGUI() {
+void Gui::freeGui() {
 	if (m_arrowCursor != nullptr) {
 		SDL_FreeCursor(m_arrowCursor);
 		m_arrowCursor = nullptr;
@@ -156,7 +156,7 @@ void GUI::freeGUI() {
 	}
 }
 
-bool GUI::isMouseInsideComponent(const glm::ivec2& mouseScreenCoords, Component& component) {
+bool Gui::isMouseInsideComponent(const glm::ivec2& mouseScreenCoords, Component& component) {
 
 	int compWidth = component.m_dimension.width;
 	int compHeight = component.m_dimension.height;
@@ -175,11 +175,11 @@ bool GUI::isMouseInsideComponent(const glm::ivec2& mouseScreenCoords, Component&
 	return false;
 }
 
-GUI::Component::Component() {}
+Gui::Component::Component() {}
 
-GUI::Component::~Component() {}
+Gui::Component::~Component() {}
 
-void GUI::Component::findComponentCenter() {
+void Gui::Component::findComponentCenter() {
 
 	switch (m_renderOrigin) {
 	case GlyphOrigin::BOTTOM_LEFT:
@@ -210,8 +210,8 @@ void GUI::Component::findComponentCenter() {
 	}
 }
 
-GUI::Button::Button(const std::string& label, const unsigned int fontId, float labelScale,
-	const ColorRGBA& textColor, const ColorRGBA& buttonColor, const GlyphOrigin& renderOrigin, 
+Gui::Button::Button(const std::string& label, const unsigned int fontId, float labelScale,
+	const ColorRgba& textColor, const ColorRgba& buttonColor, const GlyphOrigin& renderOrigin, 
 	const RectDimension& dimension, std::function<void()> buttonFunction) :
 	 
 	m_buttonColor(buttonColor),
@@ -231,8 +231,8 @@ GUI::Button::Button(const std::string& label, const unsigned int fontId, float l
 	findComponentCenter();
 }
 
-GUI::PlainText::PlainText(const std::string& text, const unsigned int fontId, float scale, 
-	const ColorRGBA& color, const RectDimension& position) {
+Gui::PlainText::PlainText(const std::string& text, const unsigned int fontId, float scale, 
+	const ColorRgba& color, const RectDimension& position) {
 	
 	m_label = text;
 	m_type = ComponentType::PLAIN_TEXT;

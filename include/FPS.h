@@ -24,10 +24,10 @@ SOFTWARE.
 
 #include "IncludeLibs.h"
 
-class FPS {
+class Fps {
 public:
-	FPS();
-	~FPS();
+	Fps();
+	~Fps();
 
 	bool init(float fps);
 	void beginFrame();
@@ -41,7 +41,7 @@ private:
 	float desiredFps = 0.0f;
 	float frameStartTicks = 0.0f;
 
-	// for FPS calculation
+	// for Fps calculation
 	float currentFps = 0.0f;
 
 	static const int NUM_SAMPLES = 10;

@@ -20,22 +20,22 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "../include/FPS.h"
+#include "../include/Fps.h"
 
-FPS::FPS() { }
+Fps::Fps() { }
 
-FPS::~FPS() { }
+Fps::~Fps() { }
 
-bool FPS::init(float fps) {
+bool Fps::init(float fps) {
 	setFps(fps);
 	return true;
 }
 
-void FPS::beginFrame() {
+void Fps::beginFrame() {
 	this->frameStartTicks = (float)SDL_GetTicks();
 }
 
-const bool FPS::endFrame() const {
+const bool Fps::endFrame() const {
 	float frameTick = (float)SDL_GetTicks() - frameStartTicks;
 
 	float desiredFrameTime = 1000.0f / desiredFps;
@@ -53,7 +53,7 @@ const bool FPS::endFrame() const {
 	return true;
 }
 
-float FPS::calculateFps() {
+float Fps::calculateFps() {
 
 	static float prevTick = (float)SDL_GetTicks();
 

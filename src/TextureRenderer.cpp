@@ -23,8 +23,8 @@ SOFTWARE.
 #include "../include/TextureRenderer.h"
 
 TextureRenderer::Glyph::Glyph(const GlyphOrigin renderOrigin, const RectDimension& destRect, 
-	const UVDimension& uvRect, GLuint textureID, 
-	const ColorRGBA& color, int depth) :
+	const UvDimension& uvRect, GLuint textureID, 
+	const ColorRgba& color, int depth) :
 	
 	m_textureID(textureID), m_depth(depth)
 {
@@ -108,8 +108,8 @@ void TextureRenderer::begin() {
 	}
 }
 
-void TextureRenderer::draw(const GlyphOrigin renderOrigin, const RectDimension& destRect, const UVDimension& uvRect, 
-	GLuint textureID, const ColorRGBA& color, int depth /*= 1*/) {
+void TextureRenderer::draw(const GlyphOrigin renderOrigin, const RectDimension& destRect, const UvDimension& uvRect, 
+	GLuint textureID, const ColorRgba& color, int depth /*= 1*/) {
 	m_glyphs.emplace_back(renderOrigin, destRect, uvRect, textureID, color, depth);
 }
 

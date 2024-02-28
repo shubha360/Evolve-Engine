@@ -20,15 +20,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "../include/GLSLProgram.h"
+#include "../include/GlslProgram.h"
 
-GLSLProgram::GLSLProgram() {}
+GlslProgram::GlslProgram() {}
 
-GLSLProgram::~GLSLProgram() {
+GlslProgram::~GlslProgram() {
 	freeProgram();
 }
 
-bool GLSLProgram::compileAndLinkShaders(const std::string& vertexShaderPath, const std::string& fragmentShaderPath) {
+bool GlslProgram::compileAndLinkShaders(const std::string& vertexShaderPath, const std::string& fragmentShaderPath) {
 
 	m_programID = glCreateProgram();
 
@@ -71,7 +71,7 @@ bool GLSLProgram::compileAndLinkShaders(const std::string& vertexShaderPath, con
 	return true;
 }
 
-GLint GLSLProgram::getUniformLocation(const std::string& uniformName) {
+GLint GlslProgram::getUniformLocation(const std::string& uniformName) {
 	GLint location = glGetUniformLocation(m_programID, uniformName.c_str());
 
 	if (location == GL_INVALID_INDEX) {
@@ -81,15 +81,15 @@ GLint GLSLProgram::getUniformLocation(const std::string& uniformName) {
 	return location;
 }
 
-void GLSLProgram::useProgram() {
+void GlslProgram::useProgram() {
 	glUseProgram(m_programID);
 }
 
-void GLSLProgram::unuseProgram() {
+void GlslProgram::unuseProgram() {
 	glUseProgram(0);
 }
 
-void GLSLProgram::freeProgram() {
+void GlslProgram::freeProgram() {
 	if (m_vertexShaderID != 0) {
 		glDeleteShader(m_vertexShaderID);
 		m_vertexShaderID = 0;
@@ -104,7 +104,7 @@ void GLSLProgram::freeProgram() {
 	}
 }
 
-GLuint GLSLProgram::compileShader(const std::string& shaderPath, const GLenum shaderType) {
+GLuint GlslProgram::compileShader(const std::string& shaderPath, const GLenum shaderType) {
 
 	// open shader file
 	std::ifstream shaderFile(shaderPath, std::ios::binary);

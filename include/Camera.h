@@ -24,7 +24,7 @@ SOFTWARE.
 
 #include "IncludeLibs.h"
 
-#include "GLSLProgram.h"
+#include "GlslProgram.h"
 
 class Camera {
 public:
@@ -33,7 +33,7 @@ public:
 
 	bool init(const unsigned int screenWidth, const unsigned int screenHeight);
 
-	void sendMatrixDataToShader(GLSLProgram& shaderProgram);
+	void sendMatrixDataToShader(GlslProgram& shaderProgram);
 
 	glm::ivec2 convertScreenCoordsToWorldCoords(const glm::ivec2& screenCoords);
 

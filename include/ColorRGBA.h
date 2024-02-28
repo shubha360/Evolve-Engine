@@ -24,7 +24,7 @@ SOFTWARE.
 
 #include "IncludeLibs.h"
 
-struct ColorRGBA {
+struct ColorRgba {
 	GLubyte red;
 	GLubyte green;
 	GLubyte blue;

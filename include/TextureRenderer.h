@@ -25,7 +25,7 @@ SOFTWARE.
 #include "IncludeLibs.h"
 
 #include "RectDimension.h"
-#include "UVDimension.h"
+#include "UvDimension.h"
 #include "Vertex2D.h"
 
 enum class GlyphOrigin {
@@ -50,8 +50,8 @@ public:
 
 	void begin();
 
-	void draw(const GlyphOrigin renderOrigin,  const RectDimension& destRect, const UVDimension& uvRect, 
-		GLuint textureID, const ColorRGBA& color, int depth = 1);
+	void draw(const GlyphOrigin renderOrigin,  const RectDimension& destRect, const UvDimension& uvRect, 
+		GLuint textureID, const ColorRgba& color, int depth = 1);
 
 	void end(const GlyphSortType& sortType = GlyphSortType::BY_TEXTURE_ID_INCREMENTAL);
 
@@ -65,8 +65,8 @@ private:
 		friend class TextureRenderer;
 		friend class RenderBatch;
 
-		Glyph(const GlyphOrigin renderOrigin, const RectDimension& destRect, const UVDimension& uvRect,
-			GLuint textureID, const ColorRGBA& color, int depth);
+		Glyph(const GlyphOrigin renderOrigin, const RectDimension& destRect, const UvDimension& uvRect,
+			GLuint textureID, const ColorRgba& color, int depth);
 
 	private:
 		GLuint m_textureID = 0;

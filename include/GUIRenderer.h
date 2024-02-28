@@ -22,27 +22,27 @@ SOFTWARE.
 
 #pragma once
 
-#include "GLSLProgram.h"
+#include "GlslProgram.h"
 #include "Font.h"
 #include "ErrorReporter.h"
 #include "TextureRenderer.h"
 #include "ImageLoader.h"
 #include "Camera.h"
-#include "GUI.h"
+#include "Gui.h"
 
-class GUIRenderer {
+class GuiRenderer {
 public:
-	GUIRenderer();
-	~GUIRenderer();
+	GuiRenderer();
+	~GuiRenderer();
 
 	bool init(const std::string& pathToAssets);
 
-	void renderGUI(GUI& gui, Camera& camera);
+	void renderGui(Gui& gui, Camera& camera);
 
-	void freeGUIRenderer();
+	void freeGuiRenderer();
 
 private:
-	GLSLProgram m_glslProgram;
+	GlslProgram m_glslProgram;
 	TextureRenderer m_renderer;
 	//Font m_font;
 

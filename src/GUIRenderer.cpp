@@ -20,15 +20,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "../include/GUIRenderer.h"
+#include "../include/GuiRenderer.h"
 
-GUIRenderer::GUIRenderer() {}
+GuiRenderer::GuiRenderer() {}
 
-GUIRenderer::~GUIRenderer() {
-	freeGUIRenderer();
+GuiRenderer::~GuiRenderer() {
+	freeGuiRenderer();
 }
 
-bool GUIRenderer::init(const std::string& pathToAssets) {
+bool GuiRenderer::init(const std::string& pathToAssets) {
 
 	std::string vertShaderPath = pathToAssets + "/gui/shaders/gui_shader.vert";
 	std::string fragShaderPath = pathToAssets + "/gui/shaders/gui_shader.frag";
@@ -38,7 +38,7 @@ bool GUIRenderer::init(const std::string& pathToAssets) {
 	if (!m_glslProgram.compileAndLinkShaders(
 		vertShaderPath,
 		fragShaderPath)) {
-		REPORT_ERROR("Failed to compile or link GUI shader.", init);
+		REPORT_ERROR("Failed to compile or link Gui shader.", init);
 		return false;
 	}
 
@@ -51,7 +51,7 @@ bool GUIRenderer::init(const std::string& pathToAssets) {
 	return true;
 }
 
-void GUIRenderer::renderGUI(GUI& gui, Camera& camera) {
+void GuiRenderer::renderGui(Gui& gui, Camera& camera) {
 	
 	m_glslProgram.useProgram();
 
@@ -67,15 +67,15 @@ void GUIRenderer::renderGUI(GUI& gui, Camera& camera) {
 
 		if (comp->m_isVisible) {
 			
-			if (comp->m_type == GUI::Component::ComponentType::BUTTON) {
+			if (comp->m_type == Gui::Component::ComponentType::BUTTON) {
 
-				GUI::Button* button = (GUI::Button*)comp.get();
+				Gui::Button* button = (Gui::Button*)comp.get();
 				Font* font = gui.m_fonts[button->m_fontId];
 
 				m_renderer.draw(
 					button->m_renderOrigin,
 					button->m_dimension,
-					UVDimension{ 0.0f, 0.0f, 1.0f, 1.0f },
+					UvDimension{ 0.0f, 0.0f, 1.0f, 1.0f },
 					m_roundedRectButtonTexture.id,
 					button->m_buttonColor
 				);
@@ -93,9 +93,9 @@ void GUIRenderer::renderGUI(GUI& gui, Camera& camera) {
 					button->m_labelTopLeftY, button->m_primaryColor, m_renderer);
 			}
 
-			else if (comp->m_type == GUI::Component::ComponentType::PLAIN_TEXT) {
+			else if (comp->m_type == Gui::Component::ComponentType::PLAIN_TEXT) {
 
-				GUI::PlainText* plainText = (GUI::PlainText*)comp.get();
+				Gui::PlainText* plainText = (Gui::PlainText*)comp.get();
 				Font* font = gui.m_fonts[plainText->m_fontId];
 
 				font->setFontScale(plainText->m_labelScale);
@@ -111,7 +111,7 @@ void GUIRenderer::renderGUI(GUI& gui, Camera& camera) {
 	m_renderer.renderTextures();
 }
 
-void GUIRenderer::freeGUIRenderer() {
+void GuiRenderer::freeGuiRenderer() {
 	ImageLoader::DeleteTexture(m_roundedRectButtonTexture);
 	//m_font.deleteFont();
 
@@ -119,7 +119,7 @@ void GUIRenderer::freeGUIRenderer() {
 	m_glslProgram.freeProgram();
 }
 
-void GUIRenderer::getLabelCoordinates(int& x, int& y, const std::string& label, 
+void GuiRenderer::getLabelCoordinates(int& x, int& y, const std::string& label, 
 	const int componentCenterX, const int componentCenterY, Font& font) {
 	
 	unsigned int labelWidth = font.getLineWidth(label);

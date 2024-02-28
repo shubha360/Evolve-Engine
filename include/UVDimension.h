@@ -22,7 +22,7 @@ SOFTWARE.
 
 #pragma once
 
-struct UVDimension {
+struct UvDimension {
 	float bottomLeftX, bottomLeftY;
 	float width, height;
 

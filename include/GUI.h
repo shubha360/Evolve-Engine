@@ -24,50 +24,50 @@ SOFTWARE.
 
 #include "IncludeLibs.h"
 
-#include "GLSLProgram.h"
+#include "GlslProgram.h"
 #include "TextureRenderer.h"
 #include "RectDimension.h"
-#include "UVDimension.h"
-#include "ColorRGBA.h"
+#include "UvDimension.h"
+#include "ColorRgba.h"
 #include "InputProcessor.h"
 #include "Camera.h"
 #include "Font.h"
 
-class GUIRenderer;
+class GuiRenderer;
 
-class GUI {
+class Gui {
 public:
-	friend class GUIRenderer;
+	friend class GuiRenderer;
 
-	GUI();
-	~GUI();
+	Gui();
+	~Gui();
 
 	bool init(Font& font);
 
-	// returns the font id in this GUI
+	// returns the font id in this Gui
 	int addFont(Font& font);
 
 	// returns the id of the component
 	// pass 0 to fontId to use the default font
 	int addTextButton(const std::string& label, const unsigned int fontId, float labelScale,
-		const ColorRGBA& textColor, const ColorRGBA& buttonColor,
+		const ColorRgba& textColor, const ColorRgba& buttonColor,
 		const GlyphOrigin& renderOrigin, const RectDimension& dimension, std::function<void()> buttonFunction);
 
 	// pass 0 to fontId to use the default font
 	int addPlainText(const std::string& text, const unsigned int fontId, float scale,
-		const ColorRGBA& color, const glm::ivec2& topLeftPosition);
+		const ColorRgba& color, const glm::ivec2& topLeftPosition);
 
 	void setComponentLabel(const int id, const std::string& text);
 
-	void updateGUI(InputProcessor& inputProcessor, Camera& camera);
+	void updateGui(InputProcessor& inputProcessor, Camera& camera);
 
-	void freeGUI();
+	void freeGui();
 
 private:
 	class Component {
 	public:
-		friend class GUI;
-		friend class GUIRenderer;
+		friend class Gui;
+		friend class GuiRenderer;
 
 		enum class ComponentType { NONE, BUTTON, PLAIN_TEXT };
 
@@ -83,7 +83,7 @@ private:
 		ComponentType m_type = ComponentType::NONE;
 		RectDimension m_dimension = {};
 		float m_labelScale = 0;
-		ColorRGBA m_primaryColor = {};
+		ColorRgba m_primaryColor = {};
 		unsigned int m_fontId = 0;
 
 		int m_centerX = 0, m_centerY = 0;
@@ -98,25 +98,25 @@ private:
 
 	class Button : public Component {
 	public:
-		friend class GUI;
-		friend class GUIRenderer;
+		friend class Gui;
+		friend class GuiRenderer;
 
 		Button(const std::string& label, const unsigned int fontId, float labelScale,
-			const ColorRGBA& textColor, const ColorRGBA& buttonColor, const GlyphOrigin& renderOrigin, 
+			const ColorRgba& textColor, const ColorRgba& buttonColor, const GlyphOrigin& renderOrigin, 
 			const RectDimension& dimension, std::function<void()> buttonFunction);
 
 	private:
-		ColorRGBA m_buttonColor;
+		ColorRgba m_buttonColor;
 		std::function<void()> m_buttonFunc;
 	};
 	
 	class PlainText : public Component {
 	public:
-		friend class GUI;
-		friend class GUIRenderer;
+		friend class Gui;
+		friend class GuiRenderer;
 
 		PlainText(const std::string& text, const unsigned int fontId, float scale,
-			const ColorRGBA& color, const RectDimension& position);
+			const ColorRgba& color, const RectDimension& position);
 	};
 
 

@@ -26,8 +26,8 @@ SOFTWARE.
 
 #include "TextureData.h"
 #include "ImageLoader.h"
-#include "UVDimension.h"
-#include "ColorRGBA.h"
+#include "UvDimension.h"
+#include "ColorRgba.h"
 #include "TextureRenderer.h"
 #include "ErrorReporter.h"
 
@@ -46,7 +46,7 @@ public:
 		const int lineSpacing = 0, const int addToSpaceLength = 0);
 
 	void drawTextToRenderer(const std::string& text, const int topLeftX, const int topLeftY,
-		const ColorRGBA& color, TextureRenderer& textureRenderer);
+		const ColorRgba& color, TextureRenderer& textureRenderer);
 
 	unsigned int getLineWidth(const std::string& text);
 
@@ -79,6 +79,6 @@ private:
 
 	TextureData m_fontTexture;
 
-	std::vector<UVDimension> m_uvDimensions;
+	std::vector<UvDimension> m_uvDimensions;
 	std::vector<int> m_characterWidths;
 };

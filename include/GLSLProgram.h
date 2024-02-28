@@ -26,10 +26,10 @@ SOFTWARE.
 
 #include "ErrorReporter.h"
 
-class GLSLProgram {
+class GlslProgram {
 public:
-	GLSLProgram();
-	~GLSLProgram();
+	GlslProgram();
+	~GlslProgram();
 
 	bool compileAndLinkShaders(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
 	GLint getUniformLocation(const std::string& uniformName);
