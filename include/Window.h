@@ -27,22 +27,25 @@ SOFTWARE.
 #include "ColorRgba.h"
 #include "ErrorReporter.h"
 
-class Window {
-public:
-	Window();
-	~Window();
+namespace Evolve {
 
-	bool init(const bool fullScreen, const unsigned int windowWidth, const unsigned int windowHeight, const ColorRgba& clearColor);
+	class Window {
+	public:
+		Window();
+		~Window();
 
-	void swapBuffer() const;
+		bool init(const bool fullScreen, const unsigned int windowWidth, const unsigned int windowHeight, 
+			const ColorRgba& clearColor);
 
-	void deleteWindow();
+		void swapBuffer() const;
 
-	const unsigned int getWindowWidth() const { return m_windowWidth; }
-	const unsigned int getWindowHeight() const { return m_windowHeight; }
+		void deleteWindow();
 
-private:
-	SDL_Window* m_window = nullptr;
-	unsigned int m_windowWidth = 0, m_windowHeight = 0;
-};
+		const unsigned int getWindowWidth() const { return m_windowWidth; }
+		const unsigned int getWindowHeight() const { return m_windowHeight; }
 
+	private:
+		SDL_Window* m_window = nullptr;
+		unsigned int m_windowWidth = 0, m_windowHeight = 0;
+	};
+}

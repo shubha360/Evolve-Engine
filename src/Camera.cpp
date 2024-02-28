@@ -22,11 +22,11 @@ SOFTWARE.
 
 #include "../include/Camera.h"
 
-Camera::Camera() {}
+Evolve::Camera::Camera() {}
 
-Camera::~Camera() {}
+Evolve::Camera::~Camera() {}
 
-bool Camera::init(const unsigned int screenWidth, const unsigned int screenHeight) {
+bool Evolve::Camera::init(const unsigned int screenWidth, const unsigned int screenHeight) {
 	this->m_screenWidth = screenWidth;
 	this->m_screenHeight = screenHeight;
 	
@@ -39,12 +39,12 @@ bool Camera::init(const unsigned int screenWidth, const unsigned int screenHeigh
 	return true;
 }
 
-void Camera::sendMatrixDataToShader(GlslProgram& shaderProgram) {
+void Evolve::Camera::sendMatrixDataToShader(GlslProgram& shaderProgram) {
 	GLint mvpLoc = shaderProgram.getUniformLocation("u_mvpMatrix");
 	glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, &m_mvp[0][0]);
 }
 
-glm::ivec2 Camera::convertScreenCoordsToWorldCoords(const glm::ivec2& screenCoords) {
+glm::ivec2 Evolve::Camera::convertScreenCoordsToWorldCoords(const glm::ivec2& screenCoords) {
 	return glm::ivec2(screenCoords.x, m_screenHeight - screenCoords.y);
 }
 

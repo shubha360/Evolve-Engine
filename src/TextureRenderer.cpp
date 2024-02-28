@@ -22,7 +22,7 @@ SOFTWARE.
 
 #include "../include/TextureRenderer.h"
 
-TextureRenderer::Glyph::Glyph(const GlyphOrigin renderOrigin, const RectDimension& destRect, 
+Evolve::TextureRenderer::Glyph::Glyph(const GlyphOrigin renderOrigin, const RectDimension& destRect,
 	const UvDimension& uvRect, GLuint textureID, 
 	const ColorRgba& color, int depth) :
 	
@@ -83,16 +83,16 @@ TextureRenderer::Glyph::Glyph(const GlyphOrigin renderOrigin, const RectDimensio
 	m_vertices[3].color = color;
 }
 
-TextureRenderer::RenderBatch::RenderBatch(unsigned int offset, unsigned int numIndices, GLuint textureID) :
+Evolve::TextureRenderer::RenderBatch::RenderBatch(unsigned int offset, unsigned int numIndices, GLuint textureID) :
 	m_offset(offset), m_numIndices(numIndices), m_textureID(textureID) {}
 
-TextureRenderer::TextureRenderer() {}
+Evolve::TextureRenderer::TextureRenderer() {}
 
-TextureRenderer::~TextureRenderer() {
+Evolve::TextureRenderer::~TextureRenderer() {
 	freeTextureRenderer();
 }
 
-void TextureRenderer::begin() {
+void Evolve::TextureRenderer::begin() {
 
 	if (m_vaoID == 0) {
 		createVao();
@@ -108,12 +108,12 @@ void TextureRenderer::begin() {
 	}
 }
 
-void TextureRenderer::draw(const GlyphOrigin renderOrigin, const RectDimension& destRect, const UvDimension& uvRect, 
+void Evolve::TextureRenderer::draw(const GlyphOrigin renderOrigin, const RectDimension& destRect, const UvDimension& uvRect,
 	GLuint textureID, const ColorRgba& color, int depth /*= 1*/) {
 	m_glyphs.emplace_back(renderOrigin, destRect, uvRect, textureID, color, depth);
 }
 
-void TextureRenderer::end(const GlyphSortType& sortType /*= GlyphSortType::BY_TEXTURE_ID_INCREMENTAL*/) {
+void Evolve::TextureRenderer::end(const GlyphSortType& sortType /*= GlyphSortType::BY_TEXTURE_ID_INCREMENTAL*/) {
 	if (!m_glyphs.empty()) {
 		m_glyphPointers.resize(m_glyphs.size());
 
@@ -144,7 +144,7 @@ void TextureRenderer::end(const GlyphSortType& sortType /*= GlyphSortType::BY_TE
 	}
 }
 
-void TextureRenderer::renderTextures() {
+void Evolve::TextureRenderer::renderTextures() {
 	if (!m_glyphPointers.empty()) {
 		glBindVertexArray(m_vaoID);
 
@@ -170,7 +170,7 @@ void TextureRenderer::renderTextures() {
 	}
 }
 
-void TextureRenderer::freeTextureRenderer() {
+void Evolve::TextureRenderer::freeTextureRenderer() {
 	
 	if (!m_iboIDs.empty()) {
 		glDeleteBuffers((GLsizei) m_iboIDs.size(), m_iboIDs.data());
@@ -187,7 +187,7 @@ void TextureRenderer::freeTextureRenderer() {
 	}	
 }
 
-void TextureRenderer::createVao() {
+void Evolve::TextureRenderer::createVao() {
 	if (m_vaoID == 0) {
 		glGenVertexArrays(1, &m_vaoID);
 	}
@@ -211,7 +211,7 @@ void TextureRenderer::createVao() {
 	glBindVertexArray(0);
 }
 
-void TextureRenderer::setupRenderBatches() {
+void Evolve::TextureRenderer::setupRenderBatches() {
 
 	if (!m_glyphPointers.empty()) {
 
@@ -282,7 +282,7 @@ void TextureRenderer::setupRenderBatches() {
 	}
 }
 
-void TextureRenderer::addIndicesToBuffer(std::vector<GLuint>& indices, 
+void Evolve::TextureRenderer::addIndicesToBuffer(std::vector<GLuint>& indices,
 	unsigned int& currentIndex, unsigned int& currentVertex) {
 	
 	// first triangle
@@ -298,18 +298,18 @@ void TextureRenderer::addIndicesToBuffer(std::vector<GLuint>& indices,
 	currentVertex += 4;
 }
 
-bool TextureRenderer::compareByTextureIdIncremental(Glyph* a, Glyph* b) {
+bool Evolve::TextureRenderer::compareByTextureIdIncremental(Glyph* a, Glyph* b) {
 	return (a->m_textureID < b->m_textureID);
 }
 
-bool TextureRenderer::compareByTextureIdDecremental(Glyph* a, Glyph* b) {
+bool Evolve::TextureRenderer::compareByTextureIdDecremental(Glyph* a, Glyph* b) {
 	return (a->m_textureID > b->m_textureID);
 }
 
-bool TextureRenderer::compareByDepthIncremental(Glyph* a, Glyph* b) {
+bool Evolve::TextureRenderer::compareByDepthIncremental(Glyph* a, Glyph* b) {
 	return (a->m_depth < b->m_depth);
 }
 
-bool TextureRenderer::compareByDepthDecremental(Glyph* a, Glyph* b) {
+bool Evolve::TextureRenderer::compareByDepthDecremental(Glyph* a, Glyph* b) {
 	return (a->m_depth > b->m_depth);
 }

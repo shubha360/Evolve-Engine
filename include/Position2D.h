@@ -23,12 +23,14 @@ SOFTWARE.
 #pragma once
 
 #include "IncludeLibs.h"
+namespace Evolve {
 
-struct Position2D {
-	GLint x, y;
+	struct Position2D {
+		GLint x, y;
 
-	void set(GLint x, GLint y) {
-		this->x = x;
-		this->y = y;
-	}
-};
+		void set(GLint x, GLint y) {
+			this->x = x;
+			this->y = y;
+		}
+	};
+}

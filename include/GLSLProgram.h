@@ -26,24 +26,27 @@ SOFTWARE.
 
 #include "ErrorReporter.h"
 
-class GlslProgram {
-public:
-	GlslProgram();
-	~GlslProgram();
+namespace Evolve {
 
-	bool compileAndLinkShaders(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
-	GLint getUniformLocation(const std::string& uniformName);
-	void useProgram();
-	void unuseProgram();
+	class GlslProgram {
+	public:
+		GlslProgram();
+		~GlslProgram();
 
-	void freeProgram();
+		bool compileAndLinkShaders(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
+		GLint getUniformLocation(const std::string& uniformName);
+		void useProgram();
+		void unuseProgram();
 
-private:
-	GLuint m_programID = 0;
-	GLuint m_vertexShaderID = 0;
-	GLuint m_fragmentShaderID = 0;
+		void freeProgram();
 
-	// Compiles a single shader, return the shader id
-	// shaderType should be either GL_VERTEX_SHADER or GL_FRAGMENT_SHADER
-	GLuint compileShader(const std::string& shaderPath, const GLenum shaderType);
-};
+	private:
+		GLuint m_programID = 0;
+		GLuint m_vertexShaderID = 0;
+		GLuint m_fragmentShaderID = 0;
+
+		// Compiles a single shader, return the shader id
+		// shaderType should be either GL_VERTEX_SHADER or GL_FRAGMENT_SHADER
+		GLuint compileShader(const std::string& shaderPath, const GLenum shaderType);
+	};
+}

@@ -22,13 +22,13 @@ SOFTWARE.
 
 #include "../include/GlslProgram.h"
 
-GlslProgram::GlslProgram() {}
+Evolve::GlslProgram::GlslProgram() {}
 
-GlslProgram::~GlslProgram() {
+Evolve::GlslProgram::~GlslProgram() {
 	freeProgram();
 }
 
-bool GlslProgram::compileAndLinkShaders(const std::string& vertexShaderPath, const std::string& fragmentShaderPath) {
+bool Evolve::GlslProgram::compileAndLinkShaders(const std::string& vertexShaderPath, const std::string& fragmentShaderPath) {
 
 	m_programID = glCreateProgram();
 
@@ -36,7 +36,7 @@ bool GlslProgram::compileAndLinkShaders(const std::string& vertexShaderPath, con
 	m_fragmentShaderID = compileShader(fragmentShaderPath, GL_FRAGMENT_SHADER);
 
 	if (m_vertexShaderID == 0 || m_fragmentShaderID == 0) {
-		REPORT_ERROR("Unable to compile shaders.", compileAndLinkShaders);
+		EVOLVE_REPORT_ERROR("Unable to compile shaders.", compileAndLinkShaders);
 		return false;
 	}
 
@@ -61,7 +61,7 @@ bool GlslProgram::compileAndLinkShaders(const std::string& vertexShaderPath, con
 		glDeleteShader(m_vertexShaderID);
 		glDeleteShader(m_fragmentShaderID);
 
-		REPORT_ERROR("Failed to link program. " + std::string(&infoLog[0]), compileAndLinkShaders);
+		EVOLVE_REPORT_ERROR("Failed to link program. " + std::string(&infoLog[0]), compileAndLinkShaders);
 		return false;
 	}
 
@@ -71,25 +71,25 @@ bool GlslProgram::compileAndLinkShaders(const std::string& vertexShaderPath, con
 	return true;
 }
 
-GLint GlslProgram::getUniformLocation(const std::string& uniformName) {
+GLint Evolve::GlslProgram::getUniformLocation(const std::string& uniformName) {
 	GLint location = glGetUniformLocation(m_programID, uniformName.c_str());
 
 	if (location == GL_INVALID_INDEX) {
-		REPORT_ERROR("Uniform " + std::string(uniformName) + " was not found in the shader.", getUniformLocation);
+		EVOLVE_REPORT_ERROR("Uniform " + std::string(uniformName) + " was not found in the shader.", getUniformLocation);
 	}
 
 	return location;
 }
 
-void GlslProgram::useProgram() {
+void Evolve::GlslProgram::useProgram() {
 	glUseProgram(m_programID);
 }
 
-void GlslProgram::unuseProgram() {
+void Evolve::GlslProgram::unuseProgram() {
 	glUseProgram(0);
 }
 
-void GlslProgram::freeProgram() {
+void Evolve::GlslProgram::freeProgram() {
 	if (m_vertexShaderID != 0) {
 		glDeleteShader(m_vertexShaderID);
 		m_vertexShaderID = 0;
@@ -104,7 +104,7 @@ void GlslProgram::freeProgram() {
 	}
 }
 
-GLuint GlslProgram::compileShader(const std::string& shaderPath, const GLenum shaderType) {
+GLuint Evolve::GlslProgram::compileShader(const std::string& shaderPath, const GLenum shaderType) {
 
 	// open shader file
 	std::ifstream shaderFile(shaderPath, std::ios::binary);
@@ -147,7 +147,7 @@ GLuint GlslProgram::compileShader(const std::string& shaderPath, const GLenum sh
 
 		std::string shaderName = (shaderType == GL_VERTEX_SHADER ? "vertex" : "fragment");
 
-		REPORT_ERROR("Failed to compile " + shaderName + " shader.\n" + std::string(&errorLog[0]), compileShader);
+		EVOLVE_REPORT_ERROR("Failed to compile " + shaderName + " shader.\n" + std::string(&errorLog[0]), compileShader);
 		return 0;
 	}
 	return shaderID;

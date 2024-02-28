@@ -22,13 +22,13 @@ SOFTWARE.
 
 #include "../include/ImageLoader.h"
 
-std::map<std::string, TextureData> ImageLoader::m_textureCache;
+std::map<std::string, Evolve::TextureData> Evolve::ImageLoader::m_textureCache;
 
-void ImageLoader::LoadTextureFromImage(const std::string& imagePath, TextureData& texture, 
+void Evolve::ImageLoader::LoadTextureFromImage(const std::string& imagePath, TextureData& texture,
     const unsigned int colorChannels) {
 
     if (colorChannels != 1 && colorChannels != 4) {
-        REPORT_ERROR("Invalid color channel " + std::to_string(colorChannels) + ".", LoadTextureFromImage);
+        EVOLVE_REPORT_ERROR("Invalid color channel " + std::to_string(colorChannels) + ".", LoadTextureFromImage);
         return;
     }
 
@@ -56,7 +56,7 @@ void ImageLoader::LoadTextureFromImage(const std::string& imagePath, TextureData
             );
 
         if (texture.data == nullptr) {
-            REPORT_ERROR("Failed to load image at " + imagePath, LoadTextureFromImage);
+            EVOLVE_REPORT_ERROR("Failed to load image at " + imagePath, LoadTextureFromImage);
 
             texture.path = "";
             texture.bitsPerPixel = 0;
@@ -68,15 +68,15 @@ void ImageLoader::LoadTextureFromImage(const std::string& imagePath, TextureData
     }    
 }
 
-void ImageLoader::BufferTextureData(TextureData& texture) {
+void Evolve::ImageLoader::BufferTextureData(TextureData& texture) {
 
     if (texture.id != 0) {
-        REPORT_ERROR("Texture data is already buffered.", BufferTextureData);
+        EVOLVE_REPORT_ERROR("Texture data is already buffered.", BufferTextureData);
         return;
     }
 
     if (texture.data == nullptr) {
-        REPORT_ERROR("Texture has no pixel data.", BufferTextureData);
+        EVOLVE_REPORT_ERROR("Texture has no pixel data.", BufferTextureData);
         return;
     }
 
@@ -119,14 +119,14 @@ void ImageLoader::BufferTextureData(TextureData& texture) {
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void ImageLoader::FreeTexture(TextureData& texture) {
+void Evolve::ImageLoader::FreeTexture(TextureData& texture) {
     if (texture.data != nullptr) {
         stbi_image_free(texture.data);
         texture.data = nullptr;
     }
 }
 
-void ImageLoader::DeleteTexture(TextureData& texture) {
+void Evolve::ImageLoader::DeleteTexture(TextureData& texture) {
     if (texture.id != 0) {
         glDeleteTextures(1, &texture.id);
         texture.id = 0;

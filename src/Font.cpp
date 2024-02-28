@@ -22,20 +22,20 @@ SOFTWARE.
 
 #include "../include/Font.h"
 
-Font::Font() { }
+Evolve::Font::Font() { }
 
-Font::~Font() {
+Evolve::Font::~Font() {
 	deleteFont();
 }
 
-bool Font::initFromBitmap16x16(const std::string& fontName, const std::string& bmpFilePath, 
+bool Evolve::Font::initFromBitmap16x16(const std::string& fontName, const std::string& bmpFilePath,
 	const float fontScale /*= 1.0f*/, const int letterSpacing /*= 5*/, 
 	const int lineSpacing /*= 5*/, const int addToSpaceLength /*= 0*/) {
 
 	ImageLoader::LoadTextureFromImage(bmpFilePath, m_fontTexture, 1);
 
 	if (m_fontTexture.data == nullptr) {
-		REPORT_ERROR("Failed to load image at " + bmpFilePath + " for bitmap font.", initFromBitmap16x16);
+		EVOLVE_REPORT_ERROR("Failed to load image at " + bmpFilePath + " for bitmap font.", initFromBitmap16x16);
 		return false;
 	}
 
@@ -188,7 +188,7 @@ bool Font::initFromBitmap16x16(const std::string& fontName, const std::string& b
 	return true;
 }
 
-bool Font::initFromFontFile(const std::string& fontName, const std::string& fontFilePath, 
+bool Evolve::Font::initFromFontFile(const std::string& fontName, const std::string& fontFilePath,
 	const unsigned int fontSize /*= 32*/,
 	const float fontScale /*= 1.0f*/, const int letterSpacing /*= 5*/, 
 	const int lineSpacing /*= 5*/, const int addToSpaceLength /*= 0*/) {
@@ -198,7 +198,7 @@ bool Font::initFromFontFile(const std::string& fontName, const std::string& font
 	static FT_Library library;
 	FT_Error error = FT_Init_FreeType(&library);
 	if (error) {
-		REPORT_ERROR("Failed to initialize FreeType.", initFromFontFile);
+		EVOLVE_REPORT_ERROR("Failed to initialize FreeType.", initFromFontFile);
 		return false;
 	}
 
@@ -216,7 +216,7 @@ bool Font::initFromFontFile(const std::string& fontName, const std::string& font
 	FT_Face face = 0;
 	error = FT_New_Face(library, fontFilePath.c_str(), 0, &face);
 	if (error) {
-		REPORT_ERROR("Failed to create font face.", initFromFontFile);
+		EVOLVE_REPORT_ERROR("Failed to create font face.", initFromFontFile);
 
 		FT_Done_FreeType(library);
 		return false;
@@ -224,7 +224,7 @@ bool Font::initFromFontFile(const std::string& fontName, const std::string& font
 
 	error = FT_Set_Pixel_Sizes(face, 0, fontSize);
 	if (error) {
-		REPORT_ERROR("Failed to set font size.", initFromFontFile);
+		EVOLVE_REPORT_ERROR("Failed to set font size.", initFromFontFile);
 
 		FT_Done_Face(face);
 		FT_Done_FreeType(library);
@@ -235,7 +235,7 @@ bool Font::initFromFontFile(const std::string& fontName, const std::string& font
 
 		error = FT_Load_Char(face, i, FT_LOAD_RENDER);
 		if (error) {
-			REPORT_ERROR("Failed to load character " + std::to_string((char)i) + ".", initFromFontFile);
+			EVOLVE_REPORT_ERROR("Failed to load character " + std::to_string((char)i) + ".", initFromFontFile);
 
 			FT_Done_Face(face);
 			FT_Done_FreeType(library);
@@ -362,11 +362,11 @@ bool Font::initFromFontFile(const std::string& fontName, const std::string& font
 	return true;
 }
 
-void Font::drawTextToRenderer(const std::string& text, const int topLeftX, const int topLeftY, 
+void Evolve::Font::drawTextToRenderer(const std::string& text, const int topLeftX, const int topLeftY,
 	const ColorRgba& color, TextureRenderer& textureRenderer) {
 
 	if (m_fontTexture.id == 0) {
-		REPORT_ERROR("Didn't load any font yet.", drawTextToRenderer);
+		EVOLVE_REPORT_ERROR("Didn't load any font yet.", drawTextToRenderer);
 		return;
 	}
 
@@ -413,7 +413,7 @@ void Font::drawTextToRenderer(const std::string& text, const int topLeftX, const
 	}
 }
 
-unsigned int Font::getLineWidth(const std::string& text) {
+unsigned int Evolve::Font::getLineWidth(const std::string& text) {
 
 	int width = 0;
 
@@ -431,7 +431,7 @@ unsigned int Font::getLineWidth(const std::string& text) {
 	return width;
 }
 
-void Font::deleteFont() {
+void Evolve::Font::deleteFont() {
 	ImageLoader::DeleteTexture(m_fontTexture);
 
 	m_uvDimensions.clear();

@@ -24,28 +24,30 @@ SOFTWARE.
 
 #include "IncludeLibs.h"
 
-class Fps {
-public:
-	Fps();
-	~Fps();
+namespace Evolve {
 
-	bool init(float fps);
-	void beginFrame();
-	const bool endFrame() const;
+	class Fps {
+	public:
+		Fps();
+		~Fps();
 
-	float calculateFps();
+		bool init(float fps);
+		void beginFrame();
+		const bool endFrame() const;
 
-	void setFps(float fps) { this->desiredFps = fps; }
+		float calculateFps();
 
-private:
-	float desiredFps = 0.0f;
-	float frameStartTicks = 0.0f;
+		void setFps(float fps) { this->desiredFps = fps; }
 
-	// for Fps calculation
-	float currentFps = 0.0f;
+	private:
+		float desiredFps = 0.0f;
+		float frameStartTicks = 0.0f;
 
-	static const int NUM_SAMPLES = 10;
-	float frameTimes[NUM_SAMPLES] = {};
-	unsigned int currentFrame = 1;
-};
+		// for Fps calculation
+		float currentFps = 0.0f;
 
+		static const int NUM_SAMPLES = 10;
+		float frameTimes[NUM_SAMPLES] = {};
+		unsigned int currentFrame = 1;
+	};
+}

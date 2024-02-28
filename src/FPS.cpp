@@ -22,20 +22,20 @@ SOFTWARE.
 
 #include "../include/Fps.h"
 
-Fps::Fps() { }
+Evolve::Fps::Fps() { }
 
-Fps::~Fps() { }
+Evolve::Fps::~Fps() { }
 
-bool Fps::init(float fps) {
+bool Evolve::Fps::init(float fps) {
 	setFps(fps);
 	return true;
 }
 
-void Fps::beginFrame() {
+void Evolve::Fps::beginFrame() {
 	this->frameStartTicks = (float)SDL_GetTicks();
 }
 
-const bool Fps::endFrame() const {
+const bool Evolve::Fps::endFrame() const {
 	float frameTick = (float)SDL_GetTicks() - frameStartTicks;
 
 	float desiredFrameTime = 1000.0f / desiredFps;
@@ -53,7 +53,7 @@ const bool Fps::endFrame() const {
 	return true;
 }
 
-float Fps::calculateFps() {
+float Evolve::Fps::calculateFps() {
 
 	static float prevTick = (float)SDL_GetTicks();
 

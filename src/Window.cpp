@@ -22,16 +22,17 @@ SOFTWARE.
 
 #include "../include/Window.h"
 
-Window::Window() {}
+Evolve::Window::Window() {}
 
-Window::~Window() {
+Evolve::Window::~Window() {
 	deleteWindow();
 }
 
-bool Window::init(const bool fullScreen, const unsigned int windowWidth, const unsigned int windowHeight, const ColorRgba& clearColor)
-{	
+bool Evolve::Window::init(const bool fullScreen, const unsigned int windowWidth, const unsigned int windowHeight, 
+	const ColorRgba& clearColor) {	
+	
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
-		REPORT_ERROR("Failed to initialize SDL. SDL_Error: " + std::string(SDL_GetError()), init);
+		EVOLVE_REPORT_ERROR("Failed to initialize SDL. SDL_Error: " + std::string(SDL_GetError()), init);
 		return false;
 	}
 
@@ -43,7 +44,7 @@ bool Window::init(const bool fullScreen, const unsigned int windowWidth, const u
 	attribResponse += SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
 	if (attribResponse < 0) {
-		REPORT_ERROR("Failed to set an SDL_GL attribute. SDL_Error: " + std::string(SDL_GetError()), init);
+		EVOLVE_REPORT_ERROR("Failed to set an SDL_GL attribute. SDL_Error: " + std::string(SDL_GetError()), init);
 		return false;
 	}
 
@@ -71,21 +72,21 @@ bool Window::init(const bool fullScreen, const unsigned int windowWidth, const u
 	);
 
 	if (m_window == nullptr) {
-		REPORT_ERROR("Failed to create window. SDL_Error: " + std::string(SDL_GetError()), init);
+		EVOLVE_REPORT_ERROR("Failed to create window. SDL_Error: " + std::string(SDL_GetError()), init);
 		return false;
 	}
 
 	SDL_GLContext glContext = SDL_GL_CreateContext(m_window);
 
 	if (glContext == nullptr) {
-		REPORT_ERROR("Failed to create GL context. SDL_Error: " + std::string(SDL_GetError()), init);
+		EVOLVE_REPORT_ERROR("Failed to create GL context. SDL_Error: " + std::string(SDL_GetError()), init);
 		return false;
 	}
 
 	GLenum response = glewInit();
 
 	if (response != GLEW_OK) {
-		REPORT_ERROR("Failed to initialize GLEW.", init);
+		EVOLVE_REPORT_ERROR("Failed to initialize GLEW.", init);
 		return false;
 	}
 
@@ -107,7 +108,7 @@ bool Window::init(const bool fullScreen, const unsigned int windowWidth, const u
 	return true;
 }
 
-void Window::deleteWindow() {
+void Evolve::Window::deleteWindow() {
 	if (m_window != nullptr) {
 		SDL_DestroyWindow(m_window);
 		m_windowWidth = 0;
@@ -115,6 +116,6 @@ void Window::deleteWindow() {
 	}
 }
 
-void Window::swapBuffer() const {
+void Evolve::Window::swapBuffer() const {
 	SDL_GL_SwapWindow(m_window);
 }

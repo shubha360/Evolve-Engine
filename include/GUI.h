@@ -33,101 +33,104 @@ SOFTWARE.
 #include "Camera.h"
 #include "Font.h"
 
-class GuiRenderer;
+namespace Evolve {
 
-class Gui {
-public:
-	friend class GuiRenderer;
+	class GuiRenderer;
 
-	Gui();
-	~Gui();
-
-	bool init(Font& font);
-
-	// returns the font id in this Gui
-	int addFont(Font& font);
-
-	// returns the id of the component
-	// pass 0 to fontId to use the default font
-	int addTextButton(const std::string& label, const unsigned int fontId, float labelScale,
-		const ColorRgba& textColor, const ColorRgba& buttonColor,
-		const GlyphOrigin& renderOrigin, const RectDimension& dimension, std::function<void()> buttonFunction);
-
-	// pass 0 to fontId to use the default font
-	int addPlainText(const std::string& text, const unsigned int fontId, float scale,
-		const ColorRgba& color, const glm::ivec2& topLeftPosition);
-
-	void setComponentLabel(const int id, const std::string& text);
-
-	void updateGui(InputProcessor& inputProcessor, Camera& camera);
-
-	void freeGui();
-
-private:
-	class Component {
+	class Gui {
 	public:
-		friend class Gui;
 		friend class GuiRenderer;
 
-		enum class ComponentType { NONE, BUTTON, PLAIN_TEXT };
+		Gui();
+		~Gui();
 
-		Component();
-		virtual ~Component();
+		bool init(Font& font);
 
-		void showComponent() { m_isVisible = true; };
-		void hideComponent() { m_isVisible = false; };
+		// returns the font id in this Gui
+		int addFont(Font& font);
 
-	protected:
-		std::string m_label = "";
-		GlyphOrigin m_renderOrigin = GlyphOrigin::BOTTOM_LEFT;
-		ComponentType m_type = ComponentType::NONE;
-		RectDimension m_dimension = {};
-		float m_labelScale = 0;
-		ColorRgba m_primaryColor = {};
-		unsigned int m_fontId = 0;
+		// returns the id of the component
+		// pass 0 to fontId to use the default font
+		int addTextButton(const std::string& label, const unsigned int fontId, float labelScale,
+			const ColorRgba& textColor, const ColorRgba& buttonColor,
+			const GlyphOrigin& renderOrigin, const RectDimension& dimension, std::function<void()> buttonFunction);
 
-		int m_centerX = 0, m_centerY = 0;
-		int m_labelTopLeftX = 0, m_labelTopLeftY = 0;
+		// pass 0 to fontId to use the default font
+		int addPlainText(const std::string& text, const unsigned int fontId, float scale,
+			const ColorRgba& color, const glm::ivec2& topLeftPosition);
 
-		bool m_isFunctional = true;
-		bool m_isVisible = true;
-		bool m_labelCoordinatesFound = false;
+		void setComponentLabel(const int id, const std::string& text);
 
-		void findComponentCenter();
-	};
+		void updateGui(InputProcessor& inputProcessor, Camera& camera);
 
-	class Button : public Component {
-	public:
-		friend class Gui;
-		friend class GuiRenderer;
-
-		Button(const std::string& label, const unsigned int fontId, float labelScale,
-			const ColorRgba& textColor, const ColorRgba& buttonColor, const GlyphOrigin& renderOrigin, 
-			const RectDimension& dimension, std::function<void()> buttonFunction);
+		void freeGui();
 
 	private:
-		ColorRgba m_buttonColor;
-		std::function<void()> m_buttonFunc;
+		class Component {
+		public:
+			friend class Gui;
+			friend class GuiRenderer;
+
+			enum class ComponentType { NONE, BUTTON, PLAIN_TEXT };
+
+			Component();
+			virtual ~Component();
+
+			void showComponent() { m_isVisible = true; };
+			void hideComponent() { m_isVisible = false; };
+
+		protected:
+			std::string m_label = "";
+			GlyphOrigin m_renderOrigin = GlyphOrigin::BOTTOM_LEFT;
+			ComponentType m_type = ComponentType::NONE;
+			RectDimension m_dimension = {};
+			float m_labelScale = 0;
+			ColorRgba m_primaryColor = {};
+			unsigned int m_fontId = 0;
+
+			int m_centerX = 0, m_centerY = 0;
+			int m_labelTopLeftX = 0, m_labelTopLeftY = 0;
+
+			bool m_isFunctional = true;
+			bool m_isVisible = true;
+			bool m_labelCoordinatesFound = false;
+
+			void findComponentCenter();
+		};
+
+		class Button : public Component {
+		public:
+			friend class Gui;
+			friend class GuiRenderer;
+
+			Button(const std::string& label, const unsigned int fontId, float labelScale,
+				const ColorRgba& textColor, const ColorRgba& buttonColor, const GlyphOrigin& renderOrigin,
+				const RectDimension& dimension, std::function<void()> buttonFunction);
+
+		private:
+			ColorRgba m_buttonColor;
+			std::function<void()> m_buttonFunc;
+		};
+
+		class PlainText : public Component {
+		public:
+			friend class Gui;
+			friend class GuiRenderer;
+
+			PlainText(const std::string& text, const unsigned int fontId, float scale,
+				const ColorRgba& color, const RectDimension& position);
+		};
+
+
+		std::vector<std::unique_ptr<Component>> m_components;
+
+		std::vector<Font*> m_fonts;
+
+		SDL_Cursor* m_arrowCursor = nullptr;
+		SDL_Cursor* m_indexPointerCursor = nullptr;
+
+		SDL_Cursor* m_currentCursor = nullptr;
+
+		bool isMouseInsideComponent(const glm::ivec2& mouseScreenCoords, Component& component);
 	};
-	
-	class PlainText : public Component {
-	public:
-		friend class Gui;
-		friend class GuiRenderer;
-
-		PlainText(const std::string& text, const unsigned int fontId, float scale,
-			const ColorRgba& color, const RectDimension& position);
-	};
-
-
-	std::vector<std::unique_ptr<Component>> m_components;
-
-	std::vector<Font*> m_fonts;
-
-	SDL_Cursor* m_arrowCursor = nullptr;
-	SDL_Cursor* m_indexPointerCursor = nullptr;
-
-	SDL_Cursor* m_currentCursor = nullptr;
-
-	bool isMouseInsideComponent(const glm::ivec2& mouseScreenCoords, Component& component);
-};
+}

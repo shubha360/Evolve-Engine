@@ -22,13 +22,13 @@ SOFTWARE.
 
 #include "../include/GuiRenderer.h"
 
-GuiRenderer::GuiRenderer() {}
+Evolve::GuiRenderer::GuiRenderer() {}
 
-GuiRenderer::~GuiRenderer() {
+Evolve::GuiRenderer::~GuiRenderer() {
 	freeGuiRenderer();
 }
 
-bool GuiRenderer::init(const std::string& pathToAssets) {
+bool Evolve::GuiRenderer::init(const std::string& pathToAssets) {
 
 	std::string vertShaderPath = pathToAssets + "/gui/shaders/gui_shader.vert";
 	std::string fragShaderPath = pathToAssets + "/gui/shaders/gui_shader.frag";
@@ -38,7 +38,7 @@ bool GuiRenderer::init(const std::string& pathToAssets) {
 	if (!m_glslProgram.compileAndLinkShaders(
 		vertShaderPath,
 		fragShaderPath)) {
-		REPORT_ERROR("Failed to compile or link Gui shader.", init);
+		EVOLVE_REPORT_ERROR("Failed to compile or link Gui shader.", init);
 		return false;
 	}
 
@@ -51,7 +51,7 @@ bool GuiRenderer::init(const std::string& pathToAssets) {
 	return true;
 }
 
-void GuiRenderer::renderGui(Gui& gui, Camera& camera) {
+void Evolve::GuiRenderer::renderGui(Gui& gui, Camera& camera) {
 	
 	m_glslProgram.useProgram();
 
@@ -111,7 +111,7 @@ void GuiRenderer::renderGui(Gui& gui, Camera& camera) {
 	m_renderer.renderTextures();
 }
 
-void GuiRenderer::freeGuiRenderer() {
+void Evolve::GuiRenderer::freeGuiRenderer() {
 	ImageLoader::DeleteTexture(m_roundedRectButtonTexture);
 	//m_font.deleteFont();
 
@@ -119,7 +119,7 @@ void GuiRenderer::freeGuiRenderer() {
 	m_glslProgram.freeProgram();
 }
 
-void GuiRenderer::getLabelCoordinates(int& x, int& y, const std::string& label, 
+void Evolve::GuiRenderer::getLabelCoordinates(int& x, int& y, const std::string& label,
 	const int componentCenterX, const int componentCenterY, Font& font) {
 	
 	unsigned int labelWidth = font.getLineWidth(label);

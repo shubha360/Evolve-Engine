@@ -22,16 +22,16 @@ SOFTWARE.
 
 #include "../include/Gui.h"
 
-Gui::Gui() {}
+Evolve::Gui::Gui() {}
 
-Gui::~Gui() {
+Evolve::Gui::~Gui() {
 	freeGui();
 }
 
-bool Gui::init(Font& font) {
+bool Evolve::Gui::init(Font& font) {
 
 	if (!font.isInitialized()) {
-		REPORT_ERROR("The font being added to Gui is not initailized.", init);
+		EVOLVE_REPORT_ERROR("The font being added to Gui is not initailized.", init);
 		return false;
 	}
 
@@ -45,10 +45,10 @@ bool Gui::init(Font& font) {
 	return true;
 }
 
-int Gui::addFont(Font& font) {
+int Evolve::Gui::addFont(Font& font) {
 	
 	if (!font.isInitialized()) {
-		REPORT_ERROR("Font adding to Gui is not initailized.", init);
+		EVOLVE_REPORT_ERROR("Font adding to Gui is not initailized.", init);
 		return -1;
 	}
 
@@ -56,12 +56,12 @@ int Gui::addFont(Font& font) {
 	return (int) (m_fonts.size() - 1);
 }
 
-int Gui::addTextButton(const std::string& label, const unsigned int fontId, float labelScale,
+int Evolve::Gui::addTextButton(const std::string& label, const unsigned int fontId, float labelScale,
 	const ColorRgba& textColor, const ColorRgba& buttonColor,
 	const GlyphOrigin& renderOrigin, const RectDimension& dimension, std::function<void()> buttonFunction) {
 
 	if (fontId < 0 || fontId >= m_fonts.size()) {
-		REPORT_ERROR("Invalid font ID used.", addTextButton);
+		EVOLVE_REPORT_ERROR("Invalid font ID used.", addTextButton);
 		return -1;
 	}
 
@@ -72,11 +72,11 @@ int Gui::addTextButton(const std::string& label, const unsigned int fontId, floa
 	return (int) (m_components.size() - 1);
 }
 
-int Gui::addPlainText(const std::string& text, const unsigned int fontId, float scale,
+int Evolve::Gui::addPlainText(const std::string& text, const unsigned int fontId, float scale,
 	const ColorRgba& color, const glm::ivec2& topLeftPosition) {
 
 	if (fontId < 0 || fontId >= m_fonts.size()) {
-		REPORT_ERROR("Invalid font ID used.", addTextButton);
+		EVOLVE_REPORT_ERROR("Invalid font ID used.", addTextButton);
 		return -1;
 	}
 
@@ -87,16 +87,16 @@ int Gui::addPlainText(const std::string& text, const unsigned int fontId, float 
 	return (int) (m_components.size() - 1);
 }
 
-void Gui::setComponentLabel(const int id, const std::string& text) {
+void Evolve::Gui::setComponentLabel(const int id, const std::string& text) {
 
 	if (id < 0 || id >= m_components.size()) {
-		REPORT_ERROR("Invalid component ID used.", addTextButton);
+		EVOLVE_REPORT_ERROR("Invalid component ID used.", addTextButton);
 	}
 
 	m_components[id]->m_label = text;
 }
 
-void Gui::updateGui(InputProcessor& inputProcessor, Camera& camera) {
+void Evolve::Gui::updateGui(InputProcessor& inputProcessor, Camera& camera) {
 
 	glm::ivec2 mouseCoords = camera.convertScreenCoordsToWorldCoords(inputProcessor.getMouseCoords());
 
@@ -144,7 +144,7 @@ void Gui::updateGui(InputProcessor& inputProcessor, Camera& camera) {
 	}
 }
 
-void Gui::freeGui() {
+void Evolve::Gui::freeGui() {
 	if (m_arrowCursor != nullptr) {
 		SDL_FreeCursor(m_arrowCursor);
 		m_arrowCursor = nullptr;
@@ -156,7 +156,7 @@ void Gui::freeGui() {
 	}
 }
 
-bool Gui::isMouseInsideComponent(const glm::ivec2& mouseScreenCoords, Component& component) {
+bool Evolve::Gui::isMouseInsideComponent(const glm::ivec2& mouseScreenCoords, Component& component) {
 
 	int compWidth = component.m_dimension.width;
 	int compHeight = component.m_dimension.height;
@@ -175,11 +175,11 @@ bool Gui::isMouseInsideComponent(const glm::ivec2& mouseScreenCoords, Component&
 	return false;
 }
 
-Gui::Component::Component() {}
+Evolve::Gui::Component::Component() {}
 
-Gui::Component::~Component() {}
+Evolve::Gui::Component::~Component() {}
 
-void Gui::Component::findComponentCenter() {
+void Evolve::Gui::Component::findComponentCenter() {
 
 	switch (m_renderOrigin) {
 	case GlyphOrigin::BOTTOM_LEFT:
@@ -210,7 +210,7 @@ void Gui::Component::findComponentCenter() {
 	}
 }
 
-Gui::Button::Button(const std::string& label, const unsigned int fontId, float labelScale,
+Evolve::Gui::Button::Button(const std::string& label, const unsigned int fontId, float labelScale,
 	const ColorRgba& textColor, const ColorRgba& buttonColor, const GlyphOrigin& renderOrigin, 
 	const RectDimension& dimension, std::function<void()> buttonFunction) :
 	 
@@ -231,7 +231,7 @@ Gui::Button::Button(const std::string& label, const unsigned int fontId, float l
 	findComponentCenter();
 }
 
-Gui::PlainText::PlainText(const std::string& text, const unsigned int fontId, float scale, 
+Evolve::Gui::PlainText::PlainText(const std::string& text, const unsigned int fontId, float scale,
 	const ColorRgba& color, const RectDimension& position) {
 	
 	m_label = text;

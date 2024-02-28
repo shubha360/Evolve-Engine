@@ -30,24 +30,27 @@ SOFTWARE.
 #include "Camera.h"
 #include "Gui.h"
 
-class GuiRenderer {
-public:
-	GuiRenderer();
-	~GuiRenderer();
+namespace Evolve {
 
-	bool init(const std::string& pathToAssets);
+	class GuiRenderer {
+	public:
+		GuiRenderer();
+		~GuiRenderer();
 
-	void renderGui(Gui& gui, Camera& camera);
+		bool init(const std::string& pathToAssets);
 
-	void freeGuiRenderer();
+		void renderGui(Gui& gui, Camera& camera);
 
-private:
-	GlslProgram m_glslProgram;
-	TextureRenderer m_renderer;
-	//Font m_font;
+		void freeGuiRenderer();
 
-	TextureData m_roundedRectButtonTexture;
+	private:
+		GlslProgram m_glslProgram;
+		TextureRenderer m_renderer;
+		//Font m_font;
 
-	void getLabelCoordinates(int& x, int& y, const std::string& label,
-		const int componentCenterX, const int componentCenterY, Font& font);
-};
+		TextureData m_roundedRectButtonTexture;
+
+		void getLabelCoordinates(int& x, int& y, const std::string& label,
+			const int componentCenterX, const int componentCenterY, Font& font);
+	};
+}

@@ -26,24 +26,27 @@ SOFTWARE.
 #include "ColorRgba.h"
 #include "TextureCoords2D.h"
 
-struct Vertex2D {
-	Position2D position;
-	ColorRgba color;
-	TextureCoords2D textureCoords;
+namespace Evolve {
 
-	void setPosition(GLint x, GLint y) {
-		position.set(x, y);
-	}
+	struct Vertex2D {
+		Position2D position;
+		ColorRgba color;
+		TextureCoords2D textureCoords;
 
-	void setColor(GLubyte red, GLubyte green, GLubyte blue, GLubyte alpha) {
-		color.set(red, green, blue, alpha);
-	}
+		void setPosition(GLint x, GLint y) {
+			position.set(x, y);
+		}
 
-	void setColor(ColorRgba& newColor) {
-		color.set(newColor.red, newColor.green, newColor.blue, newColor.alpha);
-	}
+		void setColor(GLubyte red, GLubyte green, GLubyte blue, GLubyte alpha) {
+			color.set(red, green, blue, alpha);
+		}
 
-	void setTextureCoords(GLfloat u, GLfloat v) {
-		textureCoords.set(u, v);
-	}
-};
+		void setColor(ColorRgba& newColor) {
+			color.set(newColor.red, newColor.green, newColor.blue, newColor.alpha);
+		}
+
+		void setTextureCoords(GLfloat u, GLfloat v) {
+			textureCoords.set(u, v);
+		}
+	};
+}

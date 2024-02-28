@@ -22,27 +22,27 @@ SOFTWARE.
 
 #include "../include/InputProcessor.h"
 
-InputProcessor::InputProcessor() {
+Evolve::InputProcessor::InputProcessor() {
 	m_mouseCoords = glm::ivec2(0);
 }
 
-InputProcessor::~InputProcessor() {}
+Evolve::InputProcessor::~InputProcessor() {}
 
-void InputProcessor::update() {
+void Evolve::InputProcessor::update() {
 	for (auto& it : m_keyMap) {
 		m_previousKeyMap[it.first] = it.second;
 	}
 }
 
-void InputProcessor::pressKey(unsigned int keyID) {
+void Evolve::InputProcessor::pressKey(unsigned int keyID) {
 	m_keyMap[keyID] = true;
 }
 
-void InputProcessor::releaseKey(unsigned int keyID) {
+void Evolve::InputProcessor::releaseKey(unsigned int keyID) {
 	m_keyMap[keyID] = false;
 }
 
-bool InputProcessor::isKeyDown(unsigned int keyID) {
+bool Evolve::InputProcessor::isKeyDown(unsigned int keyID) {
 	auto it = m_keyMap.find(keyID);
 
 	if (it != m_keyMap.end()) {
@@ -51,7 +51,7 @@ bool InputProcessor::isKeyDown(unsigned int keyID) {
 	return false;
 }
 
-bool InputProcessor::wasKeyDown(unsigned int keyID) {
+bool Evolve::InputProcessor::wasKeyDown(unsigned int keyID) {
 	auto it = m_previousKeyMap.find(keyID);
 
 	if (it != m_previousKeyMap.end()) {
@@ -60,10 +60,10 @@ bool InputProcessor::wasKeyDown(unsigned int keyID) {
 	return false;
 }
 
-bool InputProcessor::isKeyPressed(unsigned int keyID) {
+bool Evolve::InputProcessor::isKeyPressed(unsigned int keyID) {
 	return !wasKeyDown(keyID) && isKeyDown(keyID);
 }
 
-bool InputProcessor::isKeyReleased(unsigned int keyID) {
+bool Evolve::InputProcessor::isKeyReleased(unsigned int keyID) {
 	return wasKeyDown(keyID) && !isKeyDown(keyID);
 }
