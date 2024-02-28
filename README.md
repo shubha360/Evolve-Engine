@@ -1,4 +1,4 @@
-# Kolorob-Engine
+# Evolve-Engine
 
 This is a C++ static library to build simple 2D games. This engine is currently under development. It uses **SDL2** as its windowing API and **OpenGL 3.3** as its graphics API.
 
@@ -30,11 +30,11 @@ This can be used in one of 2 ways -
 
 - By copying all the code files into the main project. This approach prevents complexity but makes the project messy with many files.
 
-- By building and using like a C++ static library without any precompiled headers. This approach will prevent unnesseccary messi-ness.
+- By building and using this C++ static library without any precompiled headers. This approach will prevent unnecessary messiness.
 
 Either way, the dependencies stated above should already be installed in the system.
 
-***NOTE:*** If builiding the library, the engine folder should be located one directory back from where the main project source files are located. An example could be like this - 
+***NOTE:*** If building the library, the engine folder should be located one directory back from where the main project source files are located. An example could be like this - 
 
     - project dir
       - include dir
