@@ -28,16 +28,22 @@ GUIRenderer::~GUIRenderer() {
 	freeGUIRenderer();
 }
 
-bool GUIRenderer::init() {
+bool GUIRenderer::init(const std::string& pathToAssets) {
+
+	std::string vertShaderPath = pathToAssets + "/gui/shaders/gui_shader.vert";
+	std::string fragShaderPath = pathToAssets + "/gui/shaders/gui_shader.frag";
+	
+	std::string buttonImagePath = pathToAssets + "/gui/images/rounded_rect_button512x256.png";
+
 	if (!m_glslProgram.compileAndLinkShaders(
-		"../Kolorob-Engine/assets/gui/shaders/gui_shader.vert",
-		"../Kolorob-Engine/assets/gui/shaders/gui_shader.frag")) {
+		vertShaderPath,
+		fragShaderPath)) {
 		REPORT_ERROR("Failed to compile or link GUI shader.", init);
 		return false;
 	}
 
 	ImageLoader::LoadTextureFromImage(
-		"../Kolorob-Engine/assets/gui/images/rounded_rect_button512x256.png", m_roundedRectButtonTexture, 4
+		buttonImagePath, m_roundedRectButtonTexture, 4
 	);
 	ImageLoader::BufferTextureData(m_roundedRectButtonTexture);
 	ImageLoader::FreeTexture(m_roundedRectButtonTexture);

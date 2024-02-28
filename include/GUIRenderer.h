@@ -35,7 +35,7 @@ public:
 	GUIRenderer();
 	~GUIRenderer();
 
-	bool init();
+	bool init(const std::string& pathToAssets);
 
 	void renderGUI(GUI& gui, Camera& camera);
 
