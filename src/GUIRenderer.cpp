@@ -33,7 +33,7 @@ bool Evolve::GuiRenderer::init(const std::string& pathToAssets) {
 	std::string vertShaderPath = pathToAssets + "/gui/shaders/gui_shader.vert";
 	std::string fragShaderPath = pathToAssets + "/gui/shaders/gui_shader.frag";
 	
-	std::string buttonImagePath = pathToAssets + "/gui/images/rounded_rect_button512x256.png";
+	std::string buttonImagePath = pathToAssets + "/gui/images/button_bg.png";
 
 	if (!m_glslProgram.compileAndLinkShaders(
 		vertShaderPath,
