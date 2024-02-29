@@ -72,13 +72,24 @@ bool Evolve::GlslProgram::compileAndLinkShaders(const std::string& vertexShaderP
 }
 
 GLint Evolve::GlslProgram::getUniformLocation(const std::string& uniformName) {
-	GLint location = glGetUniformLocation(m_programID, uniformName.c_str());
+	
+	auto it = m_uniformCache.find(uniformName);
 
-	if (location == GL_INVALID_INDEX) {
-		EVOLVE_REPORT_ERROR("Uniform " + std::string(uniformName) + " was not found in the shader.", getUniformLocation);
+	if (it != m_uniformCache.end()) {
+		return it->second;
 	}
+	else {
+		GLint location = glGetUniformLocation(m_programID, uniformName.c_str());
 
-	return location;
+		if (location == GL_INVALID_INDEX) {
+			EVOLVE_REPORT_ERROR("Uniform " + std::string(uniformName) + " was not found in the shader.", getUniformLocation);
+		}
+		else {
+			m_uniformCache.insert(make_pair(uniformName, location));
+		}
+
+		return location;
+	}
 }
 
 void Evolve::GlslProgram::useProgram() {

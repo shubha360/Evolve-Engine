@@ -45,6 +45,8 @@ namespace Evolve {
 		GLuint m_vertexShaderID = 0;
 		GLuint m_fragmentShaderID = 0;
 
+		std::unordered_map<std::string, GLint> m_uniformCache;
+
 		// Compiles a single shader, return the shader id
 		// shaderType should be either GL_VERTEX_SHADER or GL_FRAGMENT_SHADER
 		GLuint compileShader(const std::string& shaderPath, const GLenum shaderType);
