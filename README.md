@@ -30,16 +30,9 @@ This can be used in one of 2 ways -
 
 - By copying all the code files into the main project. This approach prevents complexity but makes the project messy with many files.
 
-- By building and using this C++ static library without any precompiled headers. This approach will prevent unnecessary messiness.
+- By building this as a C++ static library without any precompiled headers. This approach will prevent unnecessary messiness.
 
 Either way, the dependencies stated above should already be installed in the system.
-
-***NOTE:*** If building the library, the engine folder should be located one directory back from where the main project source files are located. An example could be like this - 
-
-    - project dir
-      - include dir
-      - src dir (source files are here)
-      - Kolorob-Engine
 
 Contact me through my mail ***shubha360@outlook.com*** if you're having trouble using it. I intend to convert it to a CMake project in the future.
 
