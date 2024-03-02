@@ -81,7 +81,7 @@ int Evolve::Gui::addPlainText(const std::string& text, const unsigned int fontId
 	}
 
 	m_components.push_back(std::unique_ptr<Component>(
-		new PlainText(text, fontId, scale, color, RectDimension{ topLeftPosition.x, topLeftPosition.y, 0, 0 })
+		new PlainText(text, fontId, scale, color, topLeftPosition)
 	));
 
 	return (int) (m_components.size() - 1);
@@ -94,6 +94,15 @@ void Evolve::Gui::setComponentLabel(const int id, const std::string& text) {
 	}
 
 	m_components[id]->m_label = text;
+}
+
+void Evolve::Gui::setComponentPosition(const int id, const glm::ivec2& position) {
+	if (id < 0 || id >= m_components.size()) {
+		EVOLVE_REPORT_ERROR("Invalid component ID used.", addTextButton);
+	}
+
+	m_components[id]->m_dimension.x = position.x;
+	m_components[id]->m_dimension.y = position.y;
 }
 
 void Evolve::Gui::updateGui(InputProcessor& inputProcessor, Camera& camera) {
@@ -142,6 +151,24 @@ void Evolve::Gui::updateGui(InputProcessor& inputProcessor, Camera& camera) {
 			}
 		}
 	}
+}
+
+void Evolve::Gui::showComponent(const int id) {
+
+	if (id < 0 || id >= m_components.size()) {
+		EVOLVE_REPORT_ERROR("Invalid component ID used.", addTextButton);
+	}
+
+	m_components[id]->m_isVisible = true;
+}
+
+void Evolve::Gui::hideComponent(const int id) {
+	
+	if (id < 0 || id >= m_components.size()) {
+		EVOLVE_REPORT_ERROR("Invalid component ID used.", addTextButton);
+	}
+
+	m_components[id]->m_isVisible = false;
 }
 
 void Evolve::Gui::freeGui() {
@@ -232,14 +259,14 @@ Evolve::Gui::Button::Button(const std::string& label, const unsigned int fontId,
 }
 
 Evolve::Gui::PlainText::PlainText(const std::string& text, const unsigned int fontId, float scale,
-	const ColorRgba& color, const RectDimension& position) {
+	const ColorRgba& color, const glm::ivec2& position) {
 	
 	m_label = text;
 	m_type = ComponentType::PLAIN_TEXT;
 	m_fontId = fontId;
 	m_labelScale = scale;
 	m_primaryColor = color;
-	m_dimension = position;
+	m_dimension = { position.x, position.y, 0, 0 };
 
 	m_isFunctional = false;
 	m_isVisible = true;

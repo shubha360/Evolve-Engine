@@ -22,14 +22,17 @@ SOFTWARE.
 
 #pragma once
 
-struct UvDimension {
-	float bottomLeftX, bottomLeftY;
-	float width, height;
+namespace Evolve {
 
-	void set(float bottomLeftX, float bottomLeftY, float width, float height) {
-		this->bottomLeftX = bottomLeftX;
-		this->bottomLeftY = bottomLeftY;
-		this->width = width;
-		this->height = height;
-	}
-};
+	struct UvDimension {
+		float bottomLeftX, bottomLeftY;
+		float width, height;
+
+		void set(float bottomLeftX, float bottomLeftY, float width, float height) {
+			this->bottomLeftX = bottomLeftX;
+			this->bottomLeftY = bottomLeftY;
+			this->width = width;
+			this->height = height;
+		}
+	};
+}

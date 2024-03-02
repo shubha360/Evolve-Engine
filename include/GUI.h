@@ -60,8 +60,12 @@ namespace Evolve {
 			const ColorRgba& color, const glm::ivec2& topLeftPosition);
 
 		void setComponentLabel(const int id, const std::string& text);
+		void setComponentPosition(const int id, const glm::ivec2& position);
 
 		void updateGui(InputProcessor& inputProcessor, Camera& camera);
+
+		void showComponent(const int id);
+		void hideComponent(const int id);
 
 		void freeGui();
 
@@ -75,9 +79,6 @@ namespace Evolve {
 
 			Component();
 			virtual ~Component();
-
-			void showComponent() { m_isVisible = true; };
-			void hideComponent() { m_isVisible = false; };
 
 		protected:
 			std::string m_label = "";
@@ -118,7 +119,7 @@ namespace Evolve {
 			friend class GuiRenderer;
 
 			PlainText(const std::string& text, const unsigned int fontId, float scale,
-				const ColorRgba& color, const RectDimension& position);
+				const ColorRgba& color, const glm::ivec2& position);
 		};
 
 
