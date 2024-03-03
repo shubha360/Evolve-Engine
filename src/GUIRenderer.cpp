@@ -103,6 +103,32 @@ void Evolve::GuiRenderer::renderGui(Gui& gui, Camera& camera) {
 				font->drawTextToRenderer(plainText->m_label, plainText->m_dimension.x,
 					plainText->m_dimension.y, plainText->m_primaryColor, m_renderer);
 			}
+
+			else if (comp->m_type == Gui::Component::ComponentType::BACKGROUND_TEXT) {
+
+				Gui::BackgroundText* bgText = (Gui::BackgroundText*) comp.get();
+				Font* font = gui.m_fonts[bgText->m_fontId];
+
+				m_renderer.draw(
+					bgText->m_renderOrigin,
+					bgText->m_dimension,
+					UvDimension{ 0.0f, 0.0f, 1.0f, 1.0f },
+					m_roundedRectButtonTexture.id,
+					bgText->m_backgroundColor
+				);
+
+				font->setFontScale(bgText->m_labelScale);
+
+				if (!bgText->m_labelCoordinatesFound) {
+					getLabelCoordinates(bgText->m_labelTopLeftX, bgText->m_labelTopLeftY,
+						bgText->m_label, bgText->m_centerX, bgText->m_centerY, *font);
+
+					bgText->m_labelCoordinatesFound = true;
+				}
+
+				font->drawTextToRenderer(bgText->m_label, bgText->m_labelTopLeftX,
+					bgText->m_labelTopLeftY, bgText->m_primaryColor, m_renderer);
+			}
 		}
 	}
 

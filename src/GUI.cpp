@@ -87,6 +87,22 @@ int Evolve::Gui::addPlainText(const std::string& text, const unsigned int fontId
 	return (int) (m_components.size() - 1);
 }
 
+int Evolve::Gui::addBackgroundText(const std::string& text, const unsigned int fontId, float textScale, 
+	const ColorRgba& textColor, const ColorRgba& backgroundColor, 
+	const GlyphOrigin& renderOrigin, const RectDimension& dimension) {
+	
+	if (fontId < 0 || fontId >= m_fonts.size()) {
+		EVOLVE_REPORT_ERROR("Invalid font ID used.", addTextButton);
+		return -1;
+	}
+
+	m_components.push_back(std::unique_ptr<Component>(
+		new BackgroundText(text, fontId, textScale, textColor, backgroundColor, renderOrigin, dimension)
+	));
+
+	return (int) (m_components.size() - 1);
+}
+
 void Evolve::Gui::setComponentLabel(const int id, const std::string& text) {
 
 	if (id < 0 || id >= m_components.size()) {
@@ -270,4 +286,24 @@ Evolve::Gui::PlainText::PlainText(const std::string& text, const unsigned int fo
 
 	m_isFunctional = false;
 	m_isVisible = true;
+}
+
+Evolve::Gui::BackgroundText::BackgroundText(const std::string& text, const unsigned int fontId, float textScale, 
+	const ColorRgba& textColor, const ColorRgba& backgroundColor, 
+	const GlyphOrigin& renderOrigin, const RectDimension& dimension) :
+	
+	m_backgroundColor(backgroundColor)
+{
+	m_label = text;
+	m_type = ComponentType::BACKGROUND_TEXT;
+	m_renderOrigin = renderOrigin;
+	m_dimension = dimension;
+	m_labelScale = textScale;
+	m_primaryColor = textColor;
+	m_fontId = fontId;
+
+	m_isFunctional = false;
+	m_isVisible = true;
+
+	findComponentCenter();
 }

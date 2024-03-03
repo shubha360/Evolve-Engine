@@ -54,6 +54,8 @@ namespace Evolve {
 
 		unsigned int getLineHeight() const { return (unsigned int)(m_lineHeight * m_fontScale); }
 
+		unsigned int getTextHeight(const std::string& text) const;
+
 		std::string getFontName() const { return m_fontName; }
 
 		bool isInitialized() const { return m_initialized; }

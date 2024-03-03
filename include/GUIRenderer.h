@@ -46,7 +46,6 @@ namespace Evolve {
 	private:
 		GlslProgram m_glslProgram;
 		TextureRenderer m_renderer;
-		//Font m_font;
 
 		TextureData m_roundedRectButtonTexture;
 

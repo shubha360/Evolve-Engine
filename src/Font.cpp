@@ -431,6 +431,18 @@ unsigned int Evolve::Font::getLineWidth(const std::string& text) {
 	return width;
 }
 
+unsigned int Evolve::Font::getTextHeight(const std::string& text) const {
+
+	int lines = 1;
+
+	for (int i = 0; i < text.length(); i++) {
+		if (text[i] == '\n') {
+			lines++;
+		}
+	}
+	return (unsigned int) (m_lineHeight * m_fontScale * lines);
+}
+
 void Evolve::Font::deleteFont() {
 	ImageLoader::DeleteTexture(m_fontTexture);
 
