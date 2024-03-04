@@ -66,10 +66,20 @@ namespace Evolve {
 			const ColorRgba& textColor, const ColorRgba& backgroundColor,
 			const GlyphOrigin& renderOrigin, const RectDimension& dimension);
 
+		// returns the id of the component
+		// pass 0 to fontId to use the default font
+		int addBlinkingText(const std::string& text, const unsigned int fontId, float scale,
+			const ColorRgba& color, const glm::ivec2& topLeftPosition, 
+			const float onDuration = 30.0f, const float offDuration = 30.0f);
+
 		void setComponentLabel(const int id, const std::string& text);
 		void setComponentPosition(const int id, const glm::ivec2& position);
 
+		int getLabelWidth(const int id);
+		int getLabelHeight(const int id);
+
 		void updateGui(InputProcessor& inputProcessor, Camera& camera);
+		void updateTime(const float deltaTime);
 
 		void showComponent(const int id);
 		void hideComponent(const int id);
@@ -82,7 +92,7 @@ namespace Evolve {
 			friend class Gui;
 			friend class GuiRenderer;
 
-			enum class ComponentType { NONE, BUTTON, PLAIN_TEXT, BACKGROUND_TEXT };
+			enum class ComponentType { NONE, BUTTON, PLAIN_TEXT, BACKGROUND_TEXT, BLINKING_TEXT };
 
 			Component();
 			virtual ~Component();
@@ -98,6 +108,8 @@ namespace Evolve {
 
 			int m_centerX = 0, m_centerY = 0;
 			int m_labelTopLeftX = 0, m_labelTopLeftY = 0;
+
+			float m_time = 0.0f;
 
 			bool m_isFunctional = true;
 			bool m_isVisible = true;
@@ -140,6 +152,19 @@ namespace Evolve {
 
 		private:
 			ColorRgba m_backgroundColor;
+		};
+
+		class BlinkingText : public Component {
+		public:
+			friend class Gui;
+			friend class GuiRenderer;
+
+			BlinkingText(const std::string& text, const unsigned int fontId, float scale,
+				const ColorRgba& color, const glm::ivec2& position, 
+				const float onDuration, const float offDuration);
+
+		private:
+			float m_onDuration = 0.0f, m_offDuration = 0.0f;
 		};
 
 		std::vector<std::unique_ptr<Component>> m_components;

@@ -129,6 +129,26 @@ void Evolve::GuiRenderer::renderGui(Gui& gui, Camera& camera) {
 				font->drawTextToRenderer(bgText->m_label, bgText->m_labelTopLeftX,
 					bgText->m_labelTopLeftY, bgText->m_primaryColor, m_renderer);
 			}
+
+			else if (comp->m_type == Gui::Component::ComponentType::BLINKING_TEXT) {
+
+				Gui::BlinkingText* blinkingText = (Gui::BlinkingText*)comp.get();
+
+				if (blinkingText->m_time <= blinkingText->m_onDuration) {
+
+					Font* font = gui.m_fonts[blinkingText->m_fontId];
+
+					font->setFontScale(blinkingText->m_labelScale);
+
+					font->drawTextToRenderer(blinkingText->m_label, blinkingText->m_dimension.x,
+						blinkingText->m_dimension.y, blinkingText->m_primaryColor, m_renderer);
+				}
+				else {
+					if (blinkingText->m_time > blinkingText->m_onDuration + blinkingText->m_offDuration) {
+						blinkingText->m_time = 0.0f;
+					}
+				}
+			}
 		}
 	}
 

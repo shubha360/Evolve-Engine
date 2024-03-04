@@ -103,6 +103,22 @@ int Evolve::Gui::addBackgroundText(const std::string& text, const unsigned int f
 	return (int) (m_components.size() - 1);
 }
 
+int Evolve::Gui::addBlinkingText(const std::string& text, const unsigned int fontId, float scale, 
+	const ColorRgba& color, const glm::ivec2& topLeftPosition, 
+	const float onDuration /*= 30.0f*/, const float offDuration /*= 30.0f*/)
+{
+	if (fontId < 0 || fontId >= m_fonts.size()) {
+		EVOLVE_REPORT_ERROR("Invalid font ID used.", addTextButton);
+		return -1;
+	}
+
+	m_components.push_back(std::unique_ptr<Component>(
+		new BlinkingText(text, fontId, scale, color, topLeftPosition, onDuration, offDuration)
+	));
+
+	return (int)(m_components.size() - 1);
+}
+
 void Evolve::Gui::setComponentLabel(const int id, const std::string& text) {
 
 	if (id < 0 || id >= m_components.size()) {
@@ -119,6 +135,22 @@ void Evolve::Gui::setComponentPosition(const int id, const glm::ivec2& position)
 
 	m_components[id]->m_dimension.x = position.x;
 	m_components[id]->m_dimension.y = position.y;
+}
+
+int Evolve::Gui::getLabelWidth(const int id) {
+	if (id < 0 || id >= m_components.size()) {
+		EVOLVE_REPORT_ERROR("Invalid component ID used.", addTextButton);
+	}
+	
+	return m_fonts[m_components[id]->m_fontId]->getLineWidth(m_components[id]->m_label);
+}
+
+int Evolve::Gui::getLabelHeight(const int id) {
+	if (id < 0 || id >= m_components.size()) {
+		EVOLVE_REPORT_ERROR("Invalid component ID used.", addTextButton);
+	}
+	
+	return m_fonts[m_components[id]->m_fontId]->getLineHeight();
 }
 
 void Evolve::Gui::updateGui(InputProcessor& inputProcessor, Camera& camera) {
@@ -169,6 +201,12 @@ void Evolve::Gui::updateGui(InputProcessor& inputProcessor, Camera& camera) {
 	}
 }
 
+void Evolve::Gui::updateTime(const float deltaTime) {
+	for (auto& comp : m_components) {
+		comp->m_time += deltaTime;
+	}
+}
+
 void Evolve::Gui::showComponent(const int id) {
 
 	if (id < 0 || id >= m_components.size()) {
@@ -176,6 +214,7 @@ void Evolve::Gui::showComponent(const int id) {
 	}
 
 	m_components[id]->m_isVisible = true;
+	m_components[id]->m_time = 0.0f;
 }
 
 void Evolve::Gui::hideComponent(const int id) {
@@ -306,4 +345,21 @@ Evolve::Gui::BackgroundText::BackgroundText(const std::string& text, const unsig
 	m_isVisible = true;
 
 	findComponentCenter();
+}
+
+Evolve::Gui::BlinkingText::BlinkingText(const std::string& text, const unsigned int fontId, float scale, 
+	const ColorRgba& color, const glm::ivec2& position, 
+	const float onDuration, const float offDuration) :
+	
+	m_onDuration(onDuration), m_offDuration(offDuration)
+{
+	m_label = text;
+	m_type = ComponentType::BLINKING_TEXT;
+	m_fontId = fontId;
+	m_labelScale = scale;
+	m_primaryColor = color;
+	m_dimension = { position.x, position.y, 0, 0 };
+
+	m_isFunctional = false;
+	m_isVisible = true;
 }
