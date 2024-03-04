@@ -67,6 +67,7 @@ void Evolve::GuiRenderer::renderGui(Gui& gui, Camera& camera) {
 
 		if (comp->m_isVisible) {
 			
+			// BUTTON
 			if (comp->m_type == Gui::Component::ComponentType::BUTTON) {
 
 				Gui::Button* button = (Gui::Button*)comp.get();
@@ -93,6 +94,7 @@ void Evolve::GuiRenderer::renderGui(Gui& gui, Camera& camera) {
 					button->m_labelTopLeftY, button->m_primaryColor, m_renderer);
 			}
 
+			// PLAIN TEXT
 			else if (comp->m_type == Gui::Component::ComponentType::PLAIN_TEXT) {
 
 				Gui::PlainText* plainText = (Gui::PlainText*)comp.get();
@@ -104,32 +106,7 @@ void Evolve::GuiRenderer::renderGui(Gui& gui, Camera& camera) {
 					plainText->m_dimension.y, plainText->m_primaryColor, m_renderer);
 			}
 
-			else if (comp->m_type == Gui::Component::ComponentType::BACKGROUND_TEXT) {
-
-				Gui::BackgroundText* bgText = (Gui::BackgroundText*) comp.get();
-				Font* font = gui.m_fonts[bgText->m_fontId];
-
-				m_renderer.draw(
-					bgText->m_renderOrigin,
-					bgText->m_dimension,
-					UvDimension{ 0.0f, 0.0f, 1.0f, 1.0f },
-					m_roundedRectButtonTexture.id,
-					bgText->m_backgroundColor
-				);
-
-				font->setFontScale(bgText->m_labelScale);
-
-				if (!bgText->m_labelCoordinatesFound) {
-					getLabelCoordinates(bgText->m_labelTopLeftX, bgText->m_labelTopLeftY,
-						bgText->m_label, bgText->m_centerX, bgText->m_centerY, *font);
-
-					bgText->m_labelCoordinatesFound = true;
-				}
-
-				font->drawTextToRenderer(bgText->m_label, bgText->m_labelTopLeftX,
-					bgText->m_labelTopLeftY, bgText->m_primaryColor, m_renderer);
-			}
-
+			// BLINKING_TEXT
 			else if (comp->m_type == Gui::Component::ComponentType::BLINKING_TEXT) {
 
 				Gui::BlinkingText* blinkingText = (Gui::BlinkingText*)comp.get();
@@ -148,6 +125,17 @@ void Evolve::GuiRenderer::renderGui(Gui& gui, Camera& camera) {
 						blinkingText->m_time = 0.0f;
 					}
 				}
+			}
+
+			// PANEL
+			else if (comp->m_type == Gui::Component::ComponentType::PANEL) {
+				m_renderer.draw(
+					comp->m_renderOrigin,
+					comp->m_dimension,
+					UvDimension{ 0.0f, 0.0f, 1.0f, 1.0f },
+					m_roundedRectButtonTexture.id,
+					comp->m_primaryColor
+				);
 			}
 		}
 	}

@@ -87,22 +87,6 @@ int Evolve::Gui::addPlainText(const std::string& text, const unsigned int fontId
 	return (int) (m_components.size() - 1);
 }
 
-int Evolve::Gui::addBackgroundText(const std::string& text, const unsigned int fontId, float textScale, 
-	const ColorRgba& textColor, const ColorRgba& backgroundColor, 
-	const GlyphOrigin& renderOrigin, const RectDimension& dimension) {
-	
-	if (fontId < 0 || fontId >= m_fonts.size()) {
-		EVOLVE_REPORT_ERROR("Invalid font ID used.", addTextButton);
-		return -1;
-	}
-
-	m_components.push_back(std::unique_ptr<Component>(
-		new BackgroundText(text, fontId, textScale, textColor, backgroundColor, renderOrigin, dimension)
-	));
-
-	return (int) (m_components.size() - 1);
-}
-
 int Evolve::Gui::addBlinkingText(const std::string& text, const unsigned int fontId, float scale, 
 	const ColorRgba& color, const glm::ivec2& topLeftPosition, 
 	const float onDuration /*= 30.0f*/, const float offDuration /*= 30.0f*/)
@@ -114,6 +98,15 @@ int Evolve::Gui::addBlinkingText(const std::string& text, const unsigned int fon
 
 	m_components.push_back(std::unique_ptr<Component>(
 		new BlinkingText(text, fontId, scale, color, topLeftPosition, onDuration, offDuration)
+	));
+
+	return (int)(m_components.size() - 1);
+}
+
+int Evolve::Gui::addPanel(const RectDimension& dimension, const GlyphOrigin& renderOrigin, const ColorRgba& color) {
+	
+	m_components.push_back(std::unique_ptr<Component>(
+		new Panel(dimension, renderOrigin, color)
 	));
 
 	return (int)(m_components.size() - 1);
@@ -327,26 +320,6 @@ Evolve::Gui::PlainText::PlainText(const std::string& text, const unsigned int fo
 	m_isVisible = true;
 }
 
-Evolve::Gui::BackgroundText::BackgroundText(const std::string& text, const unsigned int fontId, float textScale, 
-	const ColorRgba& textColor, const ColorRgba& backgroundColor, 
-	const GlyphOrigin& renderOrigin, const RectDimension& dimension) :
-	
-	m_backgroundColor(backgroundColor)
-{
-	m_label = text;
-	m_type = ComponentType::BACKGROUND_TEXT;
-	m_renderOrigin = renderOrigin;
-	m_dimension = dimension;
-	m_labelScale = textScale;
-	m_primaryColor = textColor;
-	m_fontId = fontId;
-
-	m_isFunctional = false;
-	m_isVisible = true;
-
-	findComponentCenter();
-}
-
 Evolve::Gui::BlinkingText::BlinkingText(const std::string& text, const unsigned int fontId, float scale, 
 	const ColorRgba& color, const glm::ivec2& position, 
 	const float onDuration, const float offDuration) :
@@ -359,6 +332,16 @@ Evolve::Gui::BlinkingText::BlinkingText(const std::string& text, const unsigned 
 	m_labelScale = scale;
 	m_primaryColor = color;
 	m_dimension = { position.x, position.y, 0, 0 };
+
+	m_isFunctional = false;
+	m_isVisible = true;
+}
+
+Evolve::Gui::Panel::Panel(const RectDimension& dimension, const GlyphOrigin& renderOrigin, const ColorRgba& color) {
+	m_type = ComponentType::PANEL;
+	m_renderOrigin = renderOrigin;
+	m_primaryColor = color;
+	m_dimension = dimension;
 
 	m_isFunctional = false;
 	m_isVisible = true;

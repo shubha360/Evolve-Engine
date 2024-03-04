@@ -62,15 +62,13 @@ namespace Evolve {
 
 		// returns the id of the component
 		// pass 0 to fontId to use the default font
-		int addBackgroundText(const std::string& text, const unsigned int fontId, float textScale,
-			const ColorRgba& textColor, const ColorRgba& backgroundColor,
-			const GlyphOrigin& renderOrigin, const RectDimension& dimension);
-
-		// returns the id of the component
-		// pass 0 to fontId to use the default font
 		int addBlinkingText(const std::string& text, const unsigned int fontId, float scale,
 			const ColorRgba& color, const glm::ivec2& topLeftPosition, 
 			const float onDuration = 30.0f, const float offDuration = 30.0f);
+
+		// returns the id of the component
+		// pass 0 to fontId to use the default font
+		int addPanel(const RectDimension& dimension, const GlyphOrigin& renderOrigin, const ColorRgba& color);
 
 		void setComponentLabel(const int id, const std::string& text);
 		void setComponentPosition(const int id, const glm::ivec2& position);
@@ -92,7 +90,13 @@ namespace Evolve {
 			friend class Gui;
 			friend class GuiRenderer;
 
-			enum class ComponentType { NONE, BUTTON, PLAIN_TEXT, BACKGROUND_TEXT, BLINKING_TEXT };
+			enum class ComponentType { 
+				NONE,
+				BUTTON,
+				PLAIN_TEXT,
+				BLINKING_TEXT,
+				PANEL
+			};
 
 			Component();
 			virtual ~Component();
@@ -141,19 +145,6 @@ namespace Evolve {
 				const ColorRgba& color, const glm::ivec2& position);
 		};
 
-		class BackgroundText : public Component {
-		public:
-			friend class Gui;
-			friend class GuiRenderer;
-
-			BackgroundText(const std::string& text, const unsigned int fontId, float textScale,
-				const ColorRgba& textColor, const ColorRgba& backgroundColor, 
-				const GlyphOrigin& renderOrigin, const RectDimension& dimension);
-
-		private:
-			ColorRgba m_backgroundColor;
-		};
-
 		class BlinkingText : public Component {
 		public:
 			friend class Gui;
@@ -165,6 +156,14 @@ namespace Evolve {
 
 		private:
 			float m_onDuration = 0.0f, m_offDuration = 0.0f;
+		};
+
+		class Panel : public Component {
+		public:
+			friend class Gui;
+			friend class GuiRenderer;
+
+			Panel(const RectDimension& dimension, const GlyphOrigin& renderOrigin, const ColorRgba& color);
 		};
 
 		std::vector<std::unique_ptr<Component>> m_components;
