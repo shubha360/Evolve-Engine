@@ -1,6 +1,6 @@
 # Evolve-Engine
 
-This is a C++ static library to build simple 2D games. This engine is currently under development. It uses **SDL2** as its windowing API and **OpenGL 3.3** as its graphics API.
+This is a C++ static library to build simple 2D games. This engine is currently under development. It uses **SDL2** as its windowing API and **GLEW** to access **OpenGL 3.3** as its graphics API.
 
 ### Currently Supported Features
 
