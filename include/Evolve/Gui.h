@@ -44,7 +44,7 @@ namespace Evolve {
 		Gui();
 		~Gui();
 
-		bool init(Font& font);
+		bool init();
 
 		// returns the font id in this Gui
 		int addFont(Font& font);

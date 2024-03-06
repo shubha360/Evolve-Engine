@@ -20,7 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "../include/InputProcessor.h"
+#include "../include/Evolve/InputProcessor.h"
 
 Evolve::InputProcessor::InputProcessor() {
 	m_mouseCoords = glm::ivec2(0);

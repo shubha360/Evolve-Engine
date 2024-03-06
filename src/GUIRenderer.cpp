@@ -20,7 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "../include/GuiRenderer.h"
+#include "../include/Evolve/GuiRenderer.h"
 
 Evolve::GuiRenderer::GuiRenderer() {}
 

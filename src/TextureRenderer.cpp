@@ -20,7 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "../include/TextureRenderer.h"
+#include "../include/Evolve/TextureRenderer.h"
 
 Evolve::TextureRenderer::Glyph::Glyph(const GlyphOrigin renderOrigin, const RectDimension& destRect,
 	const UvDimension& uvRect, GLuint textureID, 

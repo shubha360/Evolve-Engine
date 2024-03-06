@@ -24,7 +24,7 @@ SOFTWARE.
 
 #include "IncludeLibs.h"
 
-#include "stb_image.h"
+#include "../Vendor/stb_image.h"
 #include "TextureData.h"
 #include "ErrorReporter.h"
 

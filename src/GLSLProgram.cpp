@@ -20,7 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "../include/GlslProgram.h"
+#include "../include/Evolve/GlslProgram.h"
 
 Evolve::GlslProgram::GlslProgram() {}
 

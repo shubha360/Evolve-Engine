@@ -20,7 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "../include/ImageLoader.h"
+#include "../include/Evolve/ImageLoader.h"
 
 std::map<std::string, Evolve::TextureData> Evolve::ImageLoader::m_textureCache;
 
