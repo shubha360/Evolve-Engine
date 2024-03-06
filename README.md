@@ -37,3 +37,7 @@ Either way, the dependencies stated above should already be installed in the sys
 Contact me through my mail ***shubha360@outlook.com*** if you're having trouble using it. I intend to convert it to a CMake project in the future.
 
 ### Games Created Using This Engine
+
+- [Tetris](https://github.com/shubha360/Tetris_Recreated)
+
+This project is licensed under the **[MIT License](LICENSE)**. You are welcome to make or propose any changes or improvements.
