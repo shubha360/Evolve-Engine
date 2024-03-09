@@ -18,6 +18,8 @@ This is a C++ static library to build simple 2D games. This engine is currently 
 
 - GLEW v2.1.0
 
+- opengl32
+
 - GLM v1.0.0
 
 - FreeType v2.13.2
