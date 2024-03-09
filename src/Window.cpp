@@ -108,12 +108,18 @@ bool Evolve::Window::init(const bool fullScreen, const unsigned int windowWidth,
 	return true;
 }
 
+void Evolve::Window::clearScreen(GLbitfield mask) {
+	glClear(mask);
+}
+
 void Evolve::Window::deleteWindow() {
 	if (m_window != nullptr) {
 		SDL_DestroyWindow(m_window);
 		m_windowWidth = 0;
 		m_windowHeight = 0;
 	}
+
+	SDL_Quit();
 }
 
 void Evolve::Window::swapBuffer() const {

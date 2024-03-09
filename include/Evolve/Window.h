@@ -37,6 +37,8 @@ namespace Evolve {
 		bool init(const bool fullScreen, const unsigned int windowWidth, const unsigned int windowHeight, 
 			const ColorRgba& clearColor);
 
+		void clearScreen(GLbitfield mask);
+
 		void swapBuffer() const;
 
 		void deleteWindow();
