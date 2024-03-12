@@ -4,7 +4,7 @@ This is a C++ static library to build simple 2D games. This engine is currently 
 
 ***Disclaimer:*** When considering performance, this engine might not offer the highest efficiency.
 
-This project is inspired by these learning materials - [MakingGamesWithBen](https://www.youtube.com/@makinggameswithben/featured), [LazyFoo's Tutorials](https://lazyfoo.net/), [The Cherno](https://www.youtube.com/@TheCherno)
+This project takes inspiration from these learning materials - [MakingGamesWithBen](https://www.youtube.com/@makinggameswithben/featured), [LazyFoo's Tutorials](https://lazyfoo.net/), [The Cherno](https://www.youtube.com/@TheCherno)
 
 ### Currently Supported Features
 
