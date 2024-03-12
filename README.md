@@ -2,6 +2,10 @@
 
 This is a C++ static library to build simple 2D games. This engine is currently under development. It uses **SDL2** as its windowing API and **GLEW** to access **OpenGL 3.3** as its graphics API.
 
+***Disclaimer:*** When considering performance, this engine might not offer the highest efficiency.
+
+This project is inspired by these learning materials - [MakingGamesWithBen](https://www.youtube.com/@makinggameswithben/featured), [LazyFoo's Tutorials](https://lazyfoo.net/), [The Cherno](https://www.youtube.com/@TheCherno)
+
 ### Currently Supported Features
 
 - Necessary 2D game features like image loading, input processing, 2D camera, etc.
