@@ -8,35 +8,37 @@ This is a C++ static library to build simple 2D games. This engine is currently 
 
 - FPS counting and limiting.
 
-- Font loading from font files (ttf, otf, etc) and 16 x 16 bitmap font files.
+- Font loading from font files (TTF, OTF, etc) and 16 x 16 bitmap font files.
 
 - Simple GUI creation (buttons and plain text).
 
 ### Dependencies
 
-- SDL v2.28.3
+- SDL 2.28.3
 
-- GLEW v2.1.0
+- GLEW 2.1.0
 
 - opengl32
 
-- GLM v1.0.0
+- GLM 1.0.0
 
-- FreeType v2.13.2
+- FreeType 2.13.2
 
-- stb_image v2.29
+- stb_image 2.29
 
 ### How To Use
 
-This can be used in one of 2 ways - 
+For 32-bit and 64-bit Windows systems, you can download the built library bundled with the additional dependencies from [here](https://github.com/shubha360/Evolve-Engine/releases).
 
-- By copying all the code files into the main project. This approach prevents complexity but makes the project messy with many files.
+Else, this can be used in one of 2 ways - 
+
+- By copying all the code files into the main project. This approach prevents the complexity of building the library but makes the project messy with many files.
 
 - By building this as a C++ static library without any precompiled headers. This approach will prevent unnecessary messiness.
 
 Either way, the dependencies stated above should already be installed in the system.
 
-Contact me through my mail ***shubha360@outlook.com*** if you're having trouble using it. I intend to convert it to a CMake project in the future.
+Please contact me at ***shubha360@outlook.com*** if you're having trouble using it. I intend to convert it to a CMake project in the future.
 
 ### Games Created Using This Engine
 
