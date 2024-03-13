@@ -32,7 +32,7 @@ This project takes inspiration from these learning materials - [MakingGamesWithB
 
 ### How To Use
 
-For 32-bit and 64-bit Windows systems, you can download the built library bundled with the additional dependencies from [here](https://github.com/shubha360/Evolve-Engine/releases).
+For use in Visual Studio on both 32-bit and 64-bit Windows systems, you can download the pre-built library bundled with the additional dependencies from [here](https://github.com/shubha360/Evolve-Engine/releases).
 
 Else, this can be used in one of 2 ways - 
 
