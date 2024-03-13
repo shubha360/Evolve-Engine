@@ -9,14 +9,6 @@
 
 namespace Evolve {
 
-	enum class ShapeOrigin {
-		BOTTOM_LEFT,
-		BOTTOM_RIGHT,
-		TOP_RIGHT,
-		TOP_LEFT,
-		CENTER
-	};
-
 	enum class ShapeSortType {
 		BY_DEPTH_INCREMENTAL,
 		BY_DEPTH_DECREMENTAL
@@ -50,7 +42,7 @@ namespace Evolve {
 			const glm::ivec2 vertexFourPos, ColorRgba& vertexFourColor, 
 			int depth = 0);
 
-		void drawRectangle(const ShapeOrigin origin, const RectDimension& destRect,
+		void drawRectangle(const RectDimension& destRect,
 			ColorRgba& verticesColor, int depth = 0);
 
 		void end(const ShapeSortType& sortType = ShapeSortType::BY_DEPTH_INCREMENTAL);

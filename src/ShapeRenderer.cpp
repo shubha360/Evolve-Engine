@@ -143,56 +143,25 @@ void Evolve::ShapeRenderer::drawRectangle(const glm::ivec2 originPos, ColorRgba&
 	m_totalIndices += m_shapes.back().m_numIndices;
 }
 
-void Evolve::ShapeRenderer::drawRectangle(const ShapeOrigin origin, const RectDimension& destRect,
+void Evolve::ShapeRenderer::drawRectangle(const RectDimension& destRect,
 	ColorRgba& verticesColor, int depth /*= 0*/) {
 
 	std::vector<Vertex2D> vertices(4);
 	
-	int left = 0, bottom = 0;
-	
-	unsigned int width = destRect.width, height = destRect.height;
-
-	// find the bottom left position
-	switch (origin) {
-	case ShapeOrigin::BOTTOM_LEFT:
-		left = destRect.x;
-		bottom = destRect.y;
-		break;
-
-	case ShapeOrigin::BOTTOM_RIGHT:
-		left = destRect.x - width;
-		bottom = destRect.y;
-		break;
-
-	case ShapeOrigin::TOP_RIGHT:
-		left = destRect.x - width;
-		bottom = destRect.y - height;
-		break;
-
-	case ShapeOrigin::TOP_LEFT:
-		left = destRect.x;
-		bottom = destRect.y - height;
-		break;
-
-	case ShapeOrigin::CENTER:
-		left = destRect.x - width / 2;
-		bottom = destRect.y - height / 2;
-		break;
-	}
-
-	vertices[0].setPosition(left, bottom);
+	// bottom left
+	vertices[0].setPosition(destRect.getLeft(), destRect.getBottom());
 	vertices[0].setColor(verticesColor);
 
 	// bottom right
-	vertices[1].setPosition(left + width, bottom);
+	vertices[1].setPosition(destRect.getRight(), destRect.getBottom());
 	vertices[1].setColor(verticesColor);
 
 	// top right
-	vertices[2].setPosition(left + width, bottom + height);
+	vertices[2].setPosition(destRect.getRight(), destRect.getTop());
 	vertices[2].setColor(verticesColor);
 
-	// top right
-	vertices[3].setPosition(left, bottom + height);
+	// top left
+	vertices[3].setPosition(destRect.getLeft(), destRect.getTop());
 	vertices[3].setColor(verticesColor);
 
 	m_shapes.emplace_back(depth, vertices, 4, 6);

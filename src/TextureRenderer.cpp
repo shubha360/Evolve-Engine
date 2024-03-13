@@ -22,63 +22,31 @@ SOFTWARE.
 
 #include "../include/Evolve/TextureRenderer.h"
 
-Evolve::TextureRenderer::Glyph::Glyph(const GlyphOrigin renderOrigin, const RectDimension& destRect,
+Evolve::TextureRenderer::Glyph::Glyph(const RectDimension& destRect,
 	const UvDimension& uvRect, GLuint textureID, 
 	const ColorRgba& color, int depth) :
 	
 	m_textureID(textureID), m_depth(depth)
 {
-	
 	this->m_textureID = textureID;
 
-	int bottomLeftX = 0, bottomLeftY = 0;
-	int width = destRect.width;
-	int height = destRect.height;
-
-	switch (renderOrigin) {
-	case GlyphOrigin::BOTTOM_LEFT:
-		bottomLeftX = destRect.x;
-		bottomLeftY = destRect.y;
-		break;
-
-	case GlyphOrigin::BOTTOM_RIGHT:
-		bottomLeftX = destRect.x - width;
-		bottomLeftY = destRect.y;
-		break;
-
-	case GlyphOrigin::TOP_RIGHT:
-		bottomLeftX = destRect.x - width;
-		bottomLeftY = destRect.y - height;
-		break;
-
-	case GlyphOrigin::TOP_LEFT:
-		bottomLeftX = destRect.x;
-		bottomLeftY = destRect.y - height;
-		break;
-
-	case GlyphOrigin::CENTER:
-		bottomLeftX = destRect.x - width / 2;
-		bottomLeftY = destRect.y - height / 2;
-		break;
-	}
-
 	// BOTTOM LEFT
-	m_vertices[0].setPosition(bottomLeftX, bottomLeftY);
+	m_vertices[0].setPosition(destRect.getLeft(), destRect.getBottom());
 	m_vertices[0].setTextureCoords(uvRect.bottomLeftX, uvRect.bottomLeftY);
 	m_vertices[0].color = color;
 
 	// BOTTOM RIGHT
-	m_vertices[1].setPosition(bottomLeftX + width, bottomLeftY);
+	m_vertices[1].setPosition(destRect.getRight(), destRect.getBottom());
 	m_vertices[1].setTextureCoords(uvRect.bottomLeftX + uvRect.width, uvRect.bottomLeftY);
 	m_vertices[1].color = color;
 
 	// TOP RIGHT
-	m_vertices[2].setPosition(bottomLeftX + width, bottomLeftY + height);
+	m_vertices[2].setPosition(destRect.getRight(), destRect.getTop());
 	m_vertices[2].setTextureCoords(uvRect.bottomLeftX + uvRect.width, uvRect.bottomLeftY + uvRect.height);
 	m_vertices[2].color = color;
 
 	// TOP LEFT
-	m_vertices[3].setPosition(bottomLeftX, bottomLeftY + height);
+	m_vertices[3].setPosition(destRect.getLeft(), destRect.getTop());
 	m_vertices[3].setTextureCoords(uvRect.bottomLeftX, uvRect.bottomLeftY + uvRect.height);
 	m_vertices[3].color = color;
 }
@@ -144,7 +112,7 @@ void Evolve::TextureRenderer::begin(Camera& camera, GlslProgram* shader /*= null
 	}
 }
 
-void Evolve::TextureRenderer::draw(const GlyphOrigin renderOrigin, const RectDimension& destRect, const UvDimension& uvRect,
+void Evolve::TextureRenderer::draw(const RectDimension& destRect, const UvDimension& uvRect,
 	GLuint textureID, const ColorRgba& color, int depth /*= 1*/) {
 
 	if (!m_inited) {
@@ -152,7 +120,7 @@ void Evolve::TextureRenderer::draw(const GlyphOrigin renderOrigin, const RectDim
 		return;
 	}
 
-	m_glyphs.emplace_back(renderOrigin, destRect, uvRect, textureID, color, depth);
+	m_glyphs.emplace_back(destRect, uvRect, textureID, color, depth);
 }
 
 void Evolve::TextureRenderer::end(const GlyphSortType& sortType /*= GlyphSortType::BY_TEXTURE_ID_INCREMENTAL*/) {

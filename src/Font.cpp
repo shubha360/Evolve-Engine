@@ -380,7 +380,7 @@ void Evolve::Font::drawTextToRenderer(const std::string& text, const int topLeft
 	int drawX = topLeftX;
 	int drawY = topLeftY;
 	
-	RectDimension currentDims = {};
+	RectDimension currentDims;
 
 	for (int i = 0; i < text.length(); i++) {
 		if (text[i] == ' ') {
@@ -394,6 +394,7 @@ void Evolve::Font::drawTextToRenderer(const std::string& text, const int topLeft
 			unsigned int ASCII = (unsigned char) text[i];
 
 			currentDims.set(
+				Origin::TOP_LEFT,
 				drawX,
 				drawY,
 				(unsigned int) (m_characterWidths[ASCII] * m_fontScale),
@@ -401,7 +402,6 @@ void Evolve::Font::drawTextToRenderer(const std::string& text, const int topLeft
 			);
 
 			textureRenderer.draw(
-				GlyphOrigin::TOP_LEFT,
 				currentDims,
 				m_uvDimensions[ASCII],
 				m_fontTexture.id,

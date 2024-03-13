@@ -22,17 +22,43 @@ SOFTWARE.
 
 #pragma once
 
-namespace Evolve {
+namespace Evolve {	
 
-	struct RectDimension {
-		int x, y;
-		unsigned int width, height;
+	enum class Origin {
+		BOTTOM_LEFT,
+		BOTTOM_RIGHT,
+		TOP_RIGHT,
+		TOP_LEFT,
+		CENTER
+	};
 
-		void set(int x, int y, unsigned int width, unsigned int height) {
-			this->x = x;
-			this->y = y;
-			this->width = width;
-			this->height = height;
-		}
+	class RectDimension {
+	public:
+		RectDimension();
+		RectDimension(Origin origin, int x, int y, unsigned int width, unsigned int height);
+		~RectDimension();
+
+		void set(Origin origin, int x, int y, unsigned int width, unsigned int height);
+
+		inline Origin getOrigin() const { return m_origin; }
+
+		inline int getLeft() const { return m_left; };
+		inline int getRight() const { return m_left + m_width; };
+
+		inline int getBottom() const { return m_bottom; };
+		inline int getTop() const { return m_bottom + m_height; };
+		
+		inline unsigned int getWidth() const { return m_width; }
+		inline unsigned int getHeight() const { return m_height; }
+
+		inline int getCenterX() const { return m_left + m_width / 2; };
+		inline int getCenterY() const { return m_bottom + m_height / 2; };
+
+	private:
+		Origin m_origin = Origin::BOTTOM_LEFT;
+		int m_left = 0, m_bottom = 0;
+		unsigned int m_width = 0, m_height = 0;
+
+		void findBottomLeft(Origin origin);
 	};
 }

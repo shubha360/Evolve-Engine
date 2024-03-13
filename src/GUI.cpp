@@ -50,7 +50,7 @@ int Evolve::Gui::addFont(Font& font) {
 
 int Evolve::Gui::addTextButton(const std::string& label, const unsigned int fontId, float labelScale,
 	const ColorRgba& textColor, const ColorRgba& buttonColor,
-	const GlyphOrigin& renderOrigin, const RectDimension& dimension, std::function<void()> buttonFunction) {
+	const RectDimension& dimension, std::function<void()> buttonFunction) {
 
 	if (fontId < 0 || fontId >= m_fonts.size()) {
 		EVOLVE_REPORT_ERROR("Invalid font ID used.", addTextButton);
@@ -58,7 +58,7 @@ int Evolve::Gui::addTextButton(const std::string& label, const unsigned int font
 	}
 
 	m_components.emplace_back(
-		new Button(label, fontId, labelScale, textColor, buttonColor, renderOrigin, dimension, buttonFunction)
+		new Button(label, fontId, labelScale, textColor, buttonColor, dimension, buttonFunction)
 	);
 	
 	return (int) (m_components.size() - 1);
@@ -95,10 +95,10 @@ int Evolve::Gui::addBlinkingText(const std::string& text, const unsigned int fon
 	return (int)(m_components.size() - 1);
 }
 
-int Evolve::Gui::addPanel(const RectDimension& dimension, const GlyphOrigin& renderOrigin, const ColorRgba& color) {
+int Evolve::Gui::addPanel(const RectDimension& dimension, const ColorRgba& color) {
 	
 	m_components.emplace_back(
-		new Panel(dimension, renderOrigin, color)
+		new Panel(dimension, color)
 	);
 
 	return (int)(m_components.size() - 1);
@@ -118,8 +118,9 @@ void Evolve::Gui::setComponentPosition(const int id, const glm::ivec2& position)
 		EVOLVE_REPORT_ERROR("Invalid component ID used.", setComponentPosition);
 	}
 
-	m_components[id]->m_dimension.x = position.x;
-	m_components[id]->m_dimension.y = position.y;
+	auto dim = m_components[id]->m_dimension;
+
+	dim.set(dim.getOrigin(), position.x, position.y, dim.getWidth(), dim.getHeight());
 }
 
 int Evolve::Gui::getLabelWidth(const int id) {
@@ -225,16 +226,16 @@ void Evolve::Gui::freeGui() {
 
 bool Evolve::Gui::isMouseInsideComponent(const glm::ivec2& mouseScreenCoords, Component& component) {
 
-	int compWidth = component.m_dimension.width;
-	int compHeight = component.m_dimension.height;
+	int compLeft = component.m_dimension.getLeft();
+	int compRight = component.m_dimension.getRight();
 
-	int compBottomLeftX = component.m_centerX - compWidth / 2;
-	int compBottomLeftY = component.m_centerY - compHeight / 2;
+	int compBottom = component.m_dimension.getBottom();
+	int compTop = component.m_dimension.getTop();
 
 	if (
-		(mouseScreenCoords.x >= compBottomLeftX && mouseScreenCoords.x <= compBottomLeftX + compWidth)
+		(mouseScreenCoords.x >= compLeft && mouseScreenCoords.x <= compRight)
 		&&
-		(mouseScreenCoords.y >= compBottomLeftY && mouseScreenCoords.y <= compBottomLeftY + compHeight)
+		(mouseScreenCoords.y >= compBottom && mouseScreenCoords.y <= compTop)
 		) {
 		return true;
 	}
@@ -246,39 +247,8 @@ Evolve::Gui::Component::Component() {}
 
 Evolve::Gui::Component::~Component() {}
 
-void Evolve::Gui::Component::findComponentCenter() {
-
-	switch (m_renderOrigin) {
-	case GlyphOrigin::BOTTOM_LEFT:
-
-		m_centerX = m_dimension.x + (m_dimension.width / 2);
-		m_centerY = m_dimension.y + (m_dimension.height / 2);
-		break;
-
-	case GlyphOrigin::BOTTOM_RIGHT:
-		m_centerX = m_dimension.x - (m_dimension.width / 2);
-		m_centerY = m_dimension.y + (m_dimension.height / 2);
-		break;
-
-	case GlyphOrigin::TOP_RIGHT:
-		m_centerX = m_dimension.x - (m_dimension.width / 2);
-		m_centerY = m_dimension.y - (m_dimension.height / 2);
-		break;
-
-	case GlyphOrigin::TOP_LEFT:
-		m_centerX = m_dimension.x + (m_dimension.width / 2);
-		m_centerY = m_dimension.y - (m_dimension.height / 2);
-		break;
-
-	case GlyphOrigin::CENTER:
-		m_centerX = m_dimension.x;
-		m_centerY = m_dimension.y;
-		break;
-	}
-}
-
 Evolve::Gui::Button::Button(const std::string& label, const unsigned int fontId, float labelScale,
-	const ColorRgba& textColor, const ColorRgba& buttonColor, const GlyphOrigin& renderOrigin, 
+	const ColorRgba& textColor, const ColorRgba& buttonColor, 
 	const RectDimension& dimension, std::function<void()> buttonFunction) :
 	 
 	m_buttonColor(buttonColor),
@@ -286,7 +256,6 @@ Evolve::Gui::Button::Button(const std::string& label, const unsigned int fontId,
 {
 	m_label = label;
 	m_type = ComponentType::BUTTON;
-	m_renderOrigin = renderOrigin;
 	m_dimension = dimension;
 	m_labelScale = labelScale;
 	m_primaryColor = textColor;
@@ -295,7 +264,8 @@ Evolve::Gui::Button::Button(const std::string& label, const unsigned int fontId,
 	m_isFunctional = true;
 	m_isVisible = true;
 
-	findComponentCenter();
+	m_centerX = m_dimension.getCenterX();
+	m_centerY = m_dimension.getCenterY();
 }
 
 Evolve::Gui::PlainText::PlainText(const std::string& text, const unsigned int fontId, float scale,
@@ -306,7 +276,8 @@ Evolve::Gui::PlainText::PlainText(const std::string& text, const unsigned int fo
 	m_fontId = fontId;
 	m_labelScale = scale;
 	m_primaryColor = color;
-	m_dimension = { position.x, position.y, 0, 0 };
+	
+	m_dimension.set(Origin::TOP_LEFT, position.x, position.y, 0, 0);
 
 	m_isFunctional = false;
 	m_isVisible = true;
@@ -323,15 +294,15 @@ Evolve::Gui::BlinkingText::BlinkingText(const std::string& text, const unsigned 
 	m_fontId = fontId;
 	m_labelScale = scale;
 	m_primaryColor = color;
-	m_dimension = { position.x, position.y, 0, 0 };
+	
+	m_dimension.set(Origin::TOP_LEFT, position.x, position.y, 0, 0);
 
 	m_isFunctional = false;
 	m_isVisible = true;
 }
 
-Evolve::Gui::Panel::Panel(const RectDimension& dimension, const GlyphOrigin& renderOrigin, const ColorRgba& color) {
+Evolve::Gui::Panel::Panel(const RectDimension& dimension, const ColorRgba& color) {
 	m_type = ComponentType::PANEL;
-	m_renderOrigin = renderOrigin;
 	m_primaryColor = color;
 	m_dimension = dimension;
 

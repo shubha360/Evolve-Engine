@@ -53,7 +53,7 @@ namespace Evolve {
 		// pass 0 to fontId to use the default font
 		int addTextButton(const std::string& label, const unsigned int fontId, float labelScale,
 			const ColorRgba& textColor, const ColorRgba& buttonColor,
-			const GlyphOrigin& renderOrigin, const RectDimension& dimension, std::function<void()> buttonFunction);
+			const RectDimension& dimension, std::function<void()> buttonFunction);
 
 		// returns the id of the component
 		// pass 0 to fontId to use the default font
@@ -68,7 +68,7 @@ namespace Evolve {
 
 		// returns the id of the component
 		// pass 0 to fontId to use the default font
-		int addPanel(const RectDimension& dimension, const GlyphOrigin& renderOrigin, const ColorRgba& color);
+		int addPanel(const RectDimension& dimension, const ColorRgba& color);
 
 		void setComponentLabel(const int id, const std::string& text);
 		void setComponentPosition(const int id, const glm::ivec2& position);
@@ -103,9 +103,8 @@ namespace Evolve {
 
 		protected:
 			std::string m_label = "";
-			GlyphOrigin m_renderOrigin = GlyphOrigin::BOTTOM_LEFT;
 			ComponentType m_type = ComponentType::NONE;
-			RectDimension m_dimension = {};
+			RectDimension m_dimension;
 			float m_labelScale = 0;
 			ColorRgba m_primaryColor = {};
 			unsigned int m_fontId = 0;
@@ -118,8 +117,6 @@ namespace Evolve {
 			bool m_isFunctional = true;
 			bool m_isVisible = true;
 			bool m_labelCoordinatesFound = false;
-
-			void findComponentCenter();
 		};
 
 		class Button : public Component {
@@ -128,7 +125,7 @@ namespace Evolve {
 			friend class GuiRenderer;
 
 			Button(const std::string& label, const unsigned int fontId, float labelScale,
-				const ColorRgba& textColor, const ColorRgba& buttonColor, const GlyphOrigin& renderOrigin,
+				const ColorRgba& textColor, const ColorRgba& buttonColor,
 				const RectDimension& dimension, std::function<void()> buttonFunction);
 
 		private:
@@ -163,7 +160,7 @@ namespace Evolve {
 			friend class Gui;
 			friend class GuiRenderer;
 
-			Panel(const RectDimension& dimension, const GlyphOrigin& renderOrigin, const ColorRgba& color);
+			Panel(const RectDimension& dimension, const ColorRgba& color);
 		};
 
 		std::vector<std::unique_ptr<Component>> m_components;

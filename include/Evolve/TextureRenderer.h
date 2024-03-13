@@ -32,14 +32,6 @@ SOFTWARE.
 
 namespace Evolve {
 
-	enum class GlyphOrigin {
-		BOTTOM_LEFT,
-		BOTTOM_RIGHT,
-		TOP_RIGHT,
-		TOP_LEFT,
-		CENTER
-	};
-
 	enum class GlyphSortType {
 		BY_TEXTURE_ID_INCREMENTAL,
 		BY_TEXTURE_ID_DECREMENTAL,
@@ -57,7 +49,7 @@ namespace Evolve {
 		// the default shader will be used if no shader passed
 		void begin(Camera& camera, GlslProgram* shader = nullptr);
 
-		void draw(const GlyphOrigin renderOrigin, const RectDimension& destRect, const UvDimension& uvRect,
+		void draw(const RectDimension& destRect, const UvDimension& uvRect,
 			GLuint textureID, const ColorRgba& color, int depth = 0);
 
 		void end(const GlyphSortType& sortType = GlyphSortType::BY_TEXTURE_ID_INCREMENTAL);
@@ -72,7 +64,7 @@ namespace Evolve {
 			friend class TextureRenderer;
 			friend class RenderBatch;
 
-			Glyph(const GlyphOrigin renderOrigin, const RectDimension& destRect, const UvDimension& uvRect,
+			Glyph(const RectDimension& destRect, const UvDimension& uvRect,
 				GLuint textureID, const ColorRgba& color, int depth);
 
 		private:

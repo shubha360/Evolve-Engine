@@ -61,7 +61,6 @@ void Evolve::GuiRenderer::renderGui(Gui& gui, Camera& camera) {
 				Font* font = gui.m_fonts[button->m_fontId];
 
 				m_renderer.draw(
-					button->m_renderOrigin,
 					button->m_dimension,
 					UvDimension{ 0.0f, 0.0f, 1.0f, 1.0f },
 					m_roundedRectButtonTexture.id,
@@ -89,8 +88,8 @@ void Evolve::GuiRenderer::renderGui(Gui& gui, Camera& camera) {
 
 				font->setFontScale(plainText->m_labelScale);
 
-				font->drawTextToRenderer(plainText->m_label, plainText->m_dimension.x,
-					plainText->m_dimension.y, plainText->m_primaryColor, m_renderer);
+				font->drawTextToRenderer(plainText->m_label, plainText->m_dimension.getLeft(),
+					plainText->m_dimension.getTop(), plainText->m_primaryColor, m_renderer);
 			}
 
 			// BLINKING_TEXT
@@ -104,8 +103,8 @@ void Evolve::GuiRenderer::renderGui(Gui& gui, Camera& camera) {
 
 					font->setFontScale(blinkingText->m_labelScale);
 
-					font->drawTextToRenderer(blinkingText->m_label, blinkingText->m_dimension.x,
-						blinkingText->m_dimension.y, blinkingText->m_primaryColor, m_renderer);
+					font->drawTextToRenderer(blinkingText->m_label, blinkingText->m_dimension.getLeft(),
+						blinkingText->m_dimension.getTop(), blinkingText->m_primaryColor, m_renderer);
 				}
 				else {
 					if (blinkingText->m_time > blinkingText->m_onDuration + blinkingText->m_offDuration) {
@@ -117,7 +116,6 @@ void Evolve::GuiRenderer::renderGui(Gui& gui, Camera& camera) {
 			// PANEL
 			else if (comp->m_type == Gui::Component::ComponentType::PANEL) {
 				m_renderer.draw(
-					comp->m_renderOrigin,
 					comp->m_dimension,
 					UvDimension{ 0.0f, 0.0f, 1.0f, 1.0f },
 					m_roundedRectButtonTexture.id,
