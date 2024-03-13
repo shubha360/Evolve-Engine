@@ -44,7 +44,6 @@ namespace Evolve {
 		void freeGuiRenderer();
 
 	private:
-		GlslProgram m_glslProgram;
 		TextureRenderer m_renderer;
 
 		TextureData m_roundedRectButtonTexture;

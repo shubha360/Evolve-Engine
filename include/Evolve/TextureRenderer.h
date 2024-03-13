@@ -24,6 +24,8 @@ SOFTWARE.
 
 #include "IncludeLibs.h"
 
+#include "GlslProgram.h"
+#include "Camera.h"
 #include "RectDimension.h"
 #include "UvDimension.h"
 #include "Vertex2D.h"
@@ -41,8 +43,8 @@ namespace Evolve {
 	enum class GlyphSortType {
 		BY_TEXTURE_ID_INCREMENTAL,
 		BY_TEXTURE_ID_DECREMENTAL,
-		BY_DEPTH_INCREMENTAL,
-		BY_DEPTH_DECREMENTAL,
+		/*BY_DEPTH_INCREMENTAL,
+		BY_DEPTH_DECREMENTAL*/
 	};
 
 	class TextureRenderer {
@@ -50,10 +52,13 @@ namespace Evolve {
 		TextureRenderer();
 		~TextureRenderer();
 
-		void begin();
+		bool init(const std::string& pathToAssets);
+
+		// the default shader will be used if no shader passed
+		void begin(Camera& camera, GlslProgram* shader = nullptr);
 
 		void draw(const GlyphOrigin renderOrigin, const RectDimension& destRect, const UvDimension& uvRect,
-			GLuint textureID, const ColorRgba& color, int depth = 1);
+			GLuint textureID, const ColorRgba& color, int depth = 0);
 
 		void end(const GlyphSortType& sortType = GlyphSortType::BY_TEXTURE_ID_INCREMENTAL);
 
@@ -72,7 +77,7 @@ namespace Evolve {
 
 		private:
 			GLuint m_textureID = 0;
-			int m_depth = 1;
+			int m_depth = 0;
 
 			Vertex2D m_vertices[4] = {};
 		};
@@ -90,10 +95,13 @@ namespace Evolve {
 			GLuint m_iboID = 0;
 		};
 
+		GlslProgram m_defaultShader;
+		GlslProgram* m_currentShader = nullptr;
+
+		bool m_inited = false;
+
 		GLuint m_vaoID = 0, m_vboID = 0;
 		std::vector<GLuint> m_iboIDs;
-
-		//std::vector<GLuint> m_vertexIndices;
 
 		std::vector<Glyph> m_glyphs;
 		std::vector<Glyph*> m_glyphPointers;
@@ -105,7 +113,7 @@ namespace Evolve {
 
 		static bool compareByTextureIdIncremental(Glyph* a, Glyph* b);
 		static bool compareByTextureIdDecremental(Glyph* a, Glyph* b);
-		static bool compareByDepthIncremental(Glyph* a, Glyph* b);
-		static bool compareByDepthDecremental(Glyph* a, Glyph* b);
+		/*static bool compareByDepthIncremental(Glyph* a, Glyph* b);
+		static bool compareByDepthDecremental(Glyph* a, Glyph* b);*/
 	};
 }

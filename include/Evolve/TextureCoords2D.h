@@ -30,7 +30,7 @@ namespace Evolve {
 		GLfloat u;
 		GLfloat v;
 
-		void set(GLfloat u, GLfloat v) {
+		void set(const GLfloat u, const GLfloat v) {
 			this->u = u;
 			this->v = v;
 		}

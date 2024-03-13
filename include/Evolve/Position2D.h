@@ -28,9 +28,14 @@ namespace Evolve {
 	struct Position2D {
 		GLint x, y;
 
-		void set(GLint x, GLint y) {
+		void set(const GLint x, const GLint y) {
 			this->x = x;
 			this->y = y;
+		}
+
+		void set(const glm::ivec2 pos) {
+			this->x = pos.x;
+			this->y = pos.y;
 		}
 	};
 }

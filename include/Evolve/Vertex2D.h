@@ -22,6 +22,8 @@ SOFTWARE.
 
 #pragma once
 
+#include "IncludeLibs.h"
+
 #include "Position2D.h"
 #include "ColorRgba.h"
 #include "TextureCoords2D.h"
@@ -33,19 +35,23 @@ namespace Evolve {
 		ColorRgba color;
 		TextureCoords2D textureCoords;
 
-		void setPosition(GLint x, GLint y) {
+		void setPosition(const GLint x, const GLint y) {
 			position.set(x, y);
 		}
 
-		void setColor(GLubyte red, GLubyte green, GLubyte blue, GLubyte alpha) {
+		void setPosition(const glm::ivec2 pos) {
+			position.set(pos);
+		}
+
+		void setColor(const GLubyte red, const GLubyte green, const GLubyte blue, const GLubyte alpha) {
 			color.set(red, green, blue, alpha);
 		}
 
-		void setColor(ColorRgba& newColor) {
+		void setColor(const ColorRgba& newColor) {
 			color.set(newColor.red, newColor.green, newColor.blue, newColor.alpha);
 		}
 
-		void setTextureCoords(GLfloat u, GLfloat v) {
+		void setTextureCoords(const GLfloat u, const GLfloat v) {
 			textureCoords.set(u, v);
 		}
 	};

@@ -57,9 +57,9 @@ int Evolve::Gui::addTextButton(const std::string& label, const unsigned int font
 		return -1;
 	}
 
-	m_components.push_back(std::unique_ptr<Component>(
+	m_components.emplace_back(
 		new Button(label, fontId, labelScale, textColor, buttonColor, renderOrigin, dimension, buttonFunction)
-	));
+	);
 	
 	return (int) (m_components.size() - 1);
 }
@@ -72,9 +72,9 @@ int Evolve::Gui::addPlainText(const std::string& text, const unsigned int fontId
 		return -1;
 	}
 
-	m_components.push_back(std::unique_ptr<Component>(
+	m_components.emplace_back(
 		new PlainText(text, fontId, scale, color, topLeftPosition)
-	));
+	);
 
 	return (int) (m_components.size() - 1);
 }
@@ -88,18 +88,18 @@ int Evolve::Gui::addBlinkingText(const std::string& text, const unsigned int fon
 		return -1;
 	}
 
-	m_components.push_back(std::unique_ptr<Component>(
+	m_components.emplace_back(
 		new BlinkingText(text, fontId, scale, color, topLeftPosition, onDuration, offDuration)
-	));
+	);
 
 	return (int)(m_components.size() - 1);
 }
 
 int Evolve::Gui::addPanel(const RectDimension& dimension, const GlyphOrigin& renderOrigin, const ColorRgba& color) {
 	
-	m_components.push_back(std::unique_ptr<Component>(
+	m_components.emplace_back(
 		new Panel(dimension, renderOrigin, color)
-	));
+	);
 
 	return (int)(m_components.size() - 1);
 }

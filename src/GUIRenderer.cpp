@@ -30,17 +30,12 @@ Evolve::GuiRenderer::~GuiRenderer() {
 
 bool Evolve::GuiRenderer::init(const std::string& pathToAssets) {
 
-	std::string vertShaderPath = pathToAssets + "/gui/shaders/gui_shader.vert";
-	std::string fragShaderPath = pathToAssets + "/gui/shaders/gui_shader.frag";
-	
-	std::string buttonImagePath = pathToAssets + "/gui/images/button_bg.png";
-
-	if (!m_glslProgram.compileAndLinkShaders(
-		vertShaderPath,
-		fragShaderPath)) {
-		EVOLVE_REPORT_ERROR("Failed to compile or link Gui shader.", init);
+	if (!m_renderer.init(pathToAssets)) {
+		EVOLVE_REPORT_ERROR("Failed to initialize gui renderer.", init);
 		return false;
 	}
+
+	std::string buttonImagePath = pathToAssets + "/gui/images/button_bg.png";
 
 	ImageLoader::LoadTextureFromImage(
 		buttonImagePath, m_roundedRectButtonTexture, 4
@@ -52,16 +47,8 @@ bool Evolve::GuiRenderer::init(const std::string& pathToAssets) {
 }
 
 void Evolve::GuiRenderer::renderGui(Gui& gui, Camera& camera) {
-	
-	m_glslProgram.useProgram();
 
-	glActiveTexture(GL_TEXTURE0);
-	GLint samplerLoc = m_glslProgram.getUniformLocation("u_imageSampler");
-	glUniform1i(samplerLoc, 0);
-
-	camera.sendMatrixDataToShader(m_glslProgram);
-
-	m_renderer.begin();
+	m_renderer.begin(camera);
 
 	for (auto& comp : gui.m_components) {
 
@@ -147,10 +134,8 @@ void Evolve::GuiRenderer::renderGui(Gui& gui, Camera& camera) {
 
 void Evolve::GuiRenderer::freeGuiRenderer() {
 	ImageLoader::DeleteTexture(m_roundedRectButtonTexture);
-	//m_font.deleteFont();
 
 	m_renderer.freeTextureRenderer();
-	m_glslProgram.freeProgram();
 }
 
 void Evolve::GuiRenderer::getLabelCoordinates(int& x, int& y, const std::string& label,
