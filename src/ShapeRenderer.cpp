@@ -22,18 +22,7 @@ bool Evolve::ShapeRenderer::init(const std::string& pathToAssets) {
 	return true;
 }
 
-void Evolve::ShapeRenderer::begin(Camera& camera, GlslProgram* shader /*= nullptr*/) {
-	if (shader != nullptr) {
-		m_currentShader = shader;
-	}
-	else {
-		m_currentShader = &m_defaultShader;
-	}
-
-	m_currentShader->useProgram();
-
-	camera.sendMatrixDataToShader(*m_currentShader);
-
+void Evolve::ShapeRenderer::begin() {
 	if (m_vaoID == 0) {
 		createVao();
 	}
@@ -198,11 +187,22 @@ void Evolve::ShapeRenderer::end(const ShapeSortType& sortType /*= ShapeSortType:
 	}
 }
 
-void Evolve::ShapeRenderer::renderShapes() {
+void Evolve::ShapeRenderer::renderShapes(Camera& camera, GlslProgram* shader /*= nullptr*/) {
 	if (!m_inited) {
 		EVOLVE_REPORT_ERROR("Shape renderer not initialized.", begin);
 		return;
 	}
+
+	if (shader != nullptr) {
+		m_currentShader = shader;
+	}
+	else {
+		m_currentShader = &m_defaultShader;
+	}
+
+	m_currentShader->useProgram();
+
+	camera.sendMatrixDataToShader(*m_currentShader);
 
 	if (!m_shapeBatches.empty()) {
 		glBindVertexArray(m_vaoID);

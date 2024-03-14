@@ -76,27 +76,12 @@ bool Evolve::TextureRenderer::init(const std::string& pathToAssets) {
 	return true;
 }
 
-void Evolve::TextureRenderer::begin(Camera& camera, GlslProgram* shader /*= nullptr*/) {
+void Evolve::TextureRenderer::begin() {
 
 	if (!m_inited) {
 		EVOLVE_REPORT_ERROR("Texture renderer not initialized.", begin);
 		return;
 	}
-
-	if (shader != nullptr) {
-		m_currentShader = shader;
-	}
-	else {
-		m_currentShader = &m_defaultShader;
-	}
-
-	m_currentShader->useProgram();
-
-	camera.sendMatrixDataToShader(*m_currentShader);
-
-	glActiveTexture(GL_TEXTURE0);
-	GLint samplerLoc = m_currentShader->getUniformLocation("u_imageSampler");
-	glUniform1i(samplerLoc, 0);
 
 	if (m_vaoID == 0) {
 		createVao();
@@ -160,12 +145,27 @@ void Evolve::TextureRenderer::end(const GlyphSortType& sortType /*= GlyphSortTyp
 	}
 }
 
-void Evolve::TextureRenderer::renderTextures() {
+void Evolve::TextureRenderer::renderTextures(Camera& camera, GlslProgram* shader /*= nullptr*/) {
 
 	if (!m_inited) {
 		EVOLVE_REPORT_ERROR("Texture renderer not initialized.", begin);
 		return;
 	}
+
+	if (shader != nullptr) {
+		m_currentShader = shader;
+	}
+	else {
+		m_currentShader = &m_defaultShader;
+	}
+
+	m_currentShader->useProgram();
+
+	camera.sendMatrixDataToShader(*m_currentShader);
+
+	glActiveTexture(GL_TEXTURE0);
+	GLint samplerLoc = m_currentShader->getUniformLocation("u_imageSampler");
+	glUniform1i(samplerLoc, 0);
 
 	if (!m_renderBatches.empty()) {
 		glBindVertexArray(m_vaoID);
@@ -184,11 +184,6 @@ void Evolve::TextureRenderer::renderTextures() {
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);
-
-		//for (auto& id : m_iboIDs) {
-		//	printf("%d ", id);
-		//}
-		//printf("\n\n");
 	}
 
 	m_currentShader->unuseProgram();

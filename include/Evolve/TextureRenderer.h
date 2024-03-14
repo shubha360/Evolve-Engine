@@ -47,14 +47,14 @@ namespace Evolve {
 		bool init(const std::string& pathToAssets);
 
 		// the default shader will be used if no shader passed
-		void begin(Camera& camera, GlslProgram* shader = nullptr);
+		void begin();
 
 		void draw(const RectDimension& destRect, const UvDimension& uvRect,
 			GLuint textureID, const ColorRgba& color, int depth = 0);
 
 		void end(const GlyphSortType& sortType = GlyphSortType::BY_TEXTURE_ID_INCREMENTAL);
 
-		void renderTextures();
+		void renderTextures(Camera& camera, GlslProgram* shader = nullptr);
 
 		void freeTextureRenderer();
 

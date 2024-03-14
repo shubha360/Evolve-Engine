@@ -22,7 +22,7 @@ namespace Evolve {
 		bool init(const std::string& pathToAssets);
 
 		// the default shader will be used if no shader passed
-		void begin(Camera& camera, GlslProgram* shader = nullptr);
+		void begin();
 
 		void drawTriangle(const glm::ivec2 originPos, const glm::ivec2 vertexTwoPos, const glm::ivec2 vertexThreePos, 
 			const ColorRgba& verticesColor, const int depth = 0);
@@ -47,7 +47,7 @@ namespace Evolve {
 
 		void end(const ShapeSortType& sortType = ShapeSortType::BY_DEPTH_INCREMENTAL);
 
-		void renderShapes();
+		void renderShapes(Camera& camera, GlslProgram* shader = nullptr);
 
 		void freeShapeRenderer();
 

@@ -26,6 +26,7 @@ SOFTWARE.
 #include "Font.h"
 #include "ErrorReporter.h"
 #include "TextureRenderer.h"
+#include "ShapeRenderer.h"
 #include "ImageLoader.h"
 #include "Camera.h"
 #include "Gui.h"
@@ -44,9 +45,8 @@ namespace Evolve {
 		void freeGuiRenderer();
 
 	private:
-		TextureRenderer m_renderer;
-
-		TextureData m_roundedRectButtonTexture;
+		TextureRenderer textureRenderer_;
+		ShapeRenderer shapeRenderer_;
 
 		void getLabelCoordinates(int& x, int& y, const std::string& label,
 			const int componentCenterX, const int componentCenterY, Font& font);

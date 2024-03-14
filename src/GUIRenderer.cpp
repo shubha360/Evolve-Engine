@@ -30,25 +30,23 @@ Evolve::GuiRenderer::~GuiRenderer() {
 
 bool Evolve::GuiRenderer::init(const std::string& pathToAssets) {
 
-	if (!m_renderer.init(pathToAssets)) {
-		EVOLVE_REPORT_ERROR("Failed to initialize gui renderer.", init);
+	if (!shapeRenderer_.init(pathToAssets)) {
+		EVOLVE_REPORT_ERROR("Failed to initialize gui shape renderer.", init);
 		return false;
 	}
 
-	std::string buttonImagePath = pathToAssets + "/gui/images/button_bg.png";
-
-	ImageLoader::LoadTextureFromImage(
-		buttonImagePath, m_roundedRectButtonTexture, 4
-	);
-	ImageLoader::BufferTextureData(m_roundedRectButtonTexture);
-	ImageLoader::FreeTexture(m_roundedRectButtonTexture);
+	if (!textureRenderer_.init(pathToAssets)) {
+		EVOLVE_REPORT_ERROR("Failed to initialize gui font renderer.", init);
+		return false;
+	}
 
 	return true;
 }
 
 void Evolve::GuiRenderer::renderGui(Gui& gui, Camera& camera) {
 
-	m_renderer.begin(camera);
+	textureRenderer_.begin();
+	shapeRenderer_.begin();	
 
 	for (auto& comp : gui.m_components) {
 
@@ -60,10 +58,8 @@ void Evolve::GuiRenderer::renderGui(Gui& gui, Camera& camera) {
 				Gui::Button* button = (Gui::Button*)comp.get();
 				Font* font = gui.m_fonts[button->m_fontId];
 
-				m_renderer.draw(
+				shapeRenderer_.drawRectangle(
 					button->m_dimension,
-					UvDimension{ 0.0f, 0.0f, 1.0f, 1.0f },
-					m_roundedRectButtonTexture.id,
 					button->m_buttonColor
 				);
 
@@ -77,7 +73,7 @@ void Evolve::GuiRenderer::renderGui(Gui& gui, Camera& camera) {
 				}
 
 				font->drawTextToRenderer(button->m_label, button->m_labelTopLeftX,
-					button->m_labelTopLeftY, button->m_primaryColor, m_renderer);
+					button->m_labelTopLeftY, button->m_primaryColor, textureRenderer_);
 			}
 
 			// PLAIN TEXT
@@ -89,7 +85,7 @@ void Evolve::GuiRenderer::renderGui(Gui& gui, Camera& camera) {
 				font->setFontScale(plainText->m_labelScale);
 
 				font->drawTextToRenderer(plainText->m_label, plainText->m_dimension.getLeft(),
-					plainText->m_dimension.getTop(), plainText->m_primaryColor, m_renderer);
+					plainText->m_dimension.getTop(), plainText->m_primaryColor, textureRenderer_);
 			}
 
 			// BLINKING_TEXT
@@ -104,7 +100,7 @@ void Evolve::GuiRenderer::renderGui(Gui& gui, Camera& camera) {
 					font->setFontScale(blinkingText->m_labelScale);
 
 					font->drawTextToRenderer(blinkingText->m_label, blinkingText->m_dimension.getLeft(),
-						blinkingText->m_dimension.getTop(), blinkingText->m_primaryColor, m_renderer);
+						blinkingText->m_dimension.getTop(), blinkingText->m_primaryColor, textureRenderer_);
 				}
 				else {
 					if (blinkingText->m_time > blinkingText->m_onDuration + blinkingText->m_offDuration) {
@@ -115,25 +111,24 @@ void Evolve::GuiRenderer::renderGui(Gui& gui, Camera& camera) {
 
 			// PANEL
 			else if (comp->m_type == Gui::Component::ComponentType::PANEL) {
-				m_renderer.draw(
+				shapeRenderer_.drawRectangle(
 					comp->m_dimension,
-					UvDimension{ 0.0f, 0.0f, 1.0f, 1.0f },
-					m_roundedRectButtonTexture.id,
 					comp->m_primaryColor
 				);
 			}
 		}
 	}
 
-	m_renderer.end(GlyphSortType::BY_TEXTURE_ID_DECREMENTAL);
+	textureRenderer_.end();
+	shapeRenderer_.end();
 
-	m_renderer.renderTextures();
+	shapeRenderer_.renderShapes(camera);
+	textureRenderer_.renderTextures(camera);
 }
 
 void Evolve::GuiRenderer::freeGuiRenderer() {
-	ImageLoader::DeleteTexture(m_roundedRectButtonTexture);
-
-	m_renderer.freeTextureRenderer();
+	shapeRenderer_.freeShapeRenderer();
+	textureRenderer_.freeTextureRenderer();
 }
 
 void Evolve::GuiRenderer::getLabelCoordinates(int& x, int& y, const std::string& label,
