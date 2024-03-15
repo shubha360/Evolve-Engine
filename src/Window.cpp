@@ -43,6 +43,7 @@ bool Evolve::Window::init(const bool fullScreen, const unsigned int windowWidth,
 	attribResponse += SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 	attribResponse += SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
+	// SDL_GL_SetAttribute returns 0 on success and negative error code on failure
 	if (attribResponse < 0) {
 		EVOLVE_REPORT_ERROR("Failed to set an SDL_GL attribute. SDL_Error: " + std::string(SDL_GetError()), init);
 		return false;
@@ -50,11 +51,14 @@ bool Evolve::Window::init(const bool fullScreen, const unsigned int windowWidth,
 
 	Uint32 windowFlags = SDL_WINDOW_OPENGL;
 
+	// get the screen size if in fullscreen
 	if (fullScreen) {
 		SDL_DisplayMode dm;
 		SDL_GetCurrentDisplayMode(0, &dm);
+		
 		m_windowWidth = dm.w;
 		m_windowHeight = dm.h;
+		
 		windowFlags |= SDL_WINDOW_FULLSCREEN;
 	}
 	else {
@@ -103,6 +107,7 @@ bool Evolve::Window::init(const bool fullScreen, const unsigned int windowWidth,
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDisable(GL_DEPTH_TEST);
 
+	// sdl function that limits the fps to 60, not needed if using the Evolve::Fps class
 	// SDL_GL_SetSwapInterval(1);
 
 	return true;
@@ -110,6 +115,10 @@ bool Evolve::Window::init(const bool fullScreen, const unsigned int windowWidth,
 
 void Evolve::Window::clearScreen(GLbitfield mask) {
 	glClear(mask);
+}
+
+void Evolve::Window::swapBuffer() const {
+	SDL_GL_SwapWindow(m_window);
 }
 
 void Evolve::Window::deleteWindow() {
@@ -120,8 +129,4 @@ void Evolve::Window::deleteWindow() {
 	}
 
 	SDL_Quit();
-}
-
-void Evolve::Window::swapBuffer() const {
-	SDL_GL_SwapWindow(m_window);
 }
