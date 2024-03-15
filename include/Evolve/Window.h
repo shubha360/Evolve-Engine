@@ -34,11 +34,14 @@ namespace Evolve {
 		Window();
 		~Window();
 
+		// the parameters windowWidth and windowHeight are unused if fulscreen is true
 		bool init(const bool fullScreen, const unsigned int windowWidth, const unsigned int windowHeight, 
 			const ColorRgba& clearColor);
 
+		// wraps the glClear() function
 		void clearScreen(GLbitfield mask);
 
+		// wraps the SDL_GL_SwapWindow() function
 		void swapBuffer() const;
 
 		void deleteWindow();
