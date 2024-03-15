@@ -1,3 +1,25 @@
+/*
+Copyright (c) 2024 Raquibul Islam
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
 #include "../include/Evolve/ShapeRenderer.h"
 
 Evolve::ShapeRenderer::Shape::Shape(int depth, std::vector<Vertex2D> vertices, 
@@ -159,6 +181,36 @@ void Evolve::ShapeRenderer::drawRectangle(const RectDimension& destRect,
 	m_totalIndices += m_shapes.back().m_numIndices;
 }
 
+void Evolve::ShapeRenderer::drawCircle(const glm::ivec2& centerPos, unsigned int radius, ColorRgba& color, int depth) {
+	static const int NUM_TRIANGLES = 60;
+
+	glm::ivec2 vertexTwoPos(0, 0);
+	bool makeTriangle = false;
+
+	for (size_t i = 0; i <= NUM_TRIANGLES; i++) {
+
+		double angle = (M_PI * 2.0f) * ((float)i / (float)NUM_TRIANGLES);
+
+		if (!makeTriangle) {
+			vertexTwoPos.x = (int) (centerPos.x + cos(angle) * radius);
+			vertexTwoPos.y = (int) (centerPos.y + sin(angle) * radius);
+
+			makeTriangle = true;
+		}
+		else {
+			glm::ivec2 vertexThreePos(
+				centerPos.x + cos(angle) * radius,
+				centerPos.y + sin(angle) * radius
+			);
+
+			drawTriangle(centerPos, vertexTwoPos, vertexThreePos, color, depth);
+
+			makeTriangle = false;
+			i--;
+		}
+	}
+}
+
 void Evolve::ShapeRenderer::end(const ShapeSortType& sortType /*= ShapeSortType::BY_DEPTH_INCREMENTAL*/) {
 	if (!m_inited) {
 		EVOLVE_REPORT_ERROR("Texture renderer not initialized.", begin);
@@ -301,7 +353,7 @@ void Evolve::ShapeRenderer::setupShapeBatches() {
 			m_shapeBatches.emplace_back(curentIndex, m_shapePointers[0]->m_numIndices);
 			addIndicesToBuffer(vertexIndices, m_shapePointers[0]->m_numIndices, curentIndex, currentVertex);
 
-			for (int i = 1; i < m_shapePointers.size(); i++) {
+			for (size_t i = 1; i < m_shapePointers.size(); i++) {
 
 				auto numIndices = m_shapePointers[i]->m_numIndices;
 
@@ -364,9 +416,13 @@ void Evolve::ShapeRenderer::addIndicesToBuffer(std::vector<GLuint>& indices, con
 	}
 
 	// circle
-	/*else {
+	else {
+		for (int i = 0; i < numIndices; i++) {
+			indices[currentIndex++] = currentVertex + i;
+		}
 
-	}*/
+		currentVertex += numIndices;
+	}
 }
 
 bool Evolve::ShapeRenderer::compareByDepthIncremental(Shape* a, Shape* b) {
