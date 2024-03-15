@@ -118,7 +118,7 @@ void Evolve::TextureRenderer::end(const GlyphSortType& sortType /*= GlyphSortTyp
 	if (!m_glyphs.empty()) {
 		m_glyphPointers.resize(m_glyphs.size());
 
-		for (int i = 0; i < m_glyphPointers.size(); i++) {
+		for (size_t i = 0; i < m_glyphPointers.size(); i++) {
 			m_glyphPointers[i] = &m_glyphs[i];
 		}
 
@@ -273,7 +273,7 @@ void Evolve::TextureRenderer::setupRenderBatches() {
 			m_renderBatches.emplace_back(curentIndex, numIndices, m_glyphPointers[0]->m_textureID);
 			addIndicesToBuffer(vertexIndices, curentIndex, currentVertex);
 
-			for (int i = 1; i < m_glyphPointers.size(); i++) {
+			for (size_t i = 1; i < m_glyphPointers.size(); i++) {
 
 				if (m_glyphPointers[i]->m_textureID == m_glyphPointers[i - 1]->m_textureID) {
 					m_renderBatches.back().m_numIndices += 6;
@@ -289,7 +289,7 @@ void Evolve::TextureRenderer::setupRenderBatches() {
 
 			glGenBuffers((GLsizei) m_iboIDs.size(), m_iboIDs.data());
 
-			for (int i = 0; i < m_iboIDs.size(); i++) {
+			for (size_t i = 0; i < m_iboIDs.size(); i++) {
 
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_iboIDs[i]);
 

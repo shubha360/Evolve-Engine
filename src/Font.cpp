@@ -39,15 +39,15 @@ bool Evolve::Font::initFromBitmap16x16(const std::string& fontName, const std::s
 		return false;
 	}
 
-	const unsigned int CELL_WIDTH = m_fontTexture.width / 16;
-	const unsigned int CELL_HEIGHT = m_fontTexture.height / 16;
+	const int CELL_WIDTH = m_fontTexture.width / 16;
+	const int CELL_HEIGHT = m_fontTexture.height / 16;
 
-	unsigned int top = CELL_HEIGHT;
-	unsigned int bottom = 0;
-	unsigned int aBottom = 0;
+	int top = CELL_HEIGHT;
+	int bottom = 0;
+	int aBottom = 0;
 
-	unsigned int currentCellX = 0, currentCellY = 0;
-	unsigned int currentPixelX = 0, currentPixelY = 0;
+	int currentCellX = 0, currentCellY = 0;
+	int currentPixelX = 0, currentPixelY = 0;
 
 	UvDimension currentUV = {};
 
@@ -55,8 +55,8 @@ bool Evolve::Font::initFromBitmap16x16(const std::string& fontName, const std::s
 	m_uvDimensions.resize(256);
 	m_characterWidths.resize(256);
 
-	for (unsigned int row = 0; row < 16; row++) {
-		for (unsigned int column = 0; column < 16; column++) {
+	for (int row = 0; row < 16; row++) {
+		for (int column = 0; column < 16; column++) {
 
 			currentCellX = CELL_WIDTH * column;
 			currentCellY = CELL_HEIGHT * row;
@@ -76,8 +76,8 @@ bool Evolve::Font::initFromBitmap16x16(const std::string& fontName, const std::s
 			);
 
 			// Calculate the top
-			for (unsigned int i = 0; i < CELL_HEIGHT; i++) {
-				for (unsigned int j = 0; j < CELL_WIDTH; j++) {
+			for (int i = 0; i < CELL_HEIGHT; i++) {
+				for (int j = 0; j < CELL_WIDTH; j++) {
 					
 					currentPixelX = currentCellX + j;
 					currentPixelY = currentCellY + i;
@@ -96,8 +96,8 @@ bool Evolve::Font::initFromBitmap16x16(const std::string& fontName, const std::s
 			}
 
 			// Calculate the bottom
-			for (unsigned int i = CELL_HEIGHT - 1; i >= 0; i--) {
-				for (unsigned int j = 0; j < CELL_WIDTH; j++) {
+			for (int i = CELL_HEIGHT - 1; i >= 0; i--) {
+				for (int j = 0; j < CELL_WIDTH; j++) {
 
 					currentPixelX = currentCellX + j;
 					currentPixelY = currentCellY + i;
@@ -120,8 +120,8 @@ bool Evolve::Font::initFromBitmap16x16(const std::string& fontName, const std::s
 			}
 
 			// Calculate the left
-			for (unsigned int j = 0; j < CELL_WIDTH; j++) {
-				for (unsigned int i = 0; i < CELL_HEIGHT; i++) {
+			for (int j = 0; j < CELL_WIDTH; j++) {
+				for (int i = 0; i < CELL_HEIGHT; i++) {
 					currentPixelX = currentCellX + j;
 					currentPixelY = currentCellY + i;
 
@@ -141,8 +141,8 @@ bool Evolve::Font::initFromBitmap16x16(const std::string& fontName, const std::s
 
 
 			// Calculate the right
-			for (unsigned int j = CELL_WIDTH - 1; j >= 0; j--) {
-				for (unsigned int i = 0; i < CELL_HEIGHT; i++) {
+			for (int j = CELL_WIDTH - 1; j >= 0; j--) {
+				for (int i = 0; i < CELL_HEIGHT; i++) {
 					currentPixelX = currentCellX + j;
 					currentPixelY = currentCellY + i;
 
@@ -250,7 +250,7 @@ bool Evolve::Font::initFromFontFile(const std::string& fontName, const std::stri
 		characterTextures[i].data = new unsigned char[characterTextures[i].width * characterTextures[i].height];
 
 		memcpy(characterTextures[i].data, face->glyph->bitmap.buffer,
-			characterTextures[i].width * characterTextures[i].height);
+			(size_t) characterTextures[i].width * characterTextures[i].height);
 
 		if (characterMetrics[i].horiBearingY / 64 > maxBearing) {
 			maxBearing = characterMetrics[i].horiBearingY / 64;
@@ -274,7 +274,7 @@ bool Evolve::Font::initFromFontFile(const std::string& fontName, const std::stri
 	unsigned int textureHeight = maxCellHeight * 16;
 
 	m_fontTexture.data = new unsigned char[textureWidth * textureHeight];
-	memset(m_fontTexture.data, 0, textureWidth * textureHeight);
+	memset(m_fontTexture.data, 0, (size_t) textureWidth * textureHeight);
 
 	m_fontTexture.width = textureWidth;
 	m_fontTexture.height = textureHeight;
@@ -382,7 +382,7 @@ void Evolve::Font::drawTextToRenderer(const std::string& text, const int topLeft
 	
 	RectDimension currentDims;
 
-	for (int i = 0; i < text.length(); i++) {
+	for (size_t i = 0; i < text.length(); i++) {
 		if (text[i] == ' ') {
 			drawX += (int) ((m_spaceSize + m_addToSpaceLength) * m_fontScale);
 		}
@@ -417,7 +417,7 @@ unsigned int Evolve::Font::getLineWidth(const std::string& text) {
 
 	int width = 0;
 
-	for (int i = 0; i < text.length(); i++) {
+	for (size_t i = 0; i < text.length(); i++) {
 		if (text[i] == '\n') {
 			break;
 		}
@@ -435,7 +435,7 @@ unsigned int Evolve::Font::getTextHeight(const std::string& text) const {
 
 	int lines = 1;
 
-	for (int i = 0; i < text.length(); i++) {
+	for (size_t i = 0; i < text.length(); i++) {
 		if (text[i] == '\n') {
 			lines++;
 		}

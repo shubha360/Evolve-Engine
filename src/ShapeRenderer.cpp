@@ -220,7 +220,7 @@ void Evolve::ShapeRenderer::end(const ShapeSortType& sortType /*= ShapeSortType:
 	if (!m_shapes.empty()) {
 		m_shapePointers.resize(m_shapes.size());
 
-		for (int i = 0; i < m_shapePointers.size(); i++) {
+		for (size_t i = 0; i < m_shapePointers.size(); i++) {
 			m_shapePointers[i] = &m_shapes[i];
 		}
 
@@ -327,7 +327,7 @@ void Evolve::ShapeRenderer::setupShapeBatches() {
 			unsigned int currentVertex = 0;
 
 			for (auto& shape : m_shapePointers) {
-				for (int vertex = 0; vertex < shape->m_vertices.size(); vertex++) {
+				for (size_t vertex = 0; vertex < shape->m_vertices.size(); vertex++) {
 					vertices[currentVertex++] = shape->m_vertices[vertex];
 				}
 			}
@@ -371,7 +371,7 @@ void Evolve::ShapeRenderer::setupShapeBatches() {
 
 			glGenBuffers((GLsizei)m_iboIDs.size(), m_iboIDs.data());
 
-			for (int i = 0; i < m_iboIDs.size(); i++) {
+			for (size_t i = 0; i < m_iboIDs.size(); i++) {
 
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_iboIDs[i]);
 

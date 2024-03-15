@@ -47,40 +47,40 @@ namespace Evolve {
 		bool init();
 
 		// returns the font id in this Gui
-		int addFont(Font& font);
+		size_t addFont(Font& font);
 
 		// returns the id of the component
 		// pass 0 to fontId to use the default font
-		int addTextButton(const std::string& label, const unsigned int fontId, float labelScale,
+		size_t addTextButton(const std::string& label, const size_t fontId, float labelScale,
 			const ColorRgba& textColor, const ColorRgba& buttonColor,
 			const RectDimension& dimension, std::function<void()> buttonFunction);
 
 		// returns the id of the component
 		// pass 0 to fontId to use the default font
-		int addPlainText(const std::string& text, const unsigned int fontId, float scale,
+		size_t addPlainText(const std::string& text, const size_t fontId, float scale,
 			const ColorRgba& color, const glm::ivec2& topLeftPosition);
 
 		// returns the id of the component
 		// pass 0 to fontId to use the default font
-		int addBlinkingText(const std::string& text, const unsigned int fontId, float scale,
+		size_t addBlinkingText(const std::string& text, const size_t fontId, float scale,
 			const ColorRgba& color, const glm::ivec2& topLeftPosition, 
 			const float onDuration = 30.0f, const float offDuration = 30.0f);
 
 		// returns the id of the component
 		// pass 0 to fontId to use the default font
-		int addPanel(const RectDimension& dimension, const ColorRgba& color);
+		size_t addPanel(const RectDimension& dimension, const ColorRgba& color);
 
-		void setComponentLabel(const int id, const std::string& text);
-		void setComponentPosition(const int id, const glm::ivec2& position);
+		void setComponentLabel(const size_t id, const std::string& text);
+		void setComponentPosition(const size_t id, const glm::ivec2& position);
 
-		int getLabelWidth(const int id);
-		int getLabelHeight(const int id);
+		int getLabelWidth(const size_t id);
+		int getLabelHeight(const size_t id);
 
 		void updateGui(InputProcessor& inputProcessor, Camera& camera);
 		void updateTime(const float deltaTime);
 
-		void showComponent(const int id);
-		void hideComponent(const int id);
+		void showComponent(const size_t id);
+		void hideComponent(const size_t id);
 
 		void freeGui();
 
@@ -107,7 +107,7 @@ namespace Evolve {
 			RectDimension m_dimension;
 			float m_labelScale = 0;
 			ColorRgba m_primaryColor = {};
-			unsigned int m_fontId = 0;
+			size_t m_fontId = 0;
 
 			int m_centerX = 0, m_centerY = 0;
 			int m_labelTopLeftX = 0, m_labelTopLeftY = 0;
@@ -124,7 +124,7 @@ namespace Evolve {
 			friend class Gui;
 			friend class GuiRenderer;
 
-			Button(const std::string& label, const unsigned int fontId, float labelScale,
+			Button(const std::string& label, const size_t fontId, float labelScale,
 				const ColorRgba& textColor, const ColorRgba& buttonColor,
 				const RectDimension& dimension, std::function<void()> buttonFunction);
 
@@ -138,7 +138,7 @@ namespace Evolve {
 			friend class Gui;
 			friend class GuiRenderer;
 
-			PlainText(const std::string& text, const unsigned int fontId, float scale,
+			PlainText(const std::string& text, const size_t fontId, float scale,
 				const ColorRgba& color, const glm::ivec2& position);
 		};
 
@@ -147,7 +147,7 @@ namespace Evolve {
 			friend class Gui;
 			friend class GuiRenderer;
 
-			BlinkingText(const std::string& text, const unsigned int fontId, float scale,
+			BlinkingText(const std::string& text, const size_t fontId, float scale,
 				const ColorRgba& color, const glm::ivec2& position, 
 				const float onDuration, const float offDuration);
 
