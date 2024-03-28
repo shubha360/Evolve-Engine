@@ -144,35 +144,27 @@ void Evolve::Gui::updateGui(InputProcessor& inputProcessor, Camera& camera) {
 	glm::ivec2 mouseCoords = camera.convertScreenCoordsToWorldCoords(inputProcessor.getMouseCoords());
 
 	for (auto& comp : m_components) {
-		if (comp->m_isVisible) {
+		if (comp->m_isVisible && comp->m_isFunctional) {
+			
 			if (isMouseInsideComponent(mouseCoords, *comp)) {
 
-				// if component is functional, change the cursor to index pointer
-				if (comp->m_isFunctional) {
-					if (m_currentCursor != m_indexPointerCursor) {
-						m_currentCursor = m_indexPointerCursor;
-						SDL_SetCursor(m_currentCursor);
-					}
-					
-					// if mouse is clicked
-					if (inputProcessor.isKeyDown(SDL_BUTTON_LEFT)) {
-						switch (comp->m_type) {
-						case Component::ComponentType::BUTTON:
-
-							Button* button = (Button*)comp.get();
-
-							button->m_buttonFunc();
-						}
-					}					
+				// change cursor
+				if (m_currentCursor != m_indexPointerCursor) {
+					m_currentCursor = m_indexPointerCursor;
+					SDL_SetCursor(m_currentCursor);
 				}
-				// is not functional, set normal cursor
-				else {
-					if (m_currentCursor != m_arrowCursor) {
-						m_currentCursor = m_arrowCursor;
-						SDL_SetCursor(m_currentCursor);
-						break;
+
+				// if mouse is clicked
+				if (inputProcessor.isKeyDown(SDL_BUTTON_LEFT)) {
+					switch (comp->m_type) {
+					case Component::ComponentType::BUTTON:
+
+						Button* button = (Button*)comp.get();
+
+						button->m_buttonFunc();
 					}
 				}
+
 				// do not check other components if cursor is inside this component
 				break;
 			}
