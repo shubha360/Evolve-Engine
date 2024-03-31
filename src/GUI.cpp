@@ -118,7 +118,7 @@ void Evolve::Gui::setComponentPosition(const size_t id, const glm::ivec2& positi
 		EVOLVE_REPORT_ERROR("Invalid component ID used.", setComponentPosition);
 	}
 
-	auto dim = m_components[id]->m_dimension;
+	auto& dim = m_components[id]->m_dimension;
 
 	dim.set(dim.getOrigin(), position.x, position.y, dim.getWidth(), dim.getHeight());
 }
@@ -202,6 +202,14 @@ void Evolve::Gui::hideComponent(const size_t id) {
 	}
 
 	m_components[id]->m_isVisible = false;
+}
+
+bool Evolve::Gui::isComponentVisible(const size_t id) {
+	if (id < 0 || id >= m_components.size()) {
+		EVOLVE_REPORT_ERROR("Invalid component ID used.", hideComponent);
+	}
+
+	return m_components[id]->m_isVisible;
 }
 
 void Evolve::Gui::freeGui() {

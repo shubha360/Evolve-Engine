@@ -82,6 +82,8 @@ namespace Evolve {
 		void showComponent(const size_t id);
 		void hideComponent(const size_t id);
 
+		bool isComponentVisible(const size_t id);
+
 		void freeGui();
 
 	private:
