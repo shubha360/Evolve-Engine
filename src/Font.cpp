@@ -426,6 +426,7 @@ unsigned int Evolve::Font::getLineWidth(const char* text) const {
 		else {
 			width += (int) ((characterWidths_[(unsigned char)text[i]] + letterSpacing_) * fontScale_);
 		}
+		i++;
 	}
 	return width;
 }
@@ -443,6 +444,7 @@ unsigned int Evolve::Font::getTextHeight(const char* text) const {
 		if (text[i] == '\n') {
 			lines++;
 		}
+		i++;
 	}
 	return (unsigned int) (lineHeight_ * fontScale_ * lines);
 }
