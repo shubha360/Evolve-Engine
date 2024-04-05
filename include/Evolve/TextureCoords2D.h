@@ -34,5 +34,10 @@ namespace Evolve {
 			this->U = u;
 			this->V = v;
 		}
+
+		void set(const TextureCoords2D& newCoords) {
+			this->U = newCoords.U;
+			this->V = newCoords.V;
+		}
 	};
 }

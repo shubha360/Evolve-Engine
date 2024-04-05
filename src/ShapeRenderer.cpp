@@ -200,7 +200,7 @@ void Evolve::ShapeRenderer::drawCircle(const Position2D& centerPos, unsigned int
 			makeTriangle = true;
 		}
 		else {
-			Position2D vertexThreePos{
+			Position2D vertexThreePos {
 				(GLint) (centerPos.X + cos(angle) * radius),
 				(GLint) (centerPos.Y + sin(angle) * radius)
 			};

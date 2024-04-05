@@ -32,11 +32,18 @@ namespace Evolve {
 		GLubyte Blue;
 		GLubyte Alpha;
 
-		void set(const GLubyte Red, const GLubyte Green, const GLubyte Blue, const GLubyte Alpha) {
-			this->Red = Red;
-			this->Green = Green;
-			this->Blue = Blue;
-			this->Alpha = Alpha;
+		void set(const GLubyte red, const GLubyte green, const GLubyte blue, const GLubyte alpha) {
+			this->Red = red;
+			this->Green = green;
+			this->Blue = blue;
+			this->Alpha = alpha;
+		}
+
+		void set(const ColorRgba& newColor) {
+			this->Red = newColor.Red;
+			this->Green = newColor.Green;
+			this->Blue = newColor.Blue;
+			this->Alpha = newColor.Alpha;
 		}
 	};
 }

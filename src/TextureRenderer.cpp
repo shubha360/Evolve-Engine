@@ -33,22 +33,22 @@ Evolve::TextureRenderer::Glyph::Glyph(const RectDimension& destRect,
 	// BOTTOM LEFT
 	vertices_[0].setPosition(destRect.getLeft(), destRect.getBottom());
 	vertices_[0].setTextureCoords(uvRect.BottomLeftX, uvRect.BottomLeftY);
-	vertices_[0].Color = color;
+	vertices_[0].setColor(color);
 
 	// BOTTOM RIGHT
 	vertices_[1].setPosition(destRect.getRight(), destRect.getBottom());
 	vertices_[1].setTextureCoords(uvRect.BottomLeftX + uvRect.Width, uvRect.BottomLeftY);
-	vertices_[1].Color = color;
+	vertices_[1].setColor(color);
 
 	// TOP RIGHT
 	vertices_[2].setPosition(destRect.getRight(), destRect.getTop());
 	vertices_[2].setTextureCoords(uvRect.BottomLeftX + uvRect.Width, uvRect.BottomLeftY + uvRect.Height);
-	vertices_[2].Color = color;
+	vertices_[2].setColor(color);
 
 	// TOP LEFT
 	vertices_[3].setPosition(destRect.getLeft(), destRect.getTop());
 	vertices_[3].setTextureCoords(uvRect.BottomLeftX, uvRect.BottomLeftY + uvRect.Height);
-	vertices_[3].Color = color;
+	vertices_[3].setColor(color);
 }
 
 Evolve::TextureRenderer::RenderBatch::RenderBatch(unsigned int offset, unsigned int numIndices, GLuint textureID) :

@@ -40,7 +40,7 @@ namespace Evolve {
 		}
 
 		void setPosition(const Position2D& pos) {
-			Position.set(pos.X, pos.Y);
+			Position.set(pos);
 		}
 
 		void setPosition(const glm::ivec2& pos) {
@@ -52,11 +52,15 @@ namespace Evolve {
 		}
 
 		void setColor(const ColorRgba& newColor) {
-			Color.set(newColor.Red, newColor.Green, newColor.Blue, newColor.Alpha);
+			Color.set(newColor);
 		}
 
 		void setTextureCoords(const GLfloat u, const GLfloat v) {
 			TextureCoords.set(u, v);
+		}
+
+		void setTextureCoords(const TextureCoords2D& newCoords) {
+			TextureCoords.set(newCoords);
 		}
 	};
 }

@@ -28,11 +28,18 @@ namespace Evolve {
 		float BottomLeftX, BottomLeftY;
 		float Width, Height;
 
-		void set(float bottomLeftX, float bottomLeftY, float width, float height) {
+		void set(const float bottomLeftX, const float bottomLeftY, const float width, const float height) {
 			this->BottomLeftX = bottomLeftX;
 			this->BottomLeftY = bottomLeftY;
 			this->Width = width;
 			this->Height = height;
+		}
+
+		void set(const UvDimension& newUV) {
+			this->BottomLeftX = newUV.BottomLeftX;
+			this->BottomLeftY = newUV.BottomLeftY;
+			this->Width = newUV.Width;
+			this->Height = newUV.Height;
 		}
 	};
 }

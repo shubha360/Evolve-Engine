@@ -33,9 +33,18 @@ namespace Evolve {
 			this->Y = y;
 		}
 
-		void set(const glm::ivec2& pos) {
-			this->X = pos.x;
-			this->Y = pos.y;
+		void set(const glm::ivec2& newPos) {
+			this->X = newPos.x;
+			this->Y = newPos.y;
+		}
+
+		void set(const Position2D& newPos) {
+			X = newPos.X;
+			Y = newPos.Y;
+		}
+
+		bool isEqualTo(const Position2D& other) const {
+			return X == other.X && Y == other.Y;
 		}
 	};
 }

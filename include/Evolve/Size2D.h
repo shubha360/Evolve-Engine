@@ -15,5 +15,14 @@ namespace Evolve {
 			this->Width = pos.x;
 			this->Height = pos.y;
 		}
+
+		void set(const Size2D& newSize) {
+			Width = newSize.Width;
+			Height = newSize.Height;
+		}
+
+		bool isEqualTo(const Size2D& other) const {
+			return Width == other.Width && Height == other.Height;
+		}
 	};
 }
