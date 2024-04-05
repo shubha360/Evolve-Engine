@@ -30,43 +30,43 @@ Evolve::GlslProgram::~GlslProgram() {
 
 bool Evolve::GlslProgram::compileAndLinkShaders(const std::string& vertexShaderPath, const std::string& fragmentShaderPath) {
 
-	m_programID = glCreateProgram();
+	programID_ = glCreateProgram();
 
-	m_vertexShaderID = compileShader(vertexShaderPath, GL_VERTEX_SHADER);
-	m_fragmentShaderID = compileShader(fragmentShaderPath, GL_FRAGMENT_SHADER);
+	vertexShaderID_ = compileShader(vertexShaderPath, GL_VERTEX_SHADER);
+	fragmentShaderID_ = compileShader(fragmentShaderPath, GL_FRAGMENT_SHADER);
 
-	if (m_vertexShaderID == 0 || m_fragmentShaderID == 0) {
+	if (vertexShaderID_ == 0 || fragmentShaderID_ == 0) {
 		EVOLVE_REPORT_ERROR("Unable to compile shaders.", compileAndLinkShaders);
 		return false;
 	}
 
-	glAttachShader(m_programID, m_vertexShaderID);
-	glAttachShader(m_programID, m_fragmentShaderID);
+	glAttachShader(programID_, vertexShaderID_);
+	glAttachShader(programID_, fragmentShaderID_);
 
-	glLinkProgram(m_programID);
+	glLinkProgram(programID_);
 
 	GLint isLinked = 0;
-	glGetProgramiv(m_programID, GL_LINK_STATUS, (int*)&isLinked);
+	glGetProgramiv(programID_, GL_LINK_STATUS, (int*)&isLinked);
 	if (isLinked == GL_FALSE)
 	{
 		GLint maxLength = 0;
-		glGetProgramiv(m_programID, GL_INFO_LOG_LENGTH, &maxLength);
+		glGetProgramiv(programID_, GL_INFO_LOG_LENGTH, &maxLength);
 
 		// The maxLength includes the NULL character
 		std::vector<GLchar> infoLog(maxLength);
-		glGetProgramInfoLog(m_programID, maxLength, &maxLength, &infoLog[0]);
+		glGetProgramInfoLog(programID_, maxLength, &maxLength, &infoLog[0]);
 
-		glDeleteProgram(m_programID);
+		glDeleteProgram(programID_);
 		
-		glDeleteShader(m_vertexShaderID);
-		glDeleteShader(m_fragmentShaderID);
+		glDeleteShader(vertexShaderID_);
+		glDeleteShader(fragmentShaderID_);
 
 		EVOLVE_REPORT_ERROR("Failed to link program. " + std::string(&infoLog[0]), compileAndLinkShaders);
 		return false;
 	}
 
-	glDetachShader(m_programID, m_vertexShaderID);
-	glDetachShader(m_programID, m_fragmentShaderID);
+	glDetachShader(programID_, vertexShaderID_);
+	glDetachShader(programID_, fragmentShaderID_);
 
 	return true;
 }
@@ -79,7 +79,7 @@ GLint Evolve::GlslProgram::getUniformLocation(const std::string& uniformName) {
 		return it->second;
 	}
 	else {
-		GLint location = glGetUniformLocation(m_programID, uniformName.c_str());
+		GLint location = glGetUniformLocation(programID_, uniformName.c_str());
 
 		if (location == GL_INVALID_INDEX) {
 			EVOLVE_REPORT_ERROR("Uniform " + std::string(uniformName) + " was not found in the shader.", getUniformLocation);
@@ -93,7 +93,7 @@ GLint Evolve::GlslProgram::getUniformLocation(const std::string& uniformName) {
 }
 
 void Evolve::GlslProgram::useProgram() {
-	glUseProgram(m_programID);
+	glUseProgram(programID_);
 }
 
 void Evolve::GlslProgram::unuseProgram() {
@@ -101,17 +101,17 @@ void Evolve::GlslProgram::unuseProgram() {
 }
 
 void Evolve::GlslProgram::freeProgram() {
-	if (m_vertexShaderID != 0) {
-		glDeleteShader(m_vertexShaderID);
-		m_vertexShaderID = 0;
+	if (vertexShaderID_ != 0) {
+		glDeleteShader(vertexShaderID_);
+		vertexShaderID_ = 0;
 	}
-	if (m_fragmentShaderID != 0) {
-		glDeleteShader(m_fragmentShaderID);
-		m_fragmentShaderID = 0;
+	if (fragmentShaderID_ != 0) {
+		glDeleteShader(fragmentShaderID_);
+		fragmentShaderID_ = 0;
 	}
-	if (m_programID != 0) {
-		glDeleteProgram(m_programID);
-		m_programID = 0;
+	if (programID_ != 0) {
+		glDeleteProgram(programID_);
+		programID_ = 0;
 	}
 }
 

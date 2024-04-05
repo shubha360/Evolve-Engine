@@ -35,7 +35,8 @@ namespace Evolve {
 		~Window();
 
 		// the parameters windowWidth and windowHeight are unused if fulscreen is true
-		bool init(const bool fullScreen, const unsigned int windowWidth, const unsigned int windowHeight, 
+		bool init(const char* windowTitle, const bool fullScreen, 
+			const unsigned int windowWidth, const unsigned int windowHeight, 
 			const ColorRgba& clearColor);
 
 		// wraps the glClear() function
@@ -46,11 +47,14 @@ namespace Evolve {
 
 		void deleteWindow();
 
-		const unsigned int getWindowWidth() const { return m_windowWidth; }
+		void setClearColor(const ColorRgba& clearColor);
+
+		const unsigned int getWindowWidth() const { return windowWidth_; }
 		const unsigned int getWindowHeight() const { return m_windowHeight; }
 
 	private:
-		SDL_Window* m_window = nullptr;
-		unsigned int m_windowWidth = 0, m_windowHeight = 0;
+		SDL_Window* window_ = nullptr;
+		unsigned int windowWidth_ = 0, m_windowHeight = 0;
+		ColorRgba clearColor_ { 0, 0, 0, 0 };
 	};
 }

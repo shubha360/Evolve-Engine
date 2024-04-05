@@ -29,139 +29,176 @@ Evolve::Gui::~Gui() {
 }
 
 bool Evolve::Gui::init() {
-	m_arrowCursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_ARROW);
-	m_indexPointerCursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_HAND);
+	arrowCursor_ = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_ARROW);
+	indexPointerCursor_ = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_HAND);
 
-	m_currentCursor = m_arrowCursor;	
+	currentCursor_ = arrowCursor_;	
+
+	components_.reserve(componentsMaxSize_);
+	fonts_.reserve(fontsMaxSize_);
 
 	return true;
 }
 
 size_t Evolve::Gui::addFont(Font& font) {
-	
+
 	if (!font.isInitialized()) {
 		EVOLVE_REPORT_ERROR("Font adding to Gui is not initailized.", addFont);
 		return -1;
 	}
 
-	m_fonts.push_back(&font);
-	return m_fonts.size() - 1;
+	fonts_.emplace_back(&font);
+	size_t id = fonts_.size() - 1;
+
+	if (fonts_.size() == fontsMaxSize_) {
+		fontsMaxSize_ *= 2;
+		fonts_.reserve(fontsMaxSize_);
+	}
+	return id;
 }
 
 size_t Evolve::Gui::addTextButton(const std::string& label, const size_t fontId, float labelScale,
 	const ColorRgba& textColor, const ColorRgba& buttonColor,
 	const RectDimension& dimension, std::function<void()> buttonFunction) {
 
-	if (fontId < 0 || fontId >= m_fonts.size()) {
+	if (fontId < 0 || fontId >= fonts_.size()) {
 		EVOLVE_REPORT_ERROR("Invalid font ID used.", addTextButton);
 		return -1;
 	}
 
-	m_components.emplace_back(
-		new Button(label, fontId, labelScale, textColor, buttonColor, dimension, buttonFunction)
+	components_.emplace_back(
+		std::make_unique<Button>(label, fontId, labelScale, textColor, buttonColor, dimension, buttonFunction)
 	);
 	
-	return m_components.size() - 1;
+	size_t id = components_.size() - 1;
+
+	if (components_.size() == componentsMaxSize_) {
+		componentsMaxSize_ *= 2;
+		components_.reserve(componentsMaxSize_);
+	}
+
+	return id;
 }
 
 size_t Evolve::Gui::addPlainText(const std::string& text, const size_t fontId, float scale,
-	const ColorRgba& color, const glm::ivec2& topLeftPosition) {
+	const ColorRgba& color, const Position2D& topLeftPosition) {
 
-	if (fontId < 0 || fontId >= m_fonts.size()) {
+	if (fontId < 0 || fontId >= fonts_.size()) {
 		EVOLVE_REPORT_ERROR("Invalid font ID used.", addPlainText);
 		return -1;
 	}
 
-	m_components.emplace_back(
-		new PlainText(text, fontId, scale, color, topLeftPosition)
+	components_.emplace_back(
+		std::make_unique<PlainText>(text, fontId, scale, color, topLeftPosition)
 	);
 
-	return m_components.size() - 1;
+	size_t id = components_.size() - 1;
+
+	if (components_.size() == componentsMaxSize_) {
+		componentsMaxSize_ *= 2;
+		components_.reserve(componentsMaxSize_);
+	}
+
+	return id;
 }
 
 size_t Evolve::Gui::addBlinkingText(const std::string& text, const size_t fontId, float scale,
-	const ColorRgba& color, const glm::ivec2& topLeftPosition, 
+	const ColorRgba& color, const Position2D& topLeftPosition,
 	const float onDuration /*= 30.0f*/, const float offDuration /*= 30.0f*/)
 {
-	if (fontId < 0 || fontId >= m_fonts.size()) {
+	if (fontId < 0 || fontId >= fonts_.size()) {
 		EVOLVE_REPORT_ERROR("Invalid font ID used.", addBlinkingText);
 		return -1;
 	}
 
-	m_components.emplace_back(
-		new BlinkingText(text, fontId, scale, color, topLeftPosition, onDuration, offDuration)
+	components_.emplace_back(
+		std::make_unique<BlinkingText>(text, fontId, scale, color, topLeftPosition, onDuration, offDuration)
 	);
 
-	return m_components.size() - 1;
+	size_t id = components_.size() - 1;
+
+	if (components_.size() == componentsMaxSize_) {
+		componentsMaxSize_ *= 2;
+		components_.reserve(componentsMaxSize_);
+	}
+
+	return id;
 }
 
 size_t Evolve::Gui::addPanel(const RectDimension& dimension, const ColorRgba& color) {
 	
-	m_components.emplace_back(
-		new Panel(dimension, color)
+	components_.emplace_back(
+		std::make_unique<Panel>(dimension, color)
 	);
 
-	return m_components.size() - 1;
+	size_t id = components_.size() - 1;
+
+	if (components_.size() == componentsMaxSize_) {
+		componentsMaxSize_ *= 2;
+		components_.reserve(componentsMaxSize_);
+	}
+
+	return id;
 }
 
 void Evolve::Gui::setComponentLabel(const size_t id, const std::string& text) {
 
-	if (id < 0 || id >= m_components.size()) {
+	if (id < 0 || id >= components_.size()) {
 		EVOLVE_REPORT_ERROR("Invalid component ID used.", setComponentLabel);
 	}
 
-	m_components[id]->m_label = text;
+	components_[id]->label_ = text;
 }
 
-void Evolve::Gui::setComponentPosition(const size_t id, const glm::ivec2& position) {
-	if (id < 0 || id >= m_components.size()) {
+void Evolve::Gui::setComponentPosition(const size_t id, const Position2D& position) {
+	if (id < 0 || id >= components_.size()) {
 		EVOLVE_REPORT_ERROR("Invalid component ID used.", setComponentPosition);
 	}
 
-	auto& dim = m_components[id]->m_dimension;
+	auto& dim = components_[id]->dimension_;
 
-	dim.set(dim.getOrigin(), position.x, position.y, dim.getWidth(), dim.getHeight());
+	dim.set(dim.getOrigin(), position.X, position.Y, dim.getWidth(), dim.getHeight());
 }
 
 int Evolve::Gui::getLabelWidth(const size_t id) {
-	if (id < 0 || id >= m_components.size()) {
+	if (id < 0 || id >= components_.size()) {
 		EVOLVE_REPORT_ERROR("Invalid component ID used.", getLabelWidth);
 	}
 	
-	return m_fonts[m_components[id]->m_fontId]->getLineWidth(m_components[id]->m_label);
+	return fonts_[components_[id]->fontId_]->getLineWidth(components_[id]->label_);
 }
 
 int Evolve::Gui::getLabelHeight(const size_t id) {
-	if (id < 0 || id >= m_components.size()) {
+	if (id < 0 || id >= components_.size()) {
 		EVOLVE_REPORT_ERROR("Invalid component ID used.", getLabelHeight);
 	}
 	
-	return m_fonts[m_components[id]->m_fontId]->getLineHeight();
+	return fonts_[components_[id]->fontId_]->getLineHeight();
 }
 
 void Evolve::Gui::updateGui(InputProcessor& inputProcessor, Camera& camera) {
 
-	glm::ivec2 mouseCoords = camera.convertScreenCoordsToWorldCoords(inputProcessor.getMouseCoords());
+	Position2D mouseCoords = camera.convertScreenCoordsToWorldCoords(inputProcessor.getMouseCoords());
 
-	for (auto& comp : m_components) {
-		if (comp->m_isVisible && comp->m_isFunctional) {
+	for (auto& comp : components_) {
+		if (comp->isVisible_ && comp->isFunctional_) {
 			
 			if (isMouseInsideComponent(mouseCoords, *comp)) {
 
 				// change cursor
-				if (m_currentCursor != m_indexPointerCursor) {
-					m_currentCursor = m_indexPointerCursor;
-					SDL_SetCursor(m_currentCursor);
+				if (currentCursor_ != indexPointerCursor_) {
+					currentCursor_ = indexPointerCursor_;
+					SDL_SetCursor(currentCursor_);
 				}
 
 				// if mouse is clicked
 				if (inputProcessor.isKeyDown(SDL_BUTTON_LEFT)) {
-					switch (comp->m_type) {
+					switch (comp->type_) {
 					case Component::ComponentType::BUTTON:
 
 						Button* button = (Button*)comp.get();
 
-						button->m_buttonFunc();
+						button->buttonFunc_();
 					}
 				}
 
@@ -170,9 +207,9 @@ void Evolve::Gui::updateGui(InputProcessor& inputProcessor, Camera& camera) {
 			}
 			// not inside component, set normal cursor
 			else {
-				if (m_currentCursor != m_arrowCursor) {
-					m_currentCursor = m_arrowCursor;
-					SDL_SetCursor(m_currentCursor);
+				if (currentCursor_ != arrowCursor_) {
+					currentCursor_ = arrowCursor_;
+					SDL_SetCursor(currentCursor_);
 				}
 			}
 		}
@@ -180,62 +217,62 @@ void Evolve::Gui::updateGui(InputProcessor& inputProcessor, Camera& camera) {
 }
 
 void Evolve::Gui::updateTime(const float deltaTime) {
-	for (auto& comp : m_components) {
-		comp->m_time += deltaTime;
+	for (auto& comp : components_) {
+		comp->time_ += deltaTime;
 	}
 }
 
 void Evolve::Gui::showComponent(const size_t id) {
 
-	if (id < 0 || id >= m_components.size()) {
+	if (id < 0 || id >= components_.size()) {
 		EVOLVE_REPORT_ERROR("Invalid component ID used.", showComponent);
 	}
 
-	m_components[id]->m_isVisible = true;
-	m_components[id]->m_time = 0.0f;
+	components_[id]->isVisible_ = true;
+	components_[id]->time_ = 0.0f;
 }
 
 void Evolve::Gui::hideComponent(const size_t id) {
 	
-	if (id < 0 || id >= m_components.size()) {
+	if (id < 0 || id >= components_.size()) {
 		EVOLVE_REPORT_ERROR("Invalid component ID used.", hideComponent);
 	}
 
-	m_components[id]->m_isVisible = false;
+	components_[id]->isVisible_ = false;
 }
 
 bool Evolve::Gui::isComponentVisible(const size_t id) {
-	if (id < 0 || id >= m_components.size()) {
+	if (id < 0 || id >= components_.size()) {
 		EVOLVE_REPORT_ERROR("Invalid component ID used.", hideComponent);
 	}
 
-	return m_components[id]->m_isVisible;
+	return components_[id]->isVisible_;
 }
 
 void Evolve::Gui::freeGui() {
-	if (m_arrowCursor != nullptr) {
-		SDL_FreeCursor(m_arrowCursor);
-		m_arrowCursor = nullptr;
+	if (arrowCursor_ != nullptr) {
+		SDL_FreeCursor(arrowCursor_);
+		arrowCursor_ = nullptr;
 	}
 
-	if (m_indexPointerCursor != nullptr) {
-		SDL_FreeCursor(m_indexPointerCursor);
-		m_indexPointerCursor = nullptr;
+	if (indexPointerCursor_ != nullptr) {
+		SDL_FreeCursor(indexPointerCursor_);
+		indexPointerCursor_ = nullptr;
 	}
 }
 
-bool Evolve::Gui::isMouseInsideComponent(const glm::ivec2& mouseScreenCoords, Component& component) {
+bool Evolve::Gui::isMouseInsideComponent(const Position2D& mouseScreenCoords, Component& component) {
 
-	int compLeft = component.m_dimension.getLeft();
-	int compRight = component.m_dimension.getRight();
+	int compLeft = component.dimension_.getLeft();
+	int compRight = component.dimension_.getRight();
 
-	int compBottom = component.m_dimension.getBottom();
-	int compTop = component.m_dimension.getTop();
+	int compBottom = component.dimension_.getBottom();
+	int compTop = component.dimension_.getTop();
 
 	if (
-		(mouseScreenCoords.x >= compLeft && mouseScreenCoords.x <= compRight)
+		(mouseScreenCoords.X >= compLeft && mouseScreenCoords.X <= compRight)
 		&&
-		(mouseScreenCoords.y >= compBottom && mouseScreenCoords.y <= compTop)
+		(mouseScreenCoords.Y >= compBottom && mouseScreenCoords.Y <= compTop)
 		) {
 		return true;
 	}
@@ -251,61 +288,61 @@ Evolve::Gui::Button::Button(const std::string& label, const size_t fontId, float
 	const ColorRgba& textColor, const ColorRgba& buttonColor, 
 	const RectDimension& dimension, std::function<void()> buttonFunction) :
 	 
-	m_buttonColor(buttonColor),
-	m_buttonFunc(buttonFunction)
+	buttonColor_(buttonColor),
+	buttonFunc_(buttonFunction)
 {
-	m_label = label;
-	m_type = ComponentType::BUTTON;
-	m_dimension = dimension;
-	m_labelScale = labelScale;
-	m_primaryColor = textColor;
-	m_fontId = fontId;
+	label_ = label;
+	type_ = ComponentType::BUTTON;
+	dimension_ = dimension;
+	labelScale_ = labelScale;
+	primaryColor_ = textColor;
+	fontId_ = fontId;
 
-	m_isFunctional = true;
-	m_isVisible = true;
+	isFunctional_ = true;
+	isVisible_ = true;
 
-	m_centerX = m_dimension.getCenterX();
-	m_centerY = m_dimension.getCenterY();
+	centerX_ = dimension_.getCenterX();
+	centerY_ = dimension_.getCenterY();
 }
 
 Evolve::Gui::PlainText::PlainText(const std::string& text, const size_t fontId, float scale,
-	const ColorRgba& color, const glm::ivec2& position) {
+	const ColorRgba& color, const Position2D& position) {
 	
-	m_label = text;
-	m_type = ComponentType::PLAIN_TEXT;
-	m_fontId = fontId;
-	m_labelScale = scale;
-	m_primaryColor = color;
+	label_ = text;
+	type_ = ComponentType::PLAIN_TEXT;
+	fontId_ = fontId;
+	labelScale_ = scale;
+	primaryColor_ = color;
 	
-	m_dimension.set(Origin::TOP_LEFT, position.x, position.y, 0, 0);
+	dimension_.set(Origin::TOP_LEFT, position.X, position.Y, 0, 0);
 
-	m_isFunctional = false;
-	m_isVisible = true;
+	isFunctional_ = false;
+	isVisible_ = true;
 }
 
 Evolve::Gui::BlinkingText::BlinkingText(const std::string& text, const size_t fontId, float scale,
-	const ColorRgba& color, const glm::ivec2& position, 
+	const ColorRgba& color, const Position2D& position,
 	const float onDuration, const float offDuration) :
 	
-	m_onDuration(onDuration), m_offDuration(offDuration)
+	onDuration_(onDuration), offDuration_(offDuration)
 {
-	m_label = text;
-	m_type = ComponentType::BLINKING_TEXT;
-	m_fontId = fontId;
-	m_labelScale = scale;
-	m_primaryColor = color;
+	label_ = text;
+	type_ = ComponentType::BLINKING_TEXT;
+	fontId_ = fontId;
+	labelScale_ = scale;
+	primaryColor_ = color;
 	
-	m_dimension.set(Origin::TOP_LEFT, position.x, position.y, 0, 0);
+	dimension_.set(Origin::TOP_LEFT, position.X, position.Y, 0, 0);
 
-	m_isFunctional = false;
-	m_isVisible = true;
+	isFunctional_ = false;
+	isVisible_ = true;
 }
 
 Evolve::Gui::Panel::Panel(const RectDimension& dimension, const ColorRgba& color) {
-	m_type = ComponentType::PANEL;
-	m_primaryColor = color;
-	m_dimension = dimension;
+	type_ = ComponentType::PANEL;
+	primaryColor_ = color;
+	dimension_ = dimension;
 
-	m_isFunctional = false;
-	m_isVisible = true;
+	isFunctional_ = false;
+	isVisible_ = true;
 }

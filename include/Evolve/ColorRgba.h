@@ -27,16 +27,16 @@ SOFTWARE.
 namespace Evolve {
 
 	struct ColorRgba {
-		GLubyte red;
-		GLubyte green;
-		GLubyte blue;
-		GLubyte alpha;
+		GLubyte Red;
+		GLubyte Green;
+		GLubyte Blue;
+		GLubyte Alpha;
 
-		void set(const GLubyte red, const GLubyte green, const GLubyte blue, const GLubyte alpha) {
-			this->red = red;
-			this->green = green;
-			this->blue = blue;
-			this->alpha = alpha;
+		void set(const GLubyte Red, const GLubyte Green, const GLubyte Blue, const GLubyte Alpha) {
+			this->Red = Red;
+			this->Green = Green;
+			this->Blue = Blue;
+			this->Alpha = Alpha;
 		}
 	};
 }

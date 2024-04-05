@@ -25,14 +25,14 @@ SOFTWARE.
 namespace Evolve {
 
 	struct UvDimension {
-		float bottomLeftX, bottomLeftY;
-		float width, height;
+		float BottomLeftX, BottomLeftY;
+		float Width, Height;
 
 		void set(float bottomLeftX, float bottomLeftY, float width, float height) {
-			this->bottomLeftX = bottomLeftX;
-			this->bottomLeftY = bottomLeftY;
-			this->width = width;
-			this->height = height;
+			this->BottomLeftX = bottomLeftX;
+			this->BottomLeftY = bottomLeftY;
+			this->Width = width;
+			this->Height = height;
 		}
 	};
 }

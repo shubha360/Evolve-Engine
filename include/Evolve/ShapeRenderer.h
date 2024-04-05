@@ -46,29 +46,29 @@ namespace Evolve {
 		// the default shader will be used if no shader passed
 		void begin();
 
-		void drawTriangle(const glm::ivec2 originPos, const glm::ivec2 vertexTwoPos, const glm::ivec2 vertexThreePos, 
+		void drawTriangle(const Position2D& originPos, const Position2D& vertexTwoPos, const Position2D& vertexThreePos,
 			const ColorRgba& verticesColor, const int depth = 0);
 
-		void drawTriangle(const glm::ivec2 originPos, ColorRgba& originColor, 
-			const glm::ivec2 vertexTwoPos, ColorRgba& vertexTwoColor,
-			const glm::ivec2 vertexThreePos, ColorRgba& vertexThreeColor,
+		void drawTriangle(const Position2D& originPos, const ColorRgba& originColor,
+			const Position2D& vertexTwoPos, const ColorRgba& vertexTwoColor,
+			const Position2D& vertexThreePos, const ColorRgba& vertexThreeColor,
 			int depth = 0);
 
-		void drawRectangle(const glm::ivec2 originPos, const glm::ivec2 vertexTwoPos, 
-			const glm::ivec2 vertexThreePos, const glm::ivec2 vertexFourPos, 
-			ColorRgba& verticesColor, int depth = 0);
+		void drawRectangle(const Position2D& originPos, const Position2D& vertexTwoPos,
+			const Position2D& vertexThreePos, const Position2D& vertexFourPos,
+			const ColorRgba& verticesColor, int depth = 0);
 
-		void drawRectangle(const glm::ivec2 originPos, ColorRgba& originColor, 
-			const glm::ivec2 vertexTwoPos, ColorRgba& vertexTwoColor,
-			const glm::ivec2 vertexThreePos, ColorRgba& vertexThreeColor,
-			const glm::ivec2 vertexFourPos, ColorRgba& vertexFourColor, 
+		void drawRectangle(const Position2D& originPos, const ColorRgba& originColor,
+			const Position2D& vertexTwoPos, const ColorRgba& vertexTwoColor,
+			const Position2D& vertexThreePos, const ColorRgba& vertexThreeColor,
+			const Position2D& vertexFourPos, const ColorRgba& vertexFourColor,
 			int depth = 0);
 
 		void drawRectangle(const RectDimension& destRect,
-			ColorRgba& verticesColor, int depth = 0);
+			const ColorRgba& verticesColor, int depth = 0);
 
 		// this is very inefficient, it's better to use a circular texture using TextureRenderer
-		void drawCircle(const glm::ivec2& centerPos, unsigned int radius, ColorRgba& color, int depth = 0);
+		void drawCircle(const Position2D& centerPos, unsigned int radius, const ColorRgba& color, int depth = 0);
 
 		void end(const ShapeSortType& sortType = ShapeSortType::BY_DEPTH_INCREMENTAL);
 
@@ -88,11 +88,11 @@ namespace Evolve {
 			~Shape();
 
 		private:
-			int m_depth = 0;
+			int depth_ = 0;
 
-			std::vector<Vertex2D> m_vertices;
+			std::vector<Vertex2D> vertices_;
 
-			unsigned int m_numVertices = 0, m_numIndices = 0;
+			unsigned int numVertices_ = 0, numIndices_ = 0;
 		};
 
 		class ShapeBatch {
@@ -102,25 +102,25 @@ namespace Evolve {
 			ShapeBatch(unsigned int offset, unsigned int numIndices);
 
 		private:
-			unsigned int m_offset;
-			unsigned int m_numIndices;
-			GLuint m_iboID = 0;
+			unsigned int offset_;
+			unsigned int numIndices_;
+			GLuint iboID_ = 0;
 		};
 
-		GlslProgram m_defaultShader;
-		GlslProgram* m_currentShader = nullptr;
+		GlslProgram defaultShader_;
+		GlslProgram* currentShader_ = nullptr;
 
-		bool m_inited = false;
+		bool inited_ = false;
 
-		GLuint m_vaoID = 0, m_vboID = 0;
-		std::vector<GLuint> m_iboIDs;
+		GLuint vaoID_ = 0, vboID_ = 0;
+		std::vector<GLuint> iboIDs_;
 
-		GLuint m_totalVertices = 0, m_totalIndices = 0;
+		GLuint totalVertices_ = 0, totalIndices_ = 0;
 
 		//std::vector<Triangle> m_triangles;
-		std::vector<Shape> m_shapes;
-		std::vector<Shape*> m_shapePointers;
-		std::vector<ShapeBatch> m_shapeBatches;
+		std::vector<Shape> shapes_;
+		std::vector<Shape*> shapePointers_;
+		std::vector<ShapeBatch> shapeBatches_;
 
 		void createVao();
 		void setupShapeBatches();

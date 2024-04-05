@@ -23,6 +23,7 @@ SOFTWARE.
 #pragma once
 
 #include "IncludeLibs.h"
+#include "Position2D.h"
 
 namespace Evolve {
 
@@ -40,14 +41,14 @@ namespace Evolve {
 		bool isKeyPressed(unsigned int keyID);
 		bool isKeyReleased(unsigned int keyID);
 
-		void setMouseCoords(int x, int y) { m_mouseCoords.x = x; m_mouseCoords.y = y; }
+		void setMouseCoords(int X, int y) { mouseCoords_.X = X; mouseCoords_.Y = y; }
 
-		glm::ivec2 getMouseCoords() const { return m_mouseCoords; }
+		Position2D getMouseCoords() const { return mouseCoords_; }
 
 	private:
-		std::unordered_map<unsigned int, bool> m_keyMap;
-		std::unordered_map<unsigned int, bool> m_previousKeyMap;
-		glm::ivec2 m_mouseCoords;
+		std::unordered_map<unsigned int, bool> keyMap_;
+		std::unordered_map<unsigned int, bool> previousKeyMap_;
+		Position2D mouseCoords_ {};
 
 		bool wasKeyDown(unsigned int keyID);
 	};

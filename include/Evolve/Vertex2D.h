@@ -31,28 +31,32 @@ SOFTWARE.
 namespace Evolve {
 
 	struct Vertex2D {
-		Position2D position;
-		ColorRgba color;
-		TextureCoords2D textureCoords;
+		Position2D Position {};
+		ColorRgba Color {};
+		TextureCoords2D TextureCoords {};
 
 		void setPosition(const GLint x, const GLint y) {
-			position.set(x, y);
+			Position.set(x, y);
 		}
 
-		void setPosition(const glm::ivec2 pos) {
-			position.set(pos);
+		void setPosition(const Position2D& pos) {
+			Position.set(pos.X, pos.Y);
 		}
 
-		void setColor(const GLubyte red, const GLubyte green, const GLubyte blue, const GLubyte alpha) {
-			color.set(red, green, blue, alpha);
+		void setPosition(const glm::ivec2& pos) {
+			Position.set(pos);
+		}
+
+		void setColor(const GLubyte Red, const GLubyte Green, const GLubyte Blue, const GLubyte Alpha) {
+			Color.set(Red, Green, Blue, Alpha);
 		}
 
 		void setColor(const ColorRgba& newColor) {
-			color.set(newColor.red, newColor.green, newColor.blue, newColor.alpha);
+			Color.set(newColor.Red, newColor.Green, newColor.Blue, newColor.Alpha);
 		}
 
 		void setTextureCoords(const GLfloat u, const GLfloat v) {
-			textureCoords.set(u, v);
+			TextureCoords.set(u, v);
 		}
 	};
 }

@@ -41,9 +41,9 @@ namespace Evolve {
 		void freeProgram();
 
 	private:
-		GLuint m_programID = 0;
-		GLuint m_vertexShaderID = 0;
-		GLuint m_fragmentShaderID = 0;
+		GLuint programID_ = 0;
+		GLuint vertexShaderID_ = 0;
+		GLuint fragmentShaderID_ = 0;
 
 		std::unordered_map<std::string, GLint> m_uniformCache;
 

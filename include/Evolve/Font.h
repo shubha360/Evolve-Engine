@@ -52,38 +52,38 @@ namespace Evolve {
 
 		unsigned int getLineWidth(const std::string& text);
 
-		unsigned int getLineHeight() const { return (unsigned int)(m_lineHeight * m_fontScale); }
+		unsigned int getLineHeight() const;
 
 		unsigned int getTextHeight(const std::string& text) const;
 
-		std::string getFontName() const { return m_fontName; }
+		std::string getFontName() const { return fontName_; }
 
-		bool isInitialized() const { return m_initialized; }
+		bool isInitialized() const { return initialized_; }
 
-		void setLetterSpacing(const int letterSpacing) { m_letterSpacing = letterSpacing; }
-		void setLineSpacing(const int lineSpacing) { m_lineSpacing = lineSpacing; }
-		void setAddToSpaceLength(const int addToSpaceLength) { m_addToSpaceLength = addToSpaceLength; }
-		void setFontScale(const float fontScale) { m_fontScale = fontScale; }
+		void setLetterSpacing(const int letterSpacing) { letterSpacing_ = letterSpacing; }
+		void setLineSpacing(const int lineSpacing) { lineSpacing_ = lineSpacing; }
+		void setAddToSpaceLength(const int addToSpaceLength) { addToSpaceLength_ = addToSpaceLength; }
+		void setFontScale(const float fontScale) { fontScale_ = fontScale; }
 
 		void deleteFont();
 
 	private:
-		std::string m_fontName;
-		bool m_initialized = false;
+		std::string fontName_;
+		bool initialized_ = false;
 
-		unsigned int m_spaceSize = 0;
-		unsigned int m_newLine = 0;
-		unsigned int m_lineHeight = 0;
+		unsigned int spaceSize_ = 0;
+		unsigned int newLine_ = 0;
+		unsigned int lineHeight_ = 0;
 
-		int m_letterSpacing = 0;
-		int m_lineSpacing = 0;
-		int m_addToSpaceLength = 0;
+		int letterSpacing_ = 0;
+		int lineSpacing_ = 0;
+		int addToSpaceLength_ = 0;
 
-		float m_fontScale = 1.0f;
+		float fontScale_ = 1.0f;
 
-		TextureData m_fontTexture;
+		TextureData fontTexture_;
 
-		std::vector<UvDimension> m_uvDimensions;
-		std::vector<int> m_characterWidths;
+		std::vector<UvDimension> uvDimensions_;
+		std::vector<int> characterWidths_;
 	};
 }

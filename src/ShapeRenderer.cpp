@@ -24,7 +24,7 @@ SOFTWARE.
 
 Evolve::ShapeRenderer::Shape::Shape(int depth, std::vector<Vertex2D> vertices, 
 	const unsigned int numVertices, const unsigned int numIndices) :
-	m_depth(depth), m_vertices(vertices), m_numVertices(numVertices), m_numIndices(numIndices)
+	depth_(depth), vertices_(vertices), numVertices_(numVertices), numIndices_(numIndices)
 {}
 
 Evolve::ShapeRenderer::Shape::~Shape() {}
@@ -33,36 +33,36 @@ bool Evolve::ShapeRenderer::init(const std::string& pathToAssets) {
 	std::string vertShaderPath = pathToAssets + "/shaders/shape_shader.vert";
 	std::string fragShaderPath = pathToAssets + "/shaders/shape_shader.frag";
 
-	if (!m_defaultShader.compileAndLinkShaders(
+	if (!defaultShader_.compileAndLinkShaders(
 		vertShaderPath,
 		fragShaderPath)) {
 		EVOLVE_REPORT_ERROR("Failed to compile or link shape shader.", init);
 		return false;
 	}
 
-	m_inited = true;
+	inited_ = true;
 	return true;
 }
 
 void Evolve::ShapeRenderer::begin() {
-	if (m_vaoID == 0) {
+	if (vaoID_ == 0) {
 		createVao();
 	}
 
-	m_shapes.clear();
-	m_shapePointers.clear();
-	m_shapeBatches.clear();
+	shapes_.clear();
+	shapePointers_.clear();
+	shapeBatches_.clear();
 
-	m_totalVertices = 0;
+	totalVertices_ = 0;
 
-	if (!m_iboIDs.empty()) {
-		glDeleteBuffers((GLsizei)m_iboIDs.size(), m_iboIDs.data());
-		m_iboIDs.clear();
+	if (!iboIDs_.empty()) {
+		glDeleteBuffers((GLsizei)iboIDs_.size(), iboIDs_.data());
+		iboIDs_.clear();
 	}
 }
 
-void Evolve::ShapeRenderer::drawTriangle(const glm::ivec2 originPos, const glm::ivec2 vertexTwoPos, 
-	const glm::ivec2 vertexThreePos, const ColorRgba& verticesColor, int depth /*= 0*/) {
+void Evolve::ShapeRenderer::drawTriangle(const Position2D& originPos, const Position2D& vertexTwoPos, 
+	const Position2D& vertexThreePos, const ColorRgba& verticesColor, int depth /*= 0*/) {
 
 	std::vector<Vertex2D> vertices(3);	
 
@@ -75,16 +75,16 @@ void Evolve::ShapeRenderer::drawTriangle(const glm::ivec2 originPos, const glm::
 	vertices[2].setPosition(vertexThreePos);
 	vertices[2].setColor(verticesColor);
 
-	m_shapes.emplace_back(depth, vertices, 3, 3);
+	shapes_.emplace_back(depth, vertices, 3, 3);
 	
-	m_totalVertices += m_shapes.back().m_numVertices;
-	m_totalIndices += m_shapes.back().m_numIndices;
+	totalVertices_ += shapes_.back().numVertices_;
+	totalIndices_ += shapes_.back().numIndices_;
 }
 
 void Evolve::ShapeRenderer::drawTriangle(
-	const glm::ivec2 originPos, ColorRgba& originColor,
-	const glm::ivec2 vertexTwoPos, ColorRgba& vertexTwoColor,
-	const glm::ivec2 vertexThreePos, ColorRgba& vertexThreeColor, 
+	const Position2D& originPos, const ColorRgba& originColor,
+	const Position2D& vertexTwoPos, const ColorRgba& vertexTwoColor,
+	const Position2D& vertexThreePos, const ColorRgba& vertexThreeColor,
 	int depth /*= 0*/) {
 
 	std::vector<Vertex2D> vertices(3);
@@ -98,15 +98,15 @@ void Evolve::ShapeRenderer::drawTriangle(
 	vertices[2].setPosition(vertexThreePos);
 	vertices[2].setColor(vertexThreeColor);
 
-	m_shapes.emplace_back(depth, vertices, 3, 3);
+	shapes_.emplace_back(depth, vertices, 3, 3);
 
-	m_totalVertices += m_shapes.back().m_numVertices;
-	m_totalIndices += m_shapes.back().m_numIndices;
+	totalVertices_ += shapes_.back().numVertices_;
+	totalIndices_ += shapes_.back().numIndices_;
 }
 
-void Evolve::ShapeRenderer::drawRectangle(const glm::ivec2 originPos, const glm::ivec2 vertexTwoPos, 
-	const glm::ivec2 vertexThreePos, const glm::ivec2 vertexFourPos, 
-	ColorRgba& verticesColor, int depth /*= 0*/) {
+void Evolve::ShapeRenderer::drawRectangle(const Position2D& originPos, const Position2D& vertexTwoPos, 
+	const Position2D& vertexThreePos, const Position2D& vertexFourPos, 
+	const ColorRgba& verticesColor, int depth /*= 0*/) {
 
 	std::vector<Vertex2D> vertices(4);
 
@@ -122,16 +122,16 @@ void Evolve::ShapeRenderer::drawRectangle(const glm::ivec2 originPos, const glm:
 	vertices[3].setPosition(vertexFourPos);
 	vertices[3].setColor(verticesColor);
 
-	m_shapes.emplace_back(depth, vertices, 4, 6);
+	shapes_.emplace_back(depth, vertices, 4, 6);
 
-	m_totalVertices += m_shapes.back().m_numVertices;
-	m_totalIndices += m_shapes.back().m_numIndices;
+	totalVertices_ += shapes_.back().numVertices_;
+	totalIndices_ += shapes_.back().numIndices_;
 }
 
-void Evolve::ShapeRenderer::drawRectangle(const glm::ivec2 originPos, ColorRgba& originColor, 
-	const glm::ivec2 vertexTwoPos, ColorRgba& vertexTwoColor, 
-	const glm::ivec2 vertexThreePos, ColorRgba& vertexThreeColor, 
-	const glm::ivec2 vertexFourPos, ColorRgba& vertexFourColor, 
+void Evolve::ShapeRenderer::drawRectangle(const Position2D& originPos, const ColorRgba& originColor,
+	const Position2D& vertexTwoPos, const ColorRgba& vertexTwoColor,
+	const Position2D& vertexThreePos, const ColorRgba& vertexThreeColor,
+	const Position2D& vertexFourPos, const ColorRgba& vertexFourColor,
 	int depth /*= 0*/) {
 
 	std::vector<Vertex2D> vertices(4);
@@ -148,14 +148,14 @@ void Evolve::ShapeRenderer::drawRectangle(const glm::ivec2 originPos, ColorRgba&
 	vertices[3].setPosition(vertexFourPos);
 	vertices[3].setColor(vertexFourColor);
 
-	m_shapes.emplace_back(depth, vertices, 4, 6);
+	shapes_.emplace_back(depth, vertices, 4, 6);
 
-	m_totalVertices += m_shapes.back().m_numVertices;
-	m_totalIndices += m_shapes.back().m_numIndices;
+	totalVertices_ += shapes_.back().numVertices_;
+	totalIndices_ += shapes_.back().numIndices_;
 }
 
 void Evolve::ShapeRenderer::drawRectangle(const RectDimension& destRect,
-	ColorRgba& verticesColor, int depth /*= 0*/) {
+	const ColorRgba& verticesColor, int depth /*= 0*/) {
 
 	std::vector<Vertex2D> vertices(4);
 	
@@ -175,16 +175,18 @@ void Evolve::ShapeRenderer::drawRectangle(const RectDimension& destRect,
 	vertices[3].setPosition(destRect.getLeft(), destRect.getTop());
 	vertices[3].setColor(verticesColor);
 
-	m_shapes.emplace_back(depth, vertices, 4, 6);
+	shapes_.emplace_back(depth, vertices, 4, 6);
 
-	m_totalVertices += m_shapes.back().m_numVertices;
-	m_totalIndices += m_shapes.back().m_numIndices;
+	totalVertices_ += shapes_.back().numVertices_;
+	totalIndices_ += shapes_.back().numIndices_;
 }
 
-void Evolve::ShapeRenderer::drawCircle(const glm::ivec2& centerPos, unsigned int radius, ColorRgba& color, int depth) {
+void Evolve::ShapeRenderer::drawCircle(const Position2D& centerPos, unsigned int radius, 
+	const ColorRgba& color, int depth) {
+	
 	static const int NUM_TRIANGLES = 60;
 
-	glm::ivec2 vertexTwoPos(0, 0);
+	Position2D vertexTwoPos { 0, 0 };
 	bool makeTriangle = false;
 
 	for (size_t i = 0; i <= NUM_TRIANGLES; i++) {
@@ -192,16 +194,16 @@ void Evolve::ShapeRenderer::drawCircle(const glm::ivec2& centerPos, unsigned int
 		double angle = (M_PI * 2.0f) * ((float)i / (float)NUM_TRIANGLES);
 
 		if (!makeTriangle) {
-			vertexTwoPos.x = (int) (centerPos.x + cos(angle) * radius);
-			vertexTwoPos.y = (int) (centerPos.y + sin(angle) * radius);
+			vertexTwoPos.X = (GLint) (centerPos.X + cos(angle) * radius);
+			vertexTwoPos.X = (GLint) (centerPos.Y + sin(angle) * radius);
 
 			makeTriangle = true;
 		}
 		else {
-			glm::ivec2 vertexThreePos(
-				centerPos.x + cos(angle) * radius,
-				centerPos.y + sin(angle) * radius
-			);
+			Position2D vertexThreePos{
+				(GLint) (centerPos.X + cos(angle) * radius),
+				(GLint) (centerPos.Y + sin(angle) * radius)
+			};
 
 			drawTriangle(centerPos, vertexTwoPos, vertexThreePos, color, depth);
 
@@ -212,26 +214,26 @@ void Evolve::ShapeRenderer::drawCircle(const glm::ivec2& centerPos, unsigned int
 }
 
 void Evolve::ShapeRenderer::end(const ShapeSortType& sortType /*= ShapeSortType::BY_DEPTH_INCREMENTAL*/) {
-	if (!m_inited) {
+	if (!inited_) {
 		EVOLVE_REPORT_ERROR("Texture renderer not initialized.", begin);
 		return;
 	}
 
-	if (!m_shapes.empty()) {
-		m_shapePointers.resize(m_shapes.size());
+	if (!shapes_.empty()) {
+		shapePointers_.resize(shapes_.size());
 
-		for (size_t i = 0; i < m_shapePointers.size(); i++) {
-			m_shapePointers[i] = &m_shapes[i];
+		for (size_t i = 0; i < shapePointers_.size(); i++) {
+			shapePointers_[i] = &shapes_[i];
 		}
 
 		switch (sortType) {
 
 		case ShapeSortType::BY_DEPTH_INCREMENTAL:
-			std::stable_sort(m_shapePointers.begin(), m_shapePointers.end(), compareByDepthIncremental);
+			std::stable_sort(shapePointers_.begin(), shapePointers_.end(), compareByDepthIncremental);
 			break;
 
 		case ShapeSortType::BY_DEPTH_DECREMENTAL:
-			std::stable_sort(m_shapePointers.begin(), m_shapePointers.end(), compareByDepthDecremental);
+			std::stable_sort(shapePointers_.begin(), shapePointers_.end(), compareByDepthDecremental);
 			break;
 		}
 
@@ -240,28 +242,28 @@ void Evolve::ShapeRenderer::end(const ShapeSortType& sortType /*= ShapeSortType:
 }
 
 void Evolve::ShapeRenderer::renderShapes(Camera& camera, GlslProgram* shader /*= nullptr*/) {
-	if (!m_inited) {
+	if (!inited_) {
 		EVOLVE_REPORT_ERROR("Shape renderer not initialized.", begin);
 		return;
 	}
 
 	if (shader != nullptr) {
-		m_currentShader = shader;
+		currentShader_ = shader;
 	}
 	else {
-		m_currentShader = &m_defaultShader;
+		currentShader_ = &defaultShader_;
 	}
 
-	m_currentShader->useProgram();
+	currentShader_->useProgram();
 
-	camera.sendMatrixDataToShader(*m_currentShader);
+	camera.sendMatrixDataToShader(*currentShader_);
 
-	if (!m_shapeBatches.empty()) {
-		glBindVertexArray(m_vaoID);
+	if (!shapeBatches_.empty()) {
+		glBindVertexArray(vaoID_);
 
-		for (auto& batch : m_shapeBatches) {
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, batch.m_iboID);
-			glDrawElements(GL_TRIANGLES, batch.m_numIndices, GL_UNSIGNED_INT, nullptr);
+		for (auto& batch : shapeBatches_) {
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, batch.iboID_);
+			glDrawElements(GL_TRIANGLES, batch.numIndices_, GL_UNSIGNED_INT, nullptr);
 		}
 
 		glBindVertexArray(0);
@@ -272,67 +274,67 @@ void Evolve::ShapeRenderer::renderShapes(Camera& camera, GlslProgram* shader /*=
 		glDisableVertexAttribArray(1);
 	}
 
-	m_currentShader->unuseProgram();
+	currentShader_->unuseProgram();
 }
 
 void Evolve::ShapeRenderer::freeShapeRenderer() {
-	if (m_inited) {
-		m_defaultShader.freeProgram();
+	if (inited_) {
+		defaultShader_.freeProgram();
 	}
 
-	if (!m_iboIDs.empty()) {
-		glDeleteBuffers((GLsizei)m_iboIDs.size(), m_iboIDs.data());
+	if (!iboIDs_.empty()) {
+		glDeleteBuffers((GLsizei)iboIDs_.size(), iboIDs_.data());
 	}
 
-	if (m_vboID != 0) {
-		glDeleteBuffers(1, &m_vboID);
-		m_vboID = 0;
+	if (vboID_ != 0) {
+		glDeleteBuffers(1, &vboID_);
+		vboID_ = 0;
 	}
 
-	if (m_vaoID != 0) {
-		glDeleteVertexArrays(1, &m_vaoID);
-		m_vaoID = 0;
+	if (vaoID_ != 0) {
+		glDeleteVertexArrays(1, &vaoID_);
+		vaoID_ = 0;
 	}
 }
 
 void Evolve::ShapeRenderer::createVao() {
-	if (m_vaoID == 0) {
-		glGenVertexArrays(1, &m_vaoID);
+	if (vaoID_ == 0) {
+		glGenVertexArrays(1, &vaoID_);
 	}
 
-	if (m_vboID == 0) {
-		glGenBuffers(1, &m_vboID);
+	if (vboID_ == 0) {
+		glGenBuffers(1, &vboID_);
 	}
 
-	glBindVertexArray(m_vaoID);
+	glBindVertexArray(vaoID_);
 
-	glBindBuffer(GL_ARRAY_BUFFER, m_vboID);
+	glBindBuffer(GL_ARRAY_BUFFER, vboID_);
 
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 
-	glVertexAttribPointer(0, 2, GL_INT, GL_FALSE, sizeof(Vertex2D), (void*)offsetof(Vertex2D, position));
-	glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex2D), (void*)offsetof(Vertex2D, color));
+	glVertexAttribPointer(0, 2, GL_INT, GL_FALSE, sizeof(Vertex2D), (void*) offsetof(Vertex2D, Position));
+	glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex2D), (void*) offsetof(Vertex2D, Color));
 
 	glBindVertexArray(0);
 }
 
 void Evolve::ShapeRenderer::setupShapeBatches() {
-	if (!m_shapePointers.empty()) {
+	if (!shapePointers_.empty()) {
 		{
 			// setup the vbo and buffer vertex data
 			std::vector<Vertex2D> vertices;
-			vertices.resize(m_totalVertices);
+			vertices.resize(totalVertices_);
 
 			unsigned int currentVertex = 0;
 
-			for (auto& shape : m_shapePointers) {
-				for (size_t vertex = 0; vertex < shape->m_vertices.size(); vertex++) {
-					vertices[currentVertex++] = shape->m_vertices[vertex];
+			for (auto& shape : shapePointers_) {
+				for (size_t vertex = 0; vertex < shape->vertices_.size(); vertex++) {
+					vertices[currentVertex++] = shape->vertices_[vertex];
 				}
 			}
 
-			glBindBuffer(GL_ARRAY_BUFFER, m_vboID);
+			glBindBuffer(GL_ARRAY_BUFFER, vboID_);
 
 			glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex2D), nullptr, GL_DYNAMIC_DRAW);
 
@@ -345,43 +347,43 @@ void Evolve::ShapeRenderer::setupShapeBatches() {
 		{
 			// Setup render batches and the ibo
 			std::vector<GLuint> vertexIndices;
-			vertexIndices.resize(m_totalIndices);
+			vertexIndices.resize(totalIndices_);
 
 			unsigned int curentIndex = 0;
 			unsigned int currentVertex = 0;
 
-			m_shapeBatches.emplace_back(curentIndex, m_shapePointers[0]->m_numIndices);
-			addIndicesToBuffer(vertexIndices, m_shapePointers[0]->m_numIndices, curentIndex, currentVertex);
+			shapeBatches_.emplace_back(curentIndex, shapePointers_[0]->numIndices_);
+			addIndicesToBuffer(vertexIndices, shapePointers_[0]->numIndices_, curentIndex, currentVertex);
 
-			for (size_t i = 1; i < m_shapePointers.size(); i++) {
+			for (size_t i = 1; i < shapePointers_.size(); i++) {
 
-				auto numIndices = m_shapePointers[i]->m_numIndices;
+				auto numIndices = shapePointers_[i]->numIndices_;
 
-				if (m_shapePointers[i]->m_depth == m_shapePointers[i - 1]->m_depth) {
-					m_shapeBatches.back().m_numIndices += numIndices;
+				if (shapePointers_[i]->depth_ == shapePointers_[i - 1]->depth_) {
+					shapeBatches_.back().numIndices_ += numIndices;
 				}
 				else {
-					m_shapeBatches.emplace_back(curentIndex, numIndices);
+					shapeBatches_.emplace_back(curentIndex, numIndices);
 				}
 
 				addIndicesToBuffer(vertexIndices, numIndices, curentIndex, currentVertex);
 			}
 
-			m_iboIDs.resize(m_shapeBatches.size());
+			iboIDs_.resize(shapeBatches_.size());
 
-			glGenBuffers((GLsizei)m_iboIDs.size(), m_iboIDs.data());
+			glGenBuffers((GLsizei)iboIDs_.size(), iboIDs_.data());
 
-			for (size_t i = 0; i < m_iboIDs.size(); i++) {
+			for (size_t i = 0; i < iboIDs_.size(); i++) {
 
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_iboIDs[i]);
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboIDs_[i]);
 
-				glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_shapeBatches[i].m_numIndices * sizeof(GLuint), nullptr, GL_DYNAMIC_DRAW);
+				glBufferData(GL_ELEMENT_ARRAY_BUFFER, shapeBatches_[i].numIndices_ * sizeof(GLuint), nullptr, GL_DYNAMIC_DRAW);
 
-				glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, m_shapeBatches[i].m_numIndices * sizeof(GLuint), &vertexIndices[m_shapeBatches[i].m_offset]);
+				glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, shapeBatches_[i].numIndices_ * sizeof(GLuint), &vertexIndices[shapeBatches_[i].offset_]);
 
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-				m_shapeBatches[i].m_iboID = m_iboIDs[i];
+				shapeBatches_[i].iboID_ = iboIDs_[i];
 			}
 		}
 	}
@@ -426,13 +428,13 @@ void Evolve::ShapeRenderer::addIndicesToBuffer(std::vector<GLuint>& indices, con
 }
 
 bool Evolve::ShapeRenderer::compareByDepthIncremental(Shape* a, Shape* b) {
-	return (a->m_depth < b->m_depth);
+	return (a->depth_ < b->depth_);
 }
 
 bool Evolve::ShapeRenderer::compareByDepthDecremental(Shape* a, Shape* b) {
-	return (a->m_depth > b->m_depth);
+	return (a->depth_ > b->depth_);
 }
 
 Evolve::ShapeRenderer::ShapeBatch::ShapeBatch(unsigned int offset, unsigned int numIndices) :
-	m_offset(offset), m_numIndices(numIndices)
+	offset_(offset), numIndices_(numIndices)
 {}

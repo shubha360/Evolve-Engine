@@ -25,6 +25,8 @@ SOFTWARE.
 #include "IncludeLibs.h"
 
 #include "GlslProgram.h"
+#include "Position2D.h"
+#include "Size2D.h"
 
 namespace Evolve {
 
@@ -33,19 +35,19 @@ namespace Evolve {
 		Camera();
 		~Camera();
 
-		bool init(const unsigned int screenWidth, const unsigned int screenHeight);
+		bool init(const Size2D& screenSize);
 
 		void sendMatrixDataToShader(GlslProgram& shaderProgram);
 
-		glm::ivec2 convertScreenCoordsToWorldCoords(const glm::ivec2& screenCoords);
+		Position2D convertScreenCoordsToWorldCoords(const Position2D& screenCoords);
 
 	private:
-		glm::mat4 m_mvp = glm::mat4(1.0f);
+		glm::mat4 mvp_ = glm::mat4(1.0f);
 
-		glm::mat4 m_projectionMatrix = glm::mat4(1.0f);
-		glm::mat4 m_viewMatrix = glm::mat4(1.0f);
-		glm::mat4 m_modelMatrix = glm::mat4(1.0f);
+		glm::mat4 projectionMatrix_ = glm::mat4(1.0f);
+		glm::mat4 viewMatrix_ = glm::mat4(1.0f);
+		glm::mat4 modelMatrix_ = glm::mat4(1.0f);
 
-		unsigned int m_screenWidth = 0, m_screenHeight = 0;
+		Size2D screenSize_ {};
 	};
 }

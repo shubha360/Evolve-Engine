@@ -26,16 +26,16 @@ SOFTWARE.
 namespace Evolve {
 
 	struct Position2D {
-		GLint x, y;
+		GLint X, Y;
 
 		void set(const GLint x, const GLint y) {
-			this->x = x;
-			this->y = y;
+			this->X = x;
+			this->Y = y;
 		}
 
-		void set(const glm::ivec2 pos) {
-			this->x = pos.x;
-			this->y = pos.y;
+		void set(const glm::ivec2& pos) {
+			this->X = pos.x;
+			this->Y = pos.y;
 		}
 	};
 }

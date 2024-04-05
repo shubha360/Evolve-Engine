@@ -32,15 +32,15 @@ bool Evolve::Font::initFromBitmap16x16(const std::string& fontName, const std::s
 	const float fontScale /*= 1.0f*/, const int letterSpacing /*= 5*/, 
 	const int lineSpacing /*= 5*/, const int addToSpaceLength /*= 0*/) {
 
-	ImageLoader::LoadTextureFromImage(bmpFilePath, m_fontTexture, 1);
+	ImageLoader::LoadTextureFromImage(bmpFilePath, fontTexture_, 1);
 
-	if (m_fontTexture.data == nullptr) {
+	if (fontTexture_.data == nullptr) {
 		EVOLVE_REPORT_ERROR("Failed to load image at " + bmpFilePath + " for bitmap font.", initFromBitmap16x16);
 		return false;
 	}
 
-	const int CELL_WIDTH = m_fontTexture.width / 16;
-	const int CELL_HEIGHT = m_fontTexture.height / 16;
+	const int CELL_WIDTH = fontTexture_.width / 16;
+	const int CELL_HEIGHT = fontTexture_.height / 16;
 
 	int top = CELL_HEIGHT;
 	int bottom = 0;
@@ -52,8 +52,8 @@ bool Evolve::Font::initFromBitmap16x16(const std::string& fontName, const std::s
 	UvDimension currentUV = {};
 
 	unsigned int currentChar = 0;
-	m_uvDimensions.resize(256);
-	m_characterWidths.resize(256);
+	uvDimensions_.resize(256);
+	characterWidths_.resize(256);
 
 	for (int row = 0; row < 16; row++) {
 		for (int column = 0; column < 16; column++) {
@@ -62,17 +62,17 @@ bool Evolve::Font::initFromBitmap16x16(const std::string& fontName, const std::s
 			currentCellY = CELL_HEIGHT * row;
 
 			currentUV.set(
-				(float) CELL_WIDTH * column / (float) m_fontTexture.width,
+				(float) CELL_WIDTH * column / (float) fontTexture_.width,
 
-				// if texture height is 10 and cell height is 2
+				// if texture Height is 10 and cell Height is 2
 				// for row = 0, (10 - ((0 + 1) * 2)) = 10 - 2 = 8
 				// for row = 1, (10 - ((1 + 1) * 2)) = 10 - 4 = 6
 				// for row = 4, (10 - ((4 + 1) * 2)) = 10 - 10 = 10
-				(float)(m_fontTexture.height - ((row + 1) * CELL_HEIGHT)) / (float)m_fontTexture.height,
+				(float)(fontTexture_.height - ((row + 1) * CELL_HEIGHT)) / (float)fontTexture_.height,
 				
 				
-				(float) CELL_WIDTH / (float) m_fontTexture.width,
-				(float) CELL_HEIGHT / (float) m_fontTexture.height
+				(float) CELL_WIDTH / (float) fontTexture_.width,
+				(float) CELL_HEIGHT / (float) fontTexture_.height
 			);
 
 			// Calculate the top
@@ -82,7 +82,7 @@ bool Evolve::Font::initFromBitmap16x16(const std::string& fontName, const std::s
 					currentPixelX = currentCellX + j;
 					currentPixelY = currentCellY + i;
 					
-					unsigned char currentPixel = m_fontTexture.data[currentPixelY * m_fontTexture.width + currentPixelX];
+					unsigned char currentPixel = fontTexture_.data[currentPixelY * fontTexture_.width + currentPixelX];
 
 					if (currentPixel != 0) {
 						if (i < top) {
@@ -102,7 +102,7 @@ bool Evolve::Font::initFromBitmap16x16(const std::string& fontName, const std::s
 					currentPixelX = currentCellX + j;
 					currentPixelY = currentCellY + i;
 
-					unsigned char currentPixel = m_fontTexture.data[currentPixelY * m_fontTexture.width + currentPixelX];
+					unsigned char currentPixel = fontTexture_.data[currentPixelY * fontTexture_.width + currentPixelX];
 
 					if (currentPixel != 0) {
 						if (currentChar == 'A') {
@@ -125,13 +125,13 @@ bool Evolve::Font::initFromBitmap16x16(const std::string& fontName, const std::s
 					currentPixelX = currentCellX + j;
 					currentPixelY = currentCellY + i;
 
-					unsigned char currentPixel = m_fontTexture.data[currentPixelY * m_fontTexture.width + currentPixelX];
+					unsigned char currentPixel = fontTexture_.data[currentPixelY * fontTexture_.width + currentPixelX];
 
 					if (currentPixel != 0) {
-						currentUV.bottomLeftX = (float) currentPixelX / (float) m_fontTexture.width;
+						currentUV.BottomLeftX = (float) currentPixelX / (float) fontTexture_.width;
 
 						// the left of current character
-						m_characterWidths[currentChar] = j;
+						characterWidths_[currentChar] = j;
 
 						i = CELL_HEIGHT;
 						j = CELL_WIDTH;
@@ -146,14 +146,14 @@ bool Evolve::Font::initFromBitmap16x16(const std::string& fontName, const std::s
 					currentPixelX = currentCellX + j;
 					currentPixelY = currentCellY + i;
 
-					unsigned char currentPixel = m_fontTexture.data[currentPixelY * m_fontTexture.width + currentPixelX];
+					unsigned char currentPixel = fontTexture_.data[currentPixelY * fontTexture_.width + currentPixelX];
 
 					if (currentPixel != 0) {
-						currentUV.width = 
-							( ( (float) currentPixelX + 1) / (float) m_fontTexture.width ) - currentUV.bottomLeftX;
+						currentUV.Width = 
+							( ( (float) currentPixelX + 1) / (float) fontTexture_.width ) - currentUV.BottomLeftX;
 
-						// now setting the actual width
-						m_characterWidths[currentChar] = j - m_characterWidths[currentChar];
+						// now setting the actual Width
+						characterWidths_[currentChar] = j - characterWidths_[currentChar];
 
 						i = CELL_HEIGHT;
 						j = -1;
@@ -161,29 +161,29 @@ bool Evolve::Font::initFromBitmap16x16(const std::string& fontName, const std::s
 				}
 			}
 
-			m_uvDimensions[currentChar] = currentUV;
+			uvDimensions_[currentChar] = currentUV;
 			currentChar++;
 		}
 	}
 
-	ImageLoader::BufferTextureData(m_fontTexture);
-	ImageLoader::FreeTexture(m_fontTexture);
+	ImageLoader::BufferTextureData(fontTexture_);
+	ImageLoader::FreeTexture(fontTexture_);
 
-	m_spaceSize = CELL_WIDTH / 2;
-	m_newLine = aBottom - top;
-	m_lineHeight = bottom - top;
+	spaceSize_ = CELL_WIDTH / 2;
+	newLine_ = aBottom - top;
+	lineHeight_ = bottom - top;
 
 	for (int i = 0; i < 256; i++) {
-		m_uvDimensions[i].height = (float)m_lineHeight / (float)m_fontTexture.height;
+		uvDimensions_[i].Height = (float)lineHeight_ / (float)fontTexture_.height;
 	}
 
-	m_fontName = fontName;
-	m_initialized = true;
+	fontName_ = fontName;
+	initialized_ = true;
 
-	m_fontScale = fontScale;
-	m_letterSpacing = letterSpacing;
-	m_lineSpacing = lineSpacing;
-	m_addToSpaceLength = addToSpaceLength;
+	fontScale_ = fontScale;
+	letterSpacing_ = letterSpacing;
+	lineSpacing_ = lineSpacing;
+	addToSpaceLength_ = addToSpaceLength;
 
 	return true;
 }
@@ -273,18 +273,18 @@ bool Evolve::Font::initFromFontFile(const std::string& fontName, const std::stri
 	unsigned int textureWidth = maxCellWidth * 16;
 	unsigned int textureHeight = maxCellHeight * 16;
 
-	m_fontTexture.data = new unsigned char[textureWidth * textureHeight];
-	memset(m_fontTexture.data, 0, (size_t) textureWidth * textureHeight);
+	fontTexture_.data = new unsigned char[textureWidth * textureHeight];
+	memset(fontTexture_.data, 0, (size_t) textureWidth * textureHeight);
 
-	m_fontTexture.width = textureWidth;
-	m_fontTexture.height = textureHeight;
-	m_fontTexture.bitsPerPixel = 1;
+	fontTexture_.width = textureWidth;
+	fontTexture_.height = textureHeight;
+	fontTexture_.bitsPerPixel = 1;
 
 	UvDimension currentUV = {};
 	unsigned int currentChar = 0;
 
-	m_uvDimensions.resize(256);
-	m_characterWidths.resize(256);
+	uvDimensions_.resize(256);
+	characterWidths_.resize(256);
 
 	unsigned int currentCellX = 0;
 	unsigned int currentCellY = 0;
@@ -296,31 +296,31 @@ bool Evolve::Font::initFromFontFile(const std::string& fontName, const std::stri
 			currentCellY = maxCellHeight * row;
 
 			currentUV.set(
-				(float)maxCellWidth * column / (float)m_fontTexture.width,
+				(float)maxCellWidth * column / (float)fontTexture_.width,
 
-				// if texture height is 10 and cell height is 2
+				// if texture Height is 10 and cell Height is 2
 				// for row = 0, (10 - ((0 + 1) * 2)) = 10 - 2 = 8
 				// for row = 1, (10 - ((1 + 1) * 2)) = 10 - 4 = 6
 				// for row = 4, (10 - ((4 + 1) * 2)) = 10 - 10 = 10
-				(float)(m_fontTexture.height - ((row + 1) * maxCellHeight)) / (float)m_fontTexture.height,
+				(float)(fontTexture_.height - ((row + 1) * maxCellHeight)) / (float)fontTexture_.height,
 
 
-				(float)(characterMetrics[currentChar].width / 64) / (float)m_fontTexture.width,
-				(float)maxCellHeight / (float)m_fontTexture.height
+				(float)(characterMetrics[currentChar].width / 64) / (float)fontTexture_.width,
+				(float)maxCellHeight / (float)fontTexture_.height
 			);
 
-			m_uvDimensions[currentChar] = currentUV;
-			m_characterWidths[currentChar] = characterMetrics[currentChar].width / 64;
+			uvDimensions_[currentChar] = currentUV;
+			characterWidths_[currentChar] = characterMetrics[currentChar].width / 64;
 
 			int currentCharTop = currentCellY + maxBearing - characterMetrics[currentChar].horiBearingY / 64;
 
-			unsigned char* destPixels = m_fontTexture.data;
+			unsigned char* destPixels = fontTexture_.data;
 			unsigned char* srcPixels = characterTextures[currentChar].data;
 
 			for (int i = 0; i < characterTextures[currentChar].height; i++) {
 
 				memcpy(
-					&destPixels[(i + currentCharTop) * m_fontTexture.width + currentCellX],
+					&destPixels[(i + currentCharTop) * fontTexture_.width + currentCellX],
 					&srcPixels[i * characterTextures[currentChar].width],
 					characterTextures[currentChar].width
 				);
@@ -330,10 +330,10 @@ bool Evolve::Font::initFromFontFile(const std::string& fontName, const std::stri
 		}
 	}
 
-	ImageLoader::BufferTextureData(m_fontTexture);
+	ImageLoader::BufferTextureData(fontTexture_);
 
-	delete[] m_fontTexture.data;
-	m_fontTexture.data = nullptr;
+	delete[] fontTexture_.data;
+	fontTexture_.data = nullptr;
 
 	for (auto& it : characterTextures) {
 		delete[] it.data;
@@ -343,21 +343,21 @@ bool Evolve::Font::initFromFontFile(const std::string& fontName, const std::stri
 	FT_Done_Face(face);
 	FT_Done_FreeType(library);
 
-	m_spaceSize = maxCellWidth / 2;
-	m_newLine = maxBearing;
-	m_lineHeight = maxCellHeight;
+	spaceSize_ = maxCellWidth / 2;
+	newLine_ = maxBearing;
+	lineHeight_ = maxCellHeight;
 
 	for (int i = 0; i < 256; i++) {
-		m_uvDimensions[i].height = (float)m_lineHeight / (float)m_fontTexture.height;
+		uvDimensions_[i].Height = (float)lineHeight_ / (float)fontTexture_.height;
 	}
 
-	m_fontName = fontName;
-	m_initialized = true;
+	fontName_ = fontName;
+	initialized_ = true;
 
-	m_letterSpacing = letterSpacing;
-	m_lineSpacing = lineSpacing;
-	m_addToSpaceLength = addToSpaceLength;
-	m_fontScale = fontScale;
+	letterSpacing_ = letterSpacing;
+	lineSpacing_ = lineSpacing;
+	addToSpaceLength_ = addToSpaceLength;
+	fontScale_ = fontScale;
 
 	return true;
 }
@@ -365,7 +365,7 @@ bool Evolve::Font::initFromFontFile(const std::string& fontName, const std::stri
 void Evolve::Font::drawTextToRenderer(const std::string& text, const int topLeftX, const int topLeftY,
 	const ColorRgba& color, TextureRenderer& textureRenderer) {
 
-	if (m_fontTexture.id == 0) {
+	if (fontTexture_.id == 0) {
 		EVOLVE_REPORT_ERROR("Didn't load any font yet.", drawTextToRenderer);
 		return;
 	}
@@ -374,7 +374,7 @@ void Evolve::Font::drawTextToRenderer(const std::string& text, const int topLeft
 		GlyphOrigin::BOTTOM_LEFT,
 		RectDimension { 0,0,700,700 },
 		UvDimension { 0.0f, 0.0f, 1.0f, 1.0f },
-		m_fontTexture.id, ColorRgba { 255,255,255,255 }
+		fontTexture_.id, ColorRgba { 255,255,255,255 }
 	);*/
 
 	int drawX = topLeftX;
@@ -384,11 +384,11 @@ void Evolve::Font::drawTextToRenderer(const std::string& text, const int topLeft
 
 	for (size_t i = 0; i < text.length(); i++) {
 		if (text[i] == ' ') {
-			drawX += (int) ((m_spaceSize + m_addToSpaceLength) * m_fontScale);
+			drawX += (int) ((spaceSize_ + addToSpaceLength_) * fontScale_);
 		}
 		else if (text[i] == '\n') {
 			drawX = topLeftX;
-			drawY -= (int) ((m_newLine + m_lineSpacing) * m_fontScale);
+			drawY -= (int) ((newLine_ + lineSpacing_) * fontScale_);
 		}
 		else {
 			unsigned int ASCII = (unsigned char) text[i];
@@ -397,18 +397,18 @@ void Evolve::Font::drawTextToRenderer(const std::string& text, const int topLeft
 				Origin::TOP_LEFT,
 				drawX,
 				drawY,
-				(unsigned int) (m_characterWidths[ASCII] * m_fontScale),
-				(unsigned int) (m_lineHeight * m_fontScale)
+				(unsigned int) (characterWidths_[ASCII] * fontScale_),
+				(unsigned int) (lineHeight_ * fontScale_)
 			);
 
 			textureRenderer.draw(
 				currentDims,
-				m_uvDimensions[ASCII],
-				m_fontTexture.id,
+				uvDimensions_[ASCII],
+				fontTexture_.id,
 				color
 			);
 
-			drawX += (int) ((m_characterWidths[ASCII] + m_letterSpacing) * m_fontScale);
+			drawX += (int) ((characterWidths_[ASCII] + letterSpacing_) * fontScale_);
 		}
 	}
 }
@@ -422,13 +422,17 @@ unsigned int Evolve::Font::getLineWidth(const std::string& text) {
 			break;
 		}
 		else if (text[i] == ' ') {
-			width += (int) ((m_spaceSize + m_addToSpaceLength) * m_fontScale);
+			width += (int) ((spaceSize_ + addToSpaceLength_) * fontScale_);
 		}
 		else {
-			width += (int) ((m_characterWidths[(unsigned char)text[i]] + m_letterSpacing) * m_fontScale);
+			width += (int) ((characterWidths_[(unsigned char)text[i]] + letterSpacing_) * fontScale_);
 		}
 	}
 	return width;
+}
+
+unsigned int Evolve::Font::getLineHeight() const {
+	return (unsigned int)(lineHeight_ * fontScale_); 
 }
 
 unsigned int Evolve::Font::getTextHeight(const std::string& text) const {
@@ -440,12 +444,12 @@ unsigned int Evolve::Font::getTextHeight(const std::string& text) const {
 			lines++;
 		}
 	}
-	return (unsigned int) (m_lineHeight * m_fontScale * lines);
+	return (unsigned int) (lineHeight_ * fontScale_ * lines);
 }
 
 void Evolve::Font::deleteFont() {
-	ImageLoader::DeleteTexture(m_fontTexture);
+	ImageLoader::DeleteTexture(fontTexture_);
 
-	m_uvDimensions.clear();
-	m_characterWidths.clear();
+	uvDimensions_.clear();
+	characterWidths_.clear();
 }

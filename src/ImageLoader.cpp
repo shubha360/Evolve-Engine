@@ -22,19 +22,19 @@ SOFTWARE.
 
 #include "../include/Evolve/ImageLoader.h"
 
-std::map<std::string, Evolve::TextureData> Evolve::ImageLoader::m_textureCache;
+std::map<std::string, Evolve::TextureData> Evolve::ImageLoader::textureCache_;
 
 void Evolve::ImageLoader::LoadTextureFromImage(const std::string& imagePath, TextureData& texture,
     const unsigned int colorChannels) {
 
     if (colorChannels != 1 && colorChannels != 4) {
-        EVOLVE_REPORT_ERROR("Invalid color channel " + std::to_string(colorChannels) + ".", LoadTextureFromImage);
+        EVOLVE_REPORT_ERROR("Invalid Color channel " + std::to_string(colorChannels) + ".", LoadTextureFromImage);
         return;
     }
 
-    auto it = m_textureCache.find(imagePath);
+    auto it = textureCache_.find(imagePath);
 
-    if (it != m_textureCache.end()) { // Found in the cache
+    if (it != textureCache_.end()) { // Found in the cache
         texture = it->second;
         //printf("Loaded from cache.\n\n");
     }
@@ -62,7 +62,7 @@ void Evolve::ImageLoader::LoadTextureFromImage(const std::string& imagePath, Tex
             texture.bitsPerPixel = 0;
         }
         else {
-            m_textureCache.insert(make_pair(imagePath, texture));
+            textureCache_.insert(make_pair(imagePath, texture));
             //printf("Loaded from file.\n\n");
         }
     }    

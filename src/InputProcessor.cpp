@@ -22,39 +22,37 @@ SOFTWARE.
 
 #include "../include/Evolve/InputProcessor.h"
 
-Evolve::InputProcessor::InputProcessor() {
-	m_mouseCoords = glm::ivec2(0);
-}
+Evolve::InputProcessor::InputProcessor() {}
 
 Evolve::InputProcessor::~InputProcessor() {}
 
 void Evolve::InputProcessor::update() {
-	for (auto& it : m_keyMap) {
-		m_previousKeyMap[it.first] = it.second;
+	for (auto& it : keyMap_) {
+		previousKeyMap_[it.first] = it.second;
 	}
 }
 
 void Evolve::InputProcessor::pressKey(unsigned int keyID) {
-	m_keyMap[keyID] = true;
+	keyMap_[keyID] = true;
 }
 
 void Evolve::InputProcessor::releaseKey(unsigned int keyID) {
-	m_keyMap[keyID] = false;
+	keyMap_[keyID] = false;
 }
 
 bool Evolve::InputProcessor::isKeyDown(unsigned int keyID) {
-	auto it = m_keyMap.find(keyID);
+	auto it = keyMap_.find(keyID);
 
-	if (it != m_keyMap.end()) {
+	if (it != keyMap_.end()) {
 		return it->second;
 	}
 	return false;
 }
 
 bool Evolve::InputProcessor::wasKeyDown(unsigned int keyID) {
-	auto it = m_previousKeyMap.find(keyID);
+	auto it = previousKeyMap_.find(keyID);
 
-	if (it != m_previousKeyMap.end()) {
+	if (it != previousKeyMap_.end()) {
 		return it->second;
 	}
 	return false;

@@ -24,18 +24,18 @@ SOFTWARE.
 
 Evolve::RectDimension::RectDimension() {}
 
-Evolve::RectDimension::RectDimension(Origin origin, int x, int y, unsigned int width, unsigned int height) {
-	set(origin, x, y, width, height);
+Evolve::RectDimension::RectDimension(Origin origin, int X, int y, unsigned int width, unsigned int height) {
+	set(origin, X, y, width, height);
 }
 
 Evolve::RectDimension::~RectDimension() {}
 
-void Evolve::RectDimension::set(Origin origin, int x, int y, unsigned int width, unsigned int height) {
-	m_origin = origin;
-	m_left = x;
-	m_bottom = y;
-	m_width = width;
-	m_height = height;
+void Evolve::RectDimension::set(Origin origin, int X, int y, unsigned int width, unsigned int height) {
+	origin_ = origin;
+	left_ = X;
+	bottom_ = y;
+	width_ = width;
+	height_ = height;
 
 	findBottomLeft(origin);
 }
@@ -43,28 +43,28 @@ void Evolve::RectDimension::set(Origin origin, int x, int y, unsigned int width,
 void Evolve::RectDimension::findBottomLeft(Origin origin) {
 	switch (origin) {
 	case Origin::BOTTOM_LEFT:
-		m_left = m_left;
-		m_bottom = m_bottom;
+		left_ = left_;
+		bottom_ = bottom_;
 		break;
 
 	case Origin::BOTTOM_RIGHT:
-		m_left = m_left - m_width;
-		m_bottom = m_bottom;
+		left_ = left_ - width_;
+		bottom_ = bottom_;
 		break;
 
 	case Origin::TOP_RIGHT:
-		m_left = m_left - m_width;
-		m_bottom = m_bottom - m_height;
+		left_ = left_ - width_;
+		bottom_ = bottom_ - height_;
 		break;
 
 	case Origin::TOP_LEFT:
-		m_left = m_left;
-		m_bottom = m_bottom - m_height;
+		left_ = left_;
+		bottom_ = bottom_ - height_;
 		break;
 
 	case Origin::CENTER:
-		m_left = m_left - m_width / 2;
-		m_bottom = m_bottom - m_height / 2;
+		left_ = left_ - width_ / 2;
+		bottom_ = bottom_ - height_ / 2;
 		break;
 	}
 }

@@ -58,12 +58,12 @@ namespace Evolve {
 		// returns the id of the component
 		// pass 0 to fontId to use the default font
 		size_t addPlainText(const std::string& text, const size_t fontId, float scale,
-			const ColorRgba& color, const glm::ivec2& topLeftPosition);
+			const ColorRgba& color, const Position2D& topLeftPosition);
 
 		// returns the id of the component
 		// pass 0 to fontId to use the default font
 		size_t addBlinkingText(const std::string& text, const size_t fontId, float scale,
-			const ColorRgba& color, const glm::ivec2& topLeftPosition, 
+			const ColorRgba& color, const Position2D& topLeftPosition,
 			const float onDuration = 30.0f, const float offDuration = 30.0f);
 
 		// returns the id of the component
@@ -71,7 +71,7 @@ namespace Evolve {
 		size_t addPanel(const RectDimension& dimension, const ColorRgba& color);
 
 		void setComponentLabel(const size_t id, const std::string& text);
-		void setComponentPosition(const size_t id, const glm::ivec2& position);
+		void setComponentPosition(const size_t id, const Position2D& position);
 
 		int getLabelWidth(const size_t id);
 		int getLabelHeight(const size_t id);
@@ -104,21 +104,21 @@ namespace Evolve {
 			virtual ~Component();
 
 		protected:
-			std::string m_label = "";
-			ComponentType m_type = ComponentType::NONE;
-			RectDimension m_dimension;
-			float m_labelScale = 0;
-			ColorRgba m_primaryColor = {};
-			size_t m_fontId = 0;
+			std::string label_ = "";
+			ComponentType type_ = ComponentType::NONE;
+			RectDimension dimension_;
+			float labelScale_ = 0;
+			ColorRgba primaryColor_ = {};
+			size_t fontId_ = 0;
 
-			int m_centerX = 0, m_centerY = 0;
-			int m_labelTopLeftX = 0, m_labelTopLeftY = 0;
+			int centerX_ = 0, centerY_ = 0;
+			int labelTopLeftX_ = 0, labelTopLeftY_ = 0;
 
-			float m_time = 0.0f;
+			float time_ = 0.0f;
 
-			bool m_isFunctional = true;
-			bool m_isVisible = true;
-			bool m_labelCoordinatesFound = false;
+			bool isFunctional_ = true;
+			bool isVisible_ = true;
+			bool labelCoordinatesFound_ = false;
 		};
 
 		class Button : public Component {
@@ -131,8 +131,8 @@ namespace Evolve {
 				const RectDimension& dimension, std::function<void()> buttonFunction);
 
 		private:
-			ColorRgba m_buttonColor;
-			std::function<void()> m_buttonFunc;
+			ColorRgba buttonColor_;
+			std::function<void()> buttonFunc_;
 		};
 
 		class PlainText : public Component {
@@ -141,7 +141,7 @@ namespace Evolve {
 			friend class GuiRenderer;
 
 			PlainText(const std::string& text, const size_t fontId, float scale,
-				const ColorRgba& color, const glm::ivec2& position);
+				const ColorRgba& color, const Position2D& position);
 		};
 
 		class BlinkingText : public Component {
@@ -150,11 +150,11 @@ namespace Evolve {
 			friend class GuiRenderer;
 
 			BlinkingText(const std::string& text, const size_t fontId, float scale,
-				const ColorRgba& color, const glm::ivec2& position, 
+				const ColorRgba& color, const Position2D& position,
 				const float onDuration, const float offDuration);
 
 		private:
-			float m_onDuration = 0.0f, m_offDuration = 0.0f;
+			float onDuration_ = 0.0f, offDuration_ = 0.0f;
 		};
 
 		class Panel : public Component {
@@ -165,15 +165,17 @@ namespace Evolve {
 			Panel(const RectDimension& dimension, const ColorRgba& color);
 		};
 
-		std::vector<std::unique_ptr<Component>> m_components;
+		std::vector<std::unique_ptr<Component>> components_;
+		size_t componentsMaxSize_ = 32;
 
-		std::vector<Font*> m_fonts;
+		std::vector<Font*> fonts_;
+		size_t fontsMaxSize_ = 8;
 
-		SDL_Cursor* m_arrowCursor = nullptr;
-		SDL_Cursor* m_indexPointerCursor = nullptr;
+		SDL_Cursor* arrowCursor_ = nullptr;
+		SDL_Cursor* indexPointerCursor_ = nullptr;
 
-		SDL_Cursor* m_currentCursor = nullptr;
+		SDL_Cursor* currentCursor_ = nullptr;
 
-		bool isMouseInsideComponent(const glm::ivec2& mouseScreenCoords, Component& component);
+		bool isMouseInsideComponent(const Position2D& mouseScreenCoords, Component& component);
 	};
 }

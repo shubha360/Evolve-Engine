@@ -68,10 +68,10 @@ namespace Evolve {
 				GLuint textureID, const ColorRgba& color, int depth);
 
 		private:
-			GLuint m_textureID = 0;
-			int m_depth = 0;
+			GLuint textureID_ = 0;
+			int depth_ = 0;
 
-			Vertex2D m_vertices[4] = {};
+			Vertex2D vertices_[4] = {};
 		};
 
 		class RenderBatch {
@@ -81,23 +81,23 @@ namespace Evolve {
 
 		private:
 
-			unsigned int m_offset;
-			unsigned int m_numIndices;
-			GLuint m_textureID;
-			GLuint m_iboID = 0;
+			unsigned int offset_;
+			unsigned int numIndices_;
+			GLuint textureID_;
+			GLuint iboID_ = 0;
 		};
 
-		GlslProgram m_defaultShader;
-		GlslProgram* m_currentShader = nullptr;
+		GlslProgram defaultShader_;
+		GlslProgram* currentShader_ = nullptr;
 
-		bool m_inited = false;
+		bool inited_ = false;
 
-		GLuint m_vaoID = 0, m_vboID = 0;
-		std::vector<GLuint> m_iboIDs;
+		GLuint vaoID_ = 0, vboID_ = 0;
+		std::vector<GLuint> iboIDs_;
 
-		std::vector<Glyph> m_glyphs;
-		std::vector<Glyph*> m_glyphPointers;
-		std::vector<RenderBatch> m_renderBatches;
+		std::vector<Glyph> glyphs_;
+		std::vector<Glyph*> glyphPointers_;
+		std::vector<RenderBatch> renderBatches_;
 
 		void createVao();
 		void setupRenderBatches();

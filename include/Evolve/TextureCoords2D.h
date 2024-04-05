@@ -27,12 +27,12 @@ SOFTWARE.
 namespace Evolve {
 
 	struct TextureCoords2D {
-		GLfloat u;
-		GLfloat v;
+		GLfloat U;
+		GLfloat V;
 
 		void set(const GLfloat u, const GLfloat v) {
-			this->u = u;
-			this->v = v;
+			this->U = u;
+			this->V = v;
 		}
 	};
 }

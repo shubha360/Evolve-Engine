@@ -35,29 +35,29 @@ namespace Evolve {
 	class RectDimension {
 	public:
 		RectDimension();
-		RectDimension(Origin origin, int x, int y, unsigned int width, unsigned int height);
+		RectDimension(Origin origin, int X, int y, unsigned int width, unsigned int height);
 		~RectDimension();
 
-		void set(Origin origin, int x, int y, unsigned int width, unsigned int height);
+		void set(Origin origin, int X, int y, unsigned int width, unsigned int height);
 
-		inline Origin getOrigin() const { return m_origin; }
+		inline Origin getOrigin() const { return origin_; }
 
-		inline int getLeft() const { return m_left; };
-		inline int getRight() const { return m_left + m_width; };
+		inline int getLeft() const { return left_; };
+		inline int getRight() const { return left_ + width_; };
 
-		inline int getBottom() const { return m_bottom; };
-		inline int getTop() const { return m_bottom + m_height; };
+		inline int getBottom() const { return bottom_; };
+		inline int getTop() const { return bottom_ + height_; };
 		
-		inline unsigned int getWidth() const { return m_width; }
-		inline unsigned int getHeight() const { return m_height; }
+		inline unsigned int getWidth() const { return width_; }
+		inline unsigned int getHeight() const { return height_; }
 
-		inline int getCenterX() const { return m_left + m_width / 2; };
-		inline int getCenterY() const { return m_bottom + m_height / 2; };
+		inline int getCenterX() const { return left_ + width_ / 2; };
+		inline int getCenterY() const { return bottom_ + height_ / 2; };
 
 	private:
-		Origin m_origin = Origin::BOTTOM_LEFT;
-		int m_left = 0, m_bottom = 0;
-		unsigned int m_width = 0, m_height = 0;
+		Origin origin_ = Origin::BOTTOM_LEFT;
+		int left_ = 0, bottom_ = 0;
+		unsigned int width_ = 0, height_ = 0;
 
 		void findBottomLeft(Origin origin);
 	};

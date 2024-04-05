@@ -26,25 +26,24 @@ Evolve::Camera::Camera() {}
 
 Evolve::Camera::~Camera() {}
 
-bool Evolve::Camera::init(const unsigned int screenWidth, const unsigned int screenHeight) {
-	this->m_screenWidth = screenWidth;
-	this->m_screenHeight = screenHeight;
+bool Evolve::Camera::init(const Size2D& screenSize) {
+	this->screenSize_ = screenSize;
 	
-	this->m_projectionMatrix = glm::ortho(0.0f, (float)screenWidth, 0.0f, (float)screenHeight, -1.0f, 1.0f);
-	this->m_viewMatrix = glm::mat4(1.0f);
-	this->m_modelMatrix = glm::mat4(1.0f);
+	this->projectionMatrix_ = glm::ortho(0.0f, (float) screenSize_.Width, 0.0f, (float) screenSize_.Height, -1.0f, 1.0f);
+	this->viewMatrix_ = glm::mat4(1.0f);
+	this->modelMatrix_ = glm::mat4(1.0f);
 
-	this->m_mvp = m_projectionMatrix * m_viewMatrix * m_modelMatrix;
+	this->mvp_ = projectionMatrix_ * viewMatrix_ * modelMatrix_;
 
 	return true;
 }
 
 void Evolve::Camera::sendMatrixDataToShader(GlslProgram& shaderProgram) {
 	GLint mvpLoc = shaderProgram.getUniformLocation("u_mvpMatrix");
-	glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, &m_mvp[0][0]);
+	glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, &mvp_[0][0]);
 }
 
-glm::ivec2 Evolve::Camera::convertScreenCoordsToWorldCoords(const glm::ivec2& screenCoords) {
-	return glm::ivec2(screenCoords.x, m_screenHeight - screenCoords.y);
+Evolve::Position2D Evolve::Camera::convertScreenCoordsToWorldCoords(const Position2D& screenCoords) {
+	return Evolve::Position2D { screenCoords.X, (GLint) screenSize_.Height - screenCoords.Y };
 }
 

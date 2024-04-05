@@ -42,6 +42,6 @@ namespace Evolve {
 		static void DeleteTexture(TextureData& texture);
 
 	private:
-		static std::map<std::string, TextureData> m_textureCache;
+		static std::map<std::string, TextureData> textureCache_;
 	};
 }

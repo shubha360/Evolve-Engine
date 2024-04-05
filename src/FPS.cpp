@@ -32,17 +32,21 @@ bool Evolve::Fps::init(float fps) {
 }
 
 void Evolve::Fps::beginFrame() {
-	this->frameStartTicks = (float)SDL_GetTicks();
+	this->frameStartTicks_ = (float)SDL_GetTicks();
 }
 
-const bool Evolve::Fps::endFrame() const {
-	float frameTick = (float)SDL_GetTicks() - frameStartTicks;
+const bool Evolve::Fps::endFrame(const bool printWarning /*= false*/) const {
+	float frameTick = (float)SDL_GetTicks() - frameStartTicks_;
 
-	float desiredFrameTime = 1000.0f / desiredFps;
+	float desiredFrameTime = 1000.0f / desiredFps_;
 
 	// return false if frame time is more than desired time
 	if (frameTick > desiredFrameTime) {
-		printf("Frame time is more than desired max frame time.\n");
+		
+		if (printWarning) {
+			printf("Frame time is more than desired max frame time.\n");
+		}
+
 		return false;
 	}
 
@@ -59,29 +63,29 @@ float Evolve::Fps::calculateFps() {
 
 	float currentTick = (float)SDL_GetTicks();
 
-	frameTimes[currentFrame % NUM_SAMPLES] = currentTick - prevTick;
+	frameTimes_[currentFrame_ % NUM_SAMPLES] = currentTick - prevTick;
 
 	prevTick = currentTick;
 
 	int valueCount = NUM_SAMPLES;
 
-	if (currentFrame < NUM_SAMPLES) {
-		valueCount = currentFrame;
+	if (currentFrame_ < NUM_SAMPLES) {
+		valueCount = currentFrame_;
 	}
 
 	float frameTimeAverage = 0.0f;
 
 	for (int i = 0; i < NUM_SAMPLES; i++) {
-		frameTimeAverage += frameTimes[i];
+		frameTimeAverage += frameTimes_[i];
 	}
 
 	frameTimeAverage /= (float)valueCount;
 
 	if (frameTimeAverage > 0.0f) {
-		currentFps = 1000.0f / frameTimeAverage;
+		currentFps_ = 1000.0f / frameTimeAverage;
 	}
 
-	currentFrame++;
+	currentFrame_++;
 
-	return currentFps;
+	return currentFps_;
 }

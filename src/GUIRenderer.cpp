@@ -48,72 +48,72 @@ void Evolve::GuiRenderer::renderGui(Gui& gui, Camera& camera) {
 	textureRenderer_.begin();
 	shapeRenderer_.begin();	
 
-	for (auto& comp : gui.m_components) {
+	for (auto& comp : gui.components_) {
 
-		if (comp->m_isVisible) {
+		if (comp->isVisible_) {
 			
 			// BUTTON
-			if (comp->m_type == Gui::Component::ComponentType::BUTTON) {
+			if (comp->type_ == Gui::Component::ComponentType::BUTTON) {
 
 				Gui::Button* button = (Gui::Button*)comp.get();
-				Font* font = gui.m_fonts[button->m_fontId];
+				Font* font = gui.fonts_[button->fontId_];
 
 				shapeRenderer_.drawRectangle(
-					button->m_dimension,
-					button->m_buttonColor
+					button->dimension_,
+					button->buttonColor_
 				);
 
-				font->setFontScale(button->m_labelScale);
+				font->setFontScale(button->labelScale_);
 
-				if (!button->m_labelCoordinatesFound) {
-					getLabelCoordinates(button->m_labelTopLeftX, button->m_labelTopLeftY,
-						button->m_label, button->m_centerX, button->m_centerY, *font);
+				if (!button->labelCoordinatesFound_) {
+					getLabelCoordinates(button->labelTopLeftX_, button->labelTopLeftY_,
+						button->label_, button->centerX_, button->centerY_, *font);
 
-					button->m_labelCoordinatesFound = true;
+					button->labelCoordinatesFound_ = true;
 				}
 
-				font->drawTextToRenderer(button->m_label, button->m_labelTopLeftX,
-					button->m_labelTopLeftY, button->m_primaryColor, textureRenderer_);
+				font->drawTextToRenderer(button->label_, button->labelTopLeftX_,
+					button->labelTopLeftY_, button->primaryColor_, textureRenderer_);
 			}
 
 			// PLAIN TEXT
-			else if (comp->m_type == Gui::Component::ComponentType::PLAIN_TEXT) {
+			else if (comp->type_ == Gui::Component::ComponentType::PLAIN_TEXT) {
 
 				Gui::PlainText* plainText = (Gui::PlainText*)comp.get();
-				Font* font = gui.m_fonts[plainText->m_fontId];
+				Font* font = gui.fonts_[plainText->fontId_];
 
-				font->setFontScale(plainText->m_labelScale);
+				font->setFontScale(plainText->labelScale_);
 
-				font->drawTextToRenderer(plainText->m_label, plainText->m_dimension.getLeft(),
-					plainText->m_dimension.getTop(), plainText->m_primaryColor, textureRenderer_);
+				font->drawTextToRenderer(plainText->label_, plainText->dimension_.getLeft(),
+					plainText->dimension_.getTop(), plainText->primaryColor_, textureRenderer_);
 			}
 
 			// BLINKING_TEXT
-			else if (comp->m_type == Gui::Component::ComponentType::BLINKING_TEXT) {
+			else if (comp->type_ == Gui::Component::ComponentType::BLINKING_TEXT) {
 
 				Gui::BlinkingText* blinkingText = (Gui::BlinkingText*)comp.get();
 
-				if (blinkingText->m_time <= blinkingText->m_onDuration) {
+				if (blinkingText->time_ <= blinkingText->onDuration_) {
 
-					Font* font = gui.m_fonts[blinkingText->m_fontId];
+					Font* font = gui.fonts_[blinkingText->fontId_];
 
-					font->setFontScale(blinkingText->m_labelScale);
+					font->setFontScale(blinkingText->labelScale_);
 
-					font->drawTextToRenderer(blinkingText->m_label, blinkingText->m_dimension.getLeft(),
-						blinkingText->m_dimension.getTop(), blinkingText->m_primaryColor, textureRenderer_);
+					font->drawTextToRenderer(blinkingText->label_, blinkingText->dimension_.getLeft(),
+						blinkingText->dimension_.getTop(), blinkingText->primaryColor_, textureRenderer_);
 				}
 				else {
-					if (blinkingText->m_time > blinkingText->m_onDuration + blinkingText->m_offDuration) {
-						blinkingText->m_time = 0.0f;
+					if (blinkingText->time_ > blinkingText->onDuration_ + blinkingText->offDuration_) {
+						blinkingText->time_ = 0.0f;
 					}
 				}
 			}
 
 			// PANEL
-			else if (comp->m_type == Gui::Component::ComponentType::PANEL) {
+			else if (comp->type_ == Gui::Component::ComponentType::PANEL) {
 				shapeRenderer_.drawRectangle(
-					comp->m_dimension,
-					comp->m_primaryColor
+					comp->dimension_,
+					comp->primaryColor_
 				);
 			}
 		}
@@ -131,13 +131,13 @@ void Evolve::GuiRenderer::freeGuiRenderer() {
 	textureRenderer_.freeTextureRenderer();
 }
 
-void Evolve::GuiRenderer::getLabelCoordinates(int& x, int& y, const std::string& label,
+void Evolve::GuiRenderer::getLabelCoordinates(int& X, int& y, const std::string& label,
 	const int componentCenterX, const int componentCenterY, Font& font) {
 	
 	unsigned int labelWidth = font.getLineWidth(label);
 	unsigned int labelHeight = font.getLineHeight();
 
-	x = componentCenterX - labelWidth / 2;
+	X = componentCenterX - labelWidth / 2;
 	y = componentCenterY + labelHeight / 2;
 }
 

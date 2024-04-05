@@ -26,33 +26,33 @@ Evolve::TextureRenderer::Glyph::Glyph(const RectDimension& destRect,
 	const UvDimension& uvRect, GLuint textureID, 
 	const ColorRgba& color, int depth) :
 	
-	m_textureID(textureID), m_depth(depth)
+	textureID_(textureID), depth_(depth)
 {
-	this->m_textureID = textureID;
+	this->textureID_ = textureID;
 
 	// BOTTOM LEFT
-	m_vertices[0].setPosition(destRect.getLeft(), destRect.getBottom());
-	m_vertices[0].setTextureCoords(uvRect.bottomLeftX, uvRect.bottomLeftY);
-	m_vertices[0].color = color;
+	vertices_[0].setPosition(destRect.getLeft(), destRect.getBottom());
+	vertices_[0].setTextureCoords(uvRect.BottomLeftX, uvRect.BottomLeftY);
+	vertices_[0].Color = color;
 
 	// BOTTOM RIGHT
-	m_vertices[1].setPosition(destRect.getRight(), destRect.getBottom());
-	m_vertices[1].setTextureCoords(uvRect.bottomLeftX + uvRect.width, uvRect.bottomLeftY);
-	m_vertices[1].color = color;
+	vertices_[1].setPosition(destRect.getRight(), destRect.getBottom());
+	vertices_[1].setTextureCoords(uvRect.BottomLeftX + uvRect.Width, uvRect.BottomLeftY);
+	vertices_[1].Color = color;
 
 	// TOP RIGHT
-	m_vertices[2].setPosition(destRect.getRight(), destRect.getTop());
-	m_vertices[2].setTextureCoords(uvRect.bottomLeftX + uvRect.width, uvRect.bottomLeftY + uvRect.height);
-	m_vertices[2].color = color;
+	vertices_[2].setPosition(destRect.getRight(), destRect.getTop());
+	vertices_[2].setTextureCoords(uvRect.BottomLeftX + uvRect.Width, uvRect.BottomLeftY + uvRect.Height);
+	vertices_[2].Color = color;
 
 	// TOP LEFT
-	m_vertices[3].setPosition(destRect.getLeft(), destRect.getTop());
-	m_vertices[3].setTextureCoords(uvRect.bottomLeftX, uvRect.bottomLeftY + uvRect.height);
-	m_vertices[3].color = color;
+	vertices_[3].setPosition(destRect.getLeft(), destRect.getTop());
+	vertices_[3].setTextureCoords(uvRect.BottomLeftX, uvRect.BottomLeftY + uvRect.Height);
+	vertices_[3].Color = color;
 }
 
 Evolve::TextureRenderer::RenderBatch::RenderBatch(unsigned int offset, unsigned int numIndices, GLuint textureID) :
-	m_offset(offset), m_numIndices(numIndices), m_textureID(textureID) {}
+	offset_(offset), numIndices_(numIndices), textureID_(textureID) {}
 
 Evolve::TextureRenderer::TextureRenderer() {}
 
@@ -65,79 +65,79 @@ bool Evolve::TextureRenderer::init(const std::string& pathToAssets) {
 	std::string vertShaderPath = pathToAssets + "/shaders/texture_shader.vert";
 	std::string fragShaderPath = pathToAssets + "/shaders/texture_shader.frag";
 
-	if (!m_defaultShader.compileAndLinkShaders(
+	if (!defaultShader_.compileAndLinkShaders(
 		vertShaderPath,
 		fragShaderPath)) {
 		EVOLVE_REPORT_ERROR("Failed to compile or link texture shader.", init);
 		return false;
 	}
 
-	m_inited = true;
+	inited_ = true;
 	return true;
 }
 
 void Evolve::TextureRenderer::begin() {
 
-	if (!m_inited) {
+	if (!inited_) {
 		EVOLVE_REPORT_ERROR("Texture renderer not initialized.", begin);
 		return;
 	}
 
-	if (m_vaoID == 0) {
+	if (vaoID_ == 0) {
 		createVao();
 	}
 
-	m_glyphs.clear();
-	m_glyphPointers.clear();
-	m_renderBatches.clear();
+	glyphs_.clear();
+	glyphPointers_.clear();
+	renderBatches_.clear();
 
-	if (!m_iboIDs.empty()) {
-		glDeleteBuffers((GLsizei) m_iboIDs.size(), m_iboIDs.data());
-		m_iboIDs.clear();
+	if (!iboIDs_.empty()) {
+		glDeleteBuffers((GLsizei) iboIDs_.size(), iboIDs_.data());
+		iboIDs_.clear();
 	}
 }
 
 void Evolve::TextureRenderer::draw(const RectDimension& destRect, const UvDimension& uvRect,
 	GLuint textureID, const ColorRgba& color, int depth /*= 1*/) {
 
-	if (!m_inited) {
+	if (!inited_) {
 		EVOLVE_REPORT_ERROR("Texture renderer not initialized.", begin);
 		return;
 	}
 
-	m_glyphs.emplace_back(destRect, uvRect, textureID, color, depth);
+	glyphs_.emplace_back(destRect, uvRect, textureID, color, depth);
 }
 
 void Evolve::TextureRenderer::end(const GlyphSortType& sortType /*= GlyphSortType::BY_TEXTURE_ID_INCREMENTAL*/) {
 
-	if (!m_inited) {
+	if (!inited_) {
 		EVOLVE_REPORT_ERROR("Texture renderer not initialized.", begin);
 		return;
 	}
 
-	if (!m_glyphs.empty()) {
-		m_glyphPointers.resize(m_glyphs.size());
+	if (!glyphs_.empty()) {
+		glyphPointers_.resize(glyphs_.size());
 
-		for (size_t i = 0; i < m_glyphPointers.size(); i++) {
-			m_glyphPointers[i] = &m_glyphs[i];
+		for (size_t i = 0; i < glyphPointers_.size(); i++) {
+			glyphPointers_[i] = &glyphs_[i];
 		}
 
 		switch (sortType) {
 		
 		case GlyphSortType::BY_TEXTURE_ID_INCREMENTAL:
-			std::stable_sort(m_glyphPointers.begin(), m_glyphPointers.end(), compareByTextureIdIncremental);
+			std::stable_sort(glyphPointers_.begin(), glyphPointers_.end(), compareByTextureIdIncremental);
 			break;
 
 		case GlyphSortType::BY_TEXTURE_ID_DECREMENTAL:
-			std::stable_sort(m_glyphPointers.begin(), m_glyphPointers.end(), compareByTextureIdDecremental);
+			std::stable_sort(glyphPointers_.begin(), glyphPointers_.end(), compareByTextureIdDecremental);
 			break;
 
 		/*case GlyphSortType::BY_DEPTH_INCREMENTAL:
-			std::stable_sort(m_glyphPointers.begin(), m_glyphPointers.end(), compareByDepthIncremental);
+			std::stable_sort(glyphPointers_.begin(), glyphPointers_.end(), compareByDepthIncremental);
 			break;
 
 		case GlyphSortType::BY_DEPTH_DECREMENTAL:
-			std::stable_sort(m_glyphPointers.begin(), m_glyphPointers.end(), compareByDepthDecremental);
+			std::stable_sort(glyphPointers_.begin(), glyphPointers_.end(), compareByDepthDecremental);
 			break;*/
 		}
 
@@ -147,33 +147,33 @@ void Evolve::TextureRenderer::end(const GlyphSortType& sortType /*= GlyphSortTyp
 
 void Evolve::TextureRenderer::renderTextures(Camera& camera, GlslProgram* shader /*= nullptr*/) {
 
-	if (!m_inited) {
+	if (!inited_) {
 		EVOLVE_REPORT_ERROR("Texture renderer not initialized.", begin);
 		return;
 	}
 
 	if (shader != nullptr) {
-		m_currentShader = shader;
+		currentShader_ = shader;
 	}
 	else {
-		m_currentShader = &m_defaultShader;
+		currentShader_ = &defaultShader_;
 	}
 
-	m_currentShader->useProgram();
+	currentShader_->useProgram();
 
-	camera.sendMatrixDataToShader(*m_currentShader);
+	camera.sendMatrixDataToShader(*currentShader_);
 
 	glActiveTexture(GL_TEXTURE0);
-	GLint samplerLoc = m_currentShader->getUniformLocation("u_imageSampler");
+	GLint samplerLoc = currentShader_->getUniformLocation("u_imageSampler");
 	glUniform1i(samplerLoc, 0);
 
-	if (!m_renderBatches.empty()) {
-		glBindVertexArray(m_vaoID);
+	if (!renderBatches_.empty()) {
+		glBindVertexArray(vaoID_);
 
-		for (auto& batch : m_renderBatches) {
-			glBindTexture(GL_TEXTURE_2D, batch.m_textureID);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, batch.m_iboID);
-			glDrawElements(GL_TRIANGLES, batch.m_numIndices, GL_UNSIGNED_INT, nullptr);
+		for (auto& batch : renderBatches_) {
+			glBindTexture(GL_TEXTURE_2D, batch.textureID_);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, batch.iboID_);
+			glDrawElements(GL_TRIANGLES, batch.numIndices_, GL_UNSIGNED_INT, nullptr);
 		}
 
 		glBindVertexArray(0);
@@ -186,72 +186,72 @@ void Evolve::TextureRenderer::renderTextures(Camera& camera, GlslProgram* shader
 		glDisableVertexAttribArray(2);
 	}
 
-	m_currentShader->unuseProgram();
+	currentShader_->unuseProgram();
 }
 
 void Evolve::TextureRenderer::freeTextureRenderer() {
 	
-	if (m_inited) {
-		m_defaultShader.freeProgram();
+	if (inited_) {
+		defaultShader_.freeProgram();
 	}
 
-	if (!m_iboIDs.empty()) {
-		glDeleteBuffers((GLsizei) m_iboIDs.size(), m_iboIDs.data());
+	if (!iboIDs_.empty()) {
+		glDeleteBuffers((GLsizei) iboIDs_.size(), iboIDs_.data());
 	}
 
-	if (m_vboID != 0) {
-		glDeleteBuffers(1, &m_vboID);
-		m_vboID = 0;
+	if (vboID_ != 0) {
+		glDeleteBuffers(1, &vboID_);
+		vboID_ = 0;
 	}
 	
-	if (m_vaoID != 0) {
-		glDeleteVertexArrays(1, &m_vaoID);
-		m_vaoID = 0;
+	if (vaoID_ != 0) {
+		glDeleteVertexArrays(1, &vaoID_);
+		vaoID_ = 0;
 	}
 }
 
 void Evolve::TextureRenderer::createVao() {
-	if (m_vaoID == 0) {
-		glGenVertexArrays(1, &m_vaoID);
+	if (vaoID_ == 0) {
+		glGenVertexArrays(1, &vaoID_);
 	}
 
-	if (m_vboID == 0) {
-		glGenBuffers(1, &m_vboID);
+	if (vboID_ == 0) {
+		glGenBuffers(1, &vboID_);
 	}
 
-	glBindVertexArray(m_vaoID);
+	glBindVertexArray(vaoID_);
 
-	glBindBuffer(GL_ARRAY_BUFFER, m_vboID);
+	glBindBuffer(GL_ARRAY_BUFFER, vboID_);
 
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
 
-	glVertexAttribPointer(0, 2, GL_INT, GL_FALSE, sizeof(Vertex2D), (void*)offsetof(Vertex2D, position));
-	glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex2D), (void*)offsetof(Vertex2D, color));
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2D), (void*)offsetof(Vertex2D, textureCoords));
+	glVertexAttribPointer(0, 2, GL_INT, GL_FALSE, sizeof(Vertex2D), (void*) offsetof(Vertex2D, Position));
+	glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex2D), (void*) offsetof(Vertex2D, Color));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2D), (void*) offsetof(Vertex2D, TextureCoords));
 
 	glBindVertexArray(0);
 }
 
 void Evolve::TextureRenderer::setupRenderBatches() {
 
-	if (!m_glyphPointers.empty()) {
+	if (!glyphPointers_.empty()) {
 
 		{
 			// setup the vbo and buffer vertex data
 			std::vector<Vertex2D> vertices;
-			vertices.resize(m_glyphPointers.size() * 4);
+			vertices.resize(glyphPointers_.size() * 4);
 
 			unsigned int currentVertex = 0;
 
-			for (auto& glyph : m_glyphPointers) {
+			for (auto& glyph : glyphPointers_) {
 				for (int vertex = 0; vertex < 4; vertex++) {
-					vertices[currentVertex++] = glyph->m_vertices[vertex];
+					vertices[currentVertex++] = glyph->vertices_[vertex];
 				}
 			}
 
-			glBindBuffer(GL_ARRAY_BUFFER, m_vboID);
+			glBindBuffer(GL_ARRAY_BUFFER, vboID_);
 
 			glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex2D), nullptr, GL_DYNAMIC_DRAW);
 
@@ -264,42 +264,42 @@ void Evolve::TextureRenderer::setupRenderBatches() {
 		{
 			// Setup render batches and the ibo
 			std::vector<GLuint> vertexIndices;
-			vertexIndices.resize(m_glyphPointers.size() * 6);
+			vertexIndices.resize(glyphPointers_.size() * 6);
 
 			unsigned int numIndices = 6;
 			unsigned int curentIndex = 0;
 			unsigned int currentVertex = 0;
 
-			m_renderBatches.emplace_back(curentIndex, numIndices, m_glyphPointers[0]->m_textureID);
+			renderBatches_.emplace_back(curentIndex, numIndices, glyphPointers_[0]->textureID_);
 			addIndicesToBuffer(vertexIndices, curentIndex, currentVertex);
 
-			for (size_t i = 1; i < m_glyphPointers.size(); i++) {
+			for (size_t i = 1; i < glyphPointers_.size(); i++) {
 
-				if (m_glyphPointers[i]->m_textureID == m_glyphPointers[i - 1]->m_textureID) {
-					m_renderBatches.back().m_numIndices += 6;
+				if (glyphPointers_[i]->textureID_ == glyphPointers_[i - 1]->textureID_) {
+					renderBatches_.back().numIndices_ += 6;
 				}
 				else {
-					m_renderBatches.emplace_back(curentIndex, numIndices, m_glyphPointers[i]->m_textureID);
+					renderBatches_.emplace_back(curentIndex, numIndices, glyphPointers_[i]->textureID_);
 				}
 
 				addIndicesToBuffer(vertexIndices, curentIndex, currentVertex);
 			}
 
-			m_iboIDs.resize(m_renderBatches.size());
+			iboIDs_.resize(renderBatches_.size());
 
-			glGenBuffers((GLsizei) m_iboIDs.size(), m_iboIDs.data());
+			glGenBuffers((GLsizei) iboIDs_.size(), iboIDs_.data());
 
-			for (size_t i = 0; i < m_iboIDs.size(); i++) {
+			for (size_t i = 0; i < iboIDs_.size(); i++) {
 
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_iboIDs[i]);
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboIDs_[i]);
 
-				glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_renderBatches[i].m_numIndices * sizeof(GLuint), nullptr, GL_DYNAMIC_DRAW);
+				glBufferData(GL_ELEMENT_ARRAY_BUFFER, renderBatches_[i].numIndices_ * sizeof(GLuint), nullptr, GL_DYNAMIC_DRAW);
 
-				glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, m_renderBatches[i].m_numIndices * sizeof(GLuint), &vertexIndices[m_renderBatches[i].m_offset]);
+				glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, renderBatches_[i].numIndices_ * sizeof(GLuint), &vertexIndices[renderBatches_[i].offset_]);
 
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-				m_renderBatches[i].m_iboID = m_iboIDs[i];
+				renderBatches_[i].iboID_ = iboIDs_[i];
 			}
 		}
 	}
@@ -322,17 +322,17 @@ void Evolve::TextureRenderer::addIndicesToBuffer(std::vector<GLuint>& indices,
 }
 
 bool Evolve::TextureRenderer::compareByTextureIdIncremental(Glyph* a, Glyph* b) {
-	return (a->m_textureID < b->m_textureID);
+	return (a->textureID_ < b->textureID_);
 }
 
 bool Evolve::TextureRenderer::compareByTextureIdDecremental(Glyph* a, Glyph* b) {
-	return (a->m_textureID > b->m_textureID);
+	return (a->textureID_ > b->textureID_);
 }
 
 //bool Evolve::TextureRenderer::compareByDepthIncremental(Glyph* a, Glyph* b) {
-//	return (a->m_depth < b->m_depth);
+//	return (a->depth_ < b->depth_);
 //}
 //
 //bool Evolve::TextureRenderer::compareByDepthDecremental(Glyph* a, Glyph* b) {
-//	return (a->m_depth > b->m_depth);
+//	return (a->depth_ > b->depth_);
 //}
