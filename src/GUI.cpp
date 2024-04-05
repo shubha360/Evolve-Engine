@@ -165,7 +165,7 @@ int Evolve::Gui::getLabelWidth(const size_t id) {
 		EVOLVE_REPORT_ERROR("Invalid component ID used.", getLabelWidth);
 	}
 	
-	return fonts_[components_[id]->fontId_]->getLineWidth(components_[id]->label_);
+	return fonts_[components_[id]->fontId_]->getLineWidth(components_[id]->label_.c_str());
 }
 
 int Evolve::Gui::getLabelHeight(const size_t id) {

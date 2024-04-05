@@ -28,14 +28,14 @@ Evolve::Font::~Font() {
 	deleteFont();
 }
 
-bool Evolve::Font::initFromBitmap16x16(const std::string& fontName, const std::string& bmpFilePath,
+bool Evolve::Font::initFromBitmap16x16(const char* fontName, const char* bmpFilePath,
 	const float fontScale /*= 1.0f*/, const int letterSpacing /*= 5*/, 
 	const int lineSpacing /*= 5*/, const int addToSpaceLength /*= 0*/) {
 
 	ImageLoader::LoadTextureFromImage(bmpFilePath, fontTexture_, 1);
 
 	if (fontTexture_.data == nullptr) {
-		EVOLVE_REPORT_ERROR("Failed to load image at " + bmpFilePath + " for bitmap font.", initFromBitmap16x16);
+		EVOLVE_REPORT_ERROR("Failed to load image at " + std::string(bmpFilePath) + " for bitmap font.", initFromBitmap16x16);
 		return false;
 	}
 
@@ -52,8 +52,6 @@ bool Evolve::Font::initFromBitmap16x16(const std::string& fontName, const std::s
 	UvDimension currentUV = {};
 
 	unsigned int currentChar = 0;
-	uvDimensions_.resize(256);
-	characterWidths_.resize(256);
 
 	for (int row = 0; row < 16; row++) {
 		for (int column = 0; column < 16; column++) {
@@ -188,7 +186,7 @@ bool Evolve::Font::initFromBitmap16x16(const std::string& fontName, const std::s
 	return true;
 }
 
-bool Evolve::Font::initFromFontFile(const std::string& fontName, const std::string& fontFilePath,
+bool Evolve::Font::initFromFontFile(const char* fontName, const char* fontFilePath,
 	const unsigned int fontSize /*= 32*/,
 	const float fontScale /*= 1.0f*/, const int letterSpacing /*= 5*/, 
 	const int lineSpacing /*= 5*/, const int addToSpaceLength /*= 0*/) {
@@ -214,7 +212,7 @@ bool Evolve::Font::initFromFontFile(const std::string& fontName, const std::stri
 	characterMetrics.resize(TOTAL_FONTS);
 
 	FT_Face face = 0;
-	error = FT_New_Face(library, fontFilePath.c_str(), 0, &face);
+	error = FT_New_Face(library, fontFilePath, 0, &face);
 	if (error) {
 		EVOLVE_REPORT_ERROR("Failed to create font face.", initFromFontFile);
 
@@ -282,9 +280,6 @@ bool Evolve::Font::initFromFontFile(const std::string& fontName, const std::stri
 
 	UvDimension currentUV = {};
 	unsigned int currentChar = 0;
-
-	uvDimensions_.resize(256);
-	characterWidths_.resize(256);
 
 	unsigned int currentCellX = 0;
 	unsigned int currentCellY = 0;
@@ -362,8 +357,8 @@ bool Evolve::Font::initFromFontFile(const std::string& fontName, const std::stri
 	return true;
 }
 
-void Evolve::Font::drawTextToRenderer(const std::string& text, const int topLeftX, const int topLeftY,
-	const ColorRgba& color, TextureRenderer& textureRenderer) {
+void Evolve::Font::drawTextToRenderer(const char* text, const int topLeftX, const int topLeftY,
+	const ColorRgba& color, TextureRenderer& textureRenderer) const {
 
 	if (fontTexture_.id == 0) {
 		EVOLVE_REPORT_ERROR("Didn't load any font yet.", drawTextToRenderer);
@@ -382,7 +377,9 @@ void Evolve::Font::drawTextToRenderer(const std::string& text, const int topLeft
 	
 	RectDimension currentDims;
 
-	for (size_t i = 0; i < text.length(); i++) {
+	int i = 0;
+
+	while (text[i] != '\0') {
 		if (text[i] == ' ') {
 			drawX += (int) ((spaceSize_ + addToSpaceLength_) * fontScale_);
 		}
@@ -410,14 +407,16 @@ void Evolve::Font::drawTextToRenderer(const std::string& text, const int topLeft
 
 			drawX += (int) ((characterWidths_[ASCII] + letterSpacing_) * fontScale_);
 		}
+		i++;
 	}
 }
 
-unsigned int Evolve::Font::getLineWidth(const std::string& text) {
+unsigned int Evolve::Font::getLineWidth(const char* text) const {
 
 	int width = 0;
+	int i = 0;
 
-	for (size_t i = 0; i < text.length(); i++) {
+	while (text[i] != '\0') {
 		if (text[i] == '\n') {
 			break;
 		}
@@ -435,11 +434,12 @@ unsigned int Evolve::Font::getLineHeight() const {
 	return (unsigned int)(lineHeight_ * fontScale_); 
 }
 
-unsigned int Evolve::Font::getTextHeight(const std::string& text) const {
+unsigned int Evolve::Font::getTextHeight(const char* text) const {
 
 	int lines = 1;
+	int i = 0;
 
-	for (size_t i = 0; i < text.length(); i++) {
+	while (text[i] != '\0') {
 		if (text[i] == '\n') {
 			lines++;
 		}
@@ -449,7 +449,4 @@ unsigned int Evolve::Font::getTextHeight(const std::string& text) const {
 
 void Evolve::Font::deleteFont() {
 	ImageLoader::DeleteTexture(fontTexture_);
-
-	uvDimensions_.clear();
-	characterWidths_.clear();
 }

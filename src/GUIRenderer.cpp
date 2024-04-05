@@ -72,7 +72,7 @@ void Evolve::GuiRenderer::renderGui(Gui& gui, Camera& camera) {
 					button->labelCoordinatesFound_ = true;
 				}
 
-				font->drawTextToRenderer(button->label_, button->labelTopLeftX_,
+				font->drawTextToRenderer(button->label_.c_str(), button->labelTopLeftX_,
 					button->labelTopLeftY_, button->primaryColor_, textureRenderer_);
 			}
 
@@ -84,7 +84,7 @@ void Evolve::GuiRenderer::renderGui(Gui& gui, Camera& camera) {
 
 				font->setFontScale(plainText->labelScale_);
 
-				font->drawTextToRenderer(plainText->label_, plainText->dimension_.getLeft(),
+				font->drawTextToRenderer(plainText->label_.c_str(), plainText->dimension_.getLeft(),
 					plainText->dimension_.getTop(), plainText->primaryColor_, textureRenderer_);
 			}
 
@@ -99,7 +99,7 @@ void Evolve::GuiRenderer::renderGui(Gui& gui, Camera& camera) {
 
 					font->setFontScale(blinkingText->labelScale_);
 
-					font->drawTextToRenderer(blinkingText->label_, blinkingText->dimension_.getLeft(),
+					font->drawTextToRenderer(blinkingText->label_.c_str(), blinkingText->dimension_.getLeft(),
 						blinkingText->dimension_.getTop(), blinkingText->primaryColor_, textureRenderer_);
 				}
 				else {
@@ -134,7 +134,7 @@ void Evolve::GuiRenderer::freeGuiRenderer() {
 void Evolve::GuiRenderer::getLabelCoordinates(int& X, int& y, const std::string& label,
 	const int componentCenterX, const int componentCenterY, Font& font) {
 	
-	unsigned int labelWidth = font.getLineWidth(label);
+	unsigned int labelWidth = font.getLineWidth(label.c_str());
 	unsigned int labelHeight = font.getLineHeight();
 
 	X = componentCenterX - labelWidth / 2;

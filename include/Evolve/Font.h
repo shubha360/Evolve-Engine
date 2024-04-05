@@ -39,22 +39,22 @@ namespace Evolve {
 		~Font();
 
 		// only font bitmap that has 16 rows and 16 colummn
-		bool initFromBitmap16x16(const std::string& fontName, const std::string& bmpFilePath,
+		bool initFromBitmap16x16(const char* fontName, const char* bmpFilePath,
 			const float fontScale = 1.0f, const int letterSpacing = 0,
 			const int lineSpacing = 0, const int addToSpaceLength = 0);
 
-		bool initFromFontFile(const std::string& fontName, const std::string& fontFilePath, const unsigned int fontSize = 32,
+		bool initFromFontFile(const char* fontName, const char* fontFilePath, const unsigned int fontSize = 32,
 			const float fontScale = 1.0f, const int letterSpacing = 0,
 			const int lineSpacing = 0, const int addToSpaceLength = 0);
 
-		void drawTextToRenderer(const std::string& text, const int topLeftX, const int topLeftY,
-			const ColorRgba& color, TextureRenderer& textureRenderer);
+		void drawTextToRenderer(const char* text, const int topLeftX, const int topLeftY,
+			const ColorRgba& color, TextureRenderer& textureRenderer) const;
 
-		unsigned int getLineWidth(const std::string& text);
+		unsigned int getLineWidth(const char* text) const;
 
 		unsigned int getLineHeight() const;
 
-		unsigned int getTextHeight(const std::string& text) const;
+		unsigned int getTextHeight(const char* text) const;
 
 		std::string getFontName() const { return fontName_; }
 
@@ -68,7 +68,7 @@ namespace Evolve {
 		void deleteFont();
 
 	private:
-		std::string fontName_;
+		const char* fontName_ = nullptr;
 		bool initialized_ = false;
 
 		unsigned int spaceSize_ = 0;
@@ -83,7 +83,7 @@ namespace Evolve {
 
 		TextureData fontTexture_;
 
-		std::vector<UvDimension> uvDimensions_;
-		std::vector<int> characterWidths_;
+		UvDimension uvDimensions_[256] {};
+		int characterWidths_[256] {};
 	};
 }
