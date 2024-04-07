@@ -32,11 +32,7 @@ bool Evolve::Gui::init() {
 	arrowCursor_ = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_ARROW);
 	indexPointerCursor_ = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_HAND);
 
-	currentCursor_ = arrowCursor_;	
-
-	components_.reserve(componentsMaxSize_);
-	fonts_.reserve(fontsMaxSize_);
-
+	currentCursor_ = arrowCursor_;
 	return true;
 }
 
@@ -49,11 +45,6 @@ size_t Evolve::Gui::addFont(Font& font) {
 
 	fonts_.emplace_back(&font);
 	size_t id = fonts_.size() - 1;
-
-	if (fonts_.size() == fontsMaxSize_) {
-		fontsMaxSize_ *= 2;
-		fonts_.reserve(fontsMaxSize_);
-	}
 	return id;
 }
 
@@ -69,15 +60,7 @@ size_t Evolve::Gui::addTextButton(const char* label, const size_t fontId, float 
 	components_.emplace_back(
 		std::make_unique<Button>(label, fontId, labelScale, textColor, buttonColor, dimension, buttonFunction)
 	);
-	
-	size_t id = components_.size() - 1;
-
-	if (components_.size() == componentsMaxSize_) {
-		componentsMaxSize_ *= 2;
-		components_.reserve(componentsMaxSize_);
-	}
-
-	return id;
+	return components_.size() - 1;
 }
 
 size_t Evolve::Gui::addPlainText(const char* text, const size_t fontId, float scale,
@@ -91,15 +74,7 @@ size_t Evolve::Gui::addPlainText(const char* text, const size_t fontId, float sc
 	components_.emplace_back(
 		std::make_unique<PlainText>(text, fontId, scale, color, topLeftPosition)
 	);
-
-	size_t id = components_.size() - 1;
-
-	if (components_.size() == componentsMaxSize_) {
-		componentsMaxSize_ *= 2;
-		components_.reserve(componentsMaxSize_);
-	}
-
-	return id;
+	return components_.size() - 1;
 }
 
 size_t Evolve::Gui::addBlinkingText(const char* text, const size_t fontId, float scale,
@@ -114,15 +89,7 @@ size_t Evolve::Gui::addBlinkingText(const char* text, const size_t fontId, float
 	components_.emplace_back(
 		std::make_unique<BlinkingText>(text, fontId, scale, color, topLeftPosition, onDuration, offDuration)
 	);
-
-	size_t id = components_.size() - 1;
-
-	if (components_.size() == componentsMaxSize_) {
-		componentsMaxSize_ *= 2;
-		components_.reserve(componentsMaxSize_);
-	}
-
-	return id;
+	return components_.size() - 1;
 }
 
 size_t Evolve::Gui::addPanel(const RectDimension& dimension, const ColorRgba& color) {
@@ -130,15 +97,7 @@ size_t Evolve::Gui::addPanel(const RectDimension& dimension, const ColorRgba& co
 	components_.emplace_back(
 		std::make_unique<Panel>(dimension, color)
 	);
-
-	size_t id = components_.size() - 1;
-
-	if (components_.size() == componentsMaxSize_) {
-		componentsMaxSize_ *= 2;
-		components_.reserve(componentsMaxSize_);
-	}
-
-	return id;
+	return components_.size() - 1;
 }
 
 void Evolve::Gui::setComponentLabel(const size_t id, const char* text) {
@@ -146,7 +105,6 @@ void Evolve::Gui::setComponentLabel(const size_t id, const char* text) {
 	if (id < 0 || id >= components_.size()) {
 		EVOLVE_REPORT_ERROR("Invalid component ID used.", setComponentLabel);
 	}
-
 	components_[id]->label_ = text;
 }
 

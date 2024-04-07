@@ -54,6 +54,7 @@ void Evolve::ShapeRenderer::begin() {
 	shapeBatches_.clear();
 
 	totalVertices_ = 0;
+	totalIndices_ = 0;
 
 	if (!iboIDs_.empty()) {
 		glDeleteBuffers((GLsizei)iboIDs_.size(), iboIDs_.data());

@@ -166,10 +166,8 @@ namespace Evolve {
 		};
 
 		std::vector<std::unique_ptr<Component>> components_;
-		size_t componentsMaxSize_ = 32;
 
 		std::vector<Font*> fonts_;
-		size_t fontsMaxSize_ = 8;
 
 		SDL_Cursor* arrowCursor_ = nullptr;
 		SDL_Cursor* indexPointerCursor_ = nullptr;
