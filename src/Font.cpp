@@ -35,7 +35,9 @@ bool Evolve::Font::initFromBitmap16x16(const char* fontName, const char* bmpFile
 	ImageLoader::LoadTextureFromImage(bmpFilePath, fontTexture_, 1);
 
 	if (fontTexture_.data == nullptr) {
-		EVOLVE_REPORT_ERROR("Failed to load image at " + std::string(bmpFilePath) + " for bitmap font.", initFromBitmap16x16);
+		std::string errStr = "Failed to load image at " + std::string(bmpFilePath) + " for bitmap font.";
+
+		EVOLVE_REPORT_ERROR(errStr.c_str(), initFromBitmap16x16);
 		return false;
 	}
 
@@ -233,7 +235,9 @@ bool Evolve::Font::initFromFontFile(const char* fontName, const char* fontFilePa
 
 		error = FT_Load_Char(face, i, FT_LOAD_RENDER);
 		if (error) {
-			EVOLVE_REPORT_ERROR("Failed to load character " + std::to_string((char)i) + ".", initFromFontFile);
+			std::string errStr = "Failed to load character " + std::to_string((char)i) + ".";
+
+			EVOLVE_REPORT_ERROR(errStr.c_str(), initFromFontFile);
 
 			FT_Done_Face(face);
 			FT_Done_FreeType(library);

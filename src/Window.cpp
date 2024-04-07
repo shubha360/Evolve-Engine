@@ -33,7 +33,8 @@ bool Evolve::Window::init(const char* windowTitle, const bool fullScreen,
 	const ColorRgba& clearColor) {	
 	
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
-		EVOLVE_REPORT_ERROR("Failed to initialize SDL. SDL_Error: " + std::string(SDL_GetError()), init);
+		std::string errStr = "Failed to initialize SDL. SDL_Error: " + std::string(SDL_GetError());
+		EVOLVE_REPORT_ERROR(errStr.c_str(), init);
 		return false;
 	}
 
@@ -46,7 +47,8 @@ bool Evolve::Window::init(const char* windowTitle, const bool fullScreen,
 
 	// SDL_GL_SetAttribute returns 0 on success and negative error code on failure
 	if (attribResponse < 0) {
-		EVOLVE_REPORT_ERROR("Failed to set an SDL_GL attribute. SDL_Error: " + std::string(SDL_GetError()), init);
+		std::string errStr = "Failed to set an SDL_GL attribute. SDL_Error: " + std::string(SDL_GetError());
+		EVOLVE_REPORT_ERROR(errStr.c_str(), init);
 		return false;
 	}
 
@@ -77,14 +79,16 @@ bool Evolve::Window::init(const char* windowTitle, const bool fullScreen,
 	);
 
 	if (window_ == nullptr) {
-		EVOLVE_REPORT_ERROR("Failed to create window. SDL_Error: " + std::string(SDL_GetError()), init);
+		std::string errStr = "Failed to create window. SDL_Error: " + std::string(SDL_GetError());
+		EVOLVE_REPORT_ERROR(errStr.c_str(), init);
 		return false;
 	}
 
 	SDL_GLContext glContext = SDL_GL_CreateContext(window_);
 
 	if (glContext == nullptr) {
-		EVOLVE_REPORT_ERROR("Failed to create GL context. SDL_Error: " + std::string(SDL_GetError()), init);
+		std::string errStr = "Failed to create GL context. SDL_Error: " + std::string(SDL_GetError());
+		EVOLVE_REPORT_ERROR(errStr.c_str(), init);
 		return false;
 	}
 

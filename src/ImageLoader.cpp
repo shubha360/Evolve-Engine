@@ -28,7 +28,9 @@ void Evolve::ImageLoader::LoadTextureFromImage(const std::string& imagePath, Tex
     const unsigned int colorChannels) {
 
     if (colorChannels != 1 && colorChannels != 4) {
-        EVOLVE_REPORT_ERROR("Invalid Color channel " + std::to_string(colorChannels) + ".", LoadTextureFromImage);
+        std::string errStr = "Invalid Color channel " + std::to_string(colorChannels) + ".";
+
+        EVOLVE_REPORT_ERROR(errStr.c_str(), LoadTextureFromImage);
         return;
     }
 
@@ -56,7 +58,9 @@ void Evolve::ImageLoader::LoadTextureFromImage(const std::string& imagePath, Tex
             );
 
         if (texture.data == nullptr) {
-            EVOLVE_REPORT_ERROR("Failed to load image at " + imagePath, LoadTextureFromImage);
+            std::string errStr = "Failed to load image at " + imagePath;
+
+            EVOLVE_REPORT_ERROR(errStr.c_str(), LoadTextureFromImage);
 
             texture.path = "";
             texture.bitsPerPixel = 0;

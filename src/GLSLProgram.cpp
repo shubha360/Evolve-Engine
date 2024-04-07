@@ -61,7 +61,9 @@ bool Evolve::GlslProgram::compileAndLinkShaders(const std::string& vertexShaderP
 		glDeleteShader(vertexShaderID_);
 		glDeleteShader(fragmentShaderID_);
 
-		EVOLVE_REPORT_ERROR("Failed to link program. " + std::string(&infoLog[0]), compileAndLinkShaders);
+		std::string errStr = "Failed to link program. " + std::string(&infoLog[0]);
+
+		EVOLVE_REPORT_ERROR(errStr.c_str(), compileAndLinkShaders);
 		return false;
 	}
 
@@ -82,7 +84,9 @@ GLint Evolve::GlslProgram::getUniformLocation(const std::string& uniformName) {
 		GLint location = glGetUniformLocation(programID_, uniformName.c_str());
 
 		if (location == GL_INVALID_INDEX) {
-			EVOLVE_REPORT_ERROR("Uniform " + std::string(uniformName) + " was not found in the shader.", getUniformLocation);
+			std::string errStr = "Uniform " + std::string(uniformName) + " was not found in the shader.";
+
+			EVOLVE_REPORT_ERROR(errStr.c_str(), getUniformLocation);
 		}
 		else {
 			m_uniformCache.insert(make_pair(uniformName, location));
@@ -158,7 +162,9 @@ GLuint Evolve::GlslProgram::compileShader(const std::string& shaderPath, const G
 
 		std::string shaderName = (shaderType == GL_VERTEX_SHADER ? "vertex" : "fragment");
 
-		EVOLVE_REPORT_ERROR("Failed to compile " + shaderName + " shader.\n" + std::string(&errorLog[0]), compileShader);
+		std::string errStr = "Failed to compile " + shaderName + " shader.\n" + std::string(&errorLog[0]);
+
+		EVOLVE_REPORT_ERROR(errStr.c_str(), compileShader);
 		return 0;
 	}
 	return shaderID;
