@@ -57,7 +57,7 @@ size_t Evolve::Gui::addFont(Font& font) {
 	return id;
 }
 
-size_t Evolve::Gui::addTextButton(const std::string& label, const size_t fontId, float labelScale,
+size_t Evolve::Gui::addTextButton(const char* label, const size_t fontId, float labelScale,
 	const ColorRgba& textColor, const ColorRgba& buttonColor,
 	const RectDimension& dimension, std::function<void()> buttonFunction) {
 
@@ -80,7 +80,7 @@ size_t Evolve::Gui::addTextButton(const std::string& label, const size_t fontId,
 	return id;
 }
 
-size_t Evolve::Gui::addPlainText(const std::string& text, const size_t fontId, float scale,
+size_t Evolve::Gui::addPlainText(const char* text, const size_t fontId, float scale,
 	const ColorRgba& color, const Position2D& topLeftPosition) {
 
 	if (fontId < 0 || fontId >= fonts_.size()) {
@@ -102,7 +102,7 @@ size_t Evolve::Gui::addPlainText(const std::string& text, const size_t fontId, f
 	return id;
 }
 
-size_t Evolve::Gui::addBlinkingText(const std::string& text, const size_t fontId, float scale,
+size_t Evolve::Gui::addBlinkingText(const char* text, const size_t fontId, float scale,
 	const ColorRgba& color, const Position2D& topLeftPosition,
 	const float onDuration /*= 30.0f*/, const float offDuration /*= 30.0f*/)
 {
@@ -141,7 +141,7 @@ size_t Evolve::Gui::addPanel(const RectDimension& dimension, const ColorRgba& co
 	return id;
 }
 
-void Evolve::Gui::setComponentLabel(const size_t id, const std::string& text) {
+void Evolve::Gui::setComponentLabel(const size_t id, const char* text) {
 
 	if (id < 0 || id >= components_.size()) {
 		EVOLVE_REPORT_ERROR("Invalid component ID used.", setComponentLabel);
@@ -165,7 +165,7 @@ int Evolve::Gui::getLabelWidth(const size_t id) {
 		EVOLVE_REPORT_ERROR("Invalid component ID used.", getLabelWidth);
 	}
 	
-	return fonts_[components_[id]->fontId_]->getLineWidth(components_[id]->label_.c_str());
+	return fonts_[components_[id]->fontId_]->getLineWidth(components_[id]->label_);
 }
 
 int Evolve::Gui::getLabelHeight(const size_t id) {
@@ -284,7 +284,7 @@ Evolve::Gui::Component::Component() {}
 
 Evolve::Gui::Component::~Component() {}
 
-Evolve::Gui::Button::Button(const std::string& label, const size_t fontId, float labelScale,
+Evolve::Gui::Button::Button(const char* label, const size_t fontId, float labelScale,
 	const ColorRgba& textColor, const ColorRgba& buttonColor, 
 	const RectDimension& dimension, std::function<void()> buttonFunction) :
 	 
@@ -305,7 +305,7 @@ Evolve::Gui::Button::Button(const std::string& label, const size_t fontId, float
 	centerY_ = dimension_.getCenterY();
 }
 
-Evolve::Gui::PlainText::PlainText(const std::string& text, const size_t fontId, float scale,
+Evolve::Gui::PlainText::PlainText(const char* text, const size_t fontId, float scale,
 	const ColorRgba& color, const Position2D& position) {
 	
 	label_ = text;
@@ -320,7 +320,7 @@ Evolve::Gui::PlainText::PlainText(const std::string& text, const size_t fontId, 
 	isVisible_ = true;
 }
 
-Evolve::Gui::BlinkingText::BlinkingText(const std::string& text, const size_t fontId, float scale,
+Evolve::Gui::BlinkingText::BlinkingText(const char* text, const size_t fontId, float scale,
 	const ColorRgba& color, const Position2D& position,
 	const float onDuration, const float offDuration) :
 	

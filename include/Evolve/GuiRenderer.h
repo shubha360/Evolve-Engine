@@ -48,7 +48,7 @@ namespace Evolve {
 		TextureRenderer textureRenderer_;
 		ShapeRenderer shapeRenderer_;
 
-		void getLabelCoordinates(int& X, int& y, const std::string& label,
+		void getLabelCoordinates(int& X, int& y, const char* label,
 			const int componentCenterX, const int componentCenterY, Font& font);
 	};
 }

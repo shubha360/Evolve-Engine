@@ -51,18 +51,18 @@ namespace Evolve {
 
 		// returns the id of the component
 		// pass 0 to fontId to use the default font
-		size_t addTextButton(const std::string& label, const size_t fontId, float labelScale,
+		size_t addTextButton(const char* label, const size_t fontId, float labelScale,
 			const ColorRgba& textColor, const ColorRgba& buttonColor,
 			const RectDimension& dimension, std::function<void()> buttonFunction);
 
 		// returns the id of the component
 		// pass 0 to fontId to use the default font
-		size_t addPlainText(const std::string& text, const size_t fontId, float scale,
+		size_t addPlainText(const char* text, const size_t fontId, float scale,
 			const ColorRgba& color, const Position2D& topLeftPosition);
 
 		// returns the id of the component
 		// pass 0 to fontId to use the default font
-		size_t addBlinkingText(const std::string& text, const size_t fontId, float scale,
+		size_t addBlinkingText(const char* text, const size_t fontId, float scale,
 			const ColorRgba& color, const Position2D& topLeftPosition,
 			const float onDuration = 30.0f, const float offDuration = 30.0f);
 
@@ -70,7 +70,7 @@ namespace Evolve {
 		// pass 0 to fontId to use the default font
 		size_t addPanel(const RectDimension& dimension, const ColorRgba& color);
 
-		void setComponentLabel(const size_t id, const std::string& text);
+		void setComponentLabel(const size_t id, const char* text);
 		void setComponentPosition(const size_t id, const Position2D& position);
 
 		int getLabelWidth(const size_t id);
@@ -104,7 +104,7 @@ namespace Evolve {
 			virtual ~Component();
 
 		protected:
-			std::string label_ = "";
+			const char* label_ = nullptr;
 			ComponentType type_ = ComponentType::NONE;
 			RectDimension dimension_;
 			float labelScale_ = 0;
@@ -126,7 +126,7 @@ namespace Evolve {
 			friend class Gui;
 			friend class GuiRenderer;
 
-			Button(const std::string& label, const size_t fontId, float labelScale,
+			Button(const char* label, const size_t fontId, float labelScale,
 				const ColorRgba& textColor, const ColorRgba& buttonColor,
 				const RectDimension& dimension, std::function<void()> buttonFunction);
 
@@ -140,7 +140,7 @@ namespace Evolve {
 			friend class Gui;
 			friend class GuiRenderer;
 
-			PlainText(const std::string& text, const size_t fontId, float scale,
+			PlainText(const char* text, const size_t fontId, float scale,
 				const ColorRgba& color, const Position2D& position);
 		};
 
@@ -149,7 +149,7 @@ namespace Evolve {
 			friend class Gui;
 			friend class GuiRenderer;
 
-			BlinkingText(const std::string& text, const size_t fontId, float scale,
+			BlinkingText(const char* text, const size_t fontId, float scale,
 				const ColorRgba& color, const Position2D& position,
 				const float onDuration, const float offDuration);
 
