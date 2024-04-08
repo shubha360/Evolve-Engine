@@ -35,7 +35,7 @@ void Evolve::Fps::beginFrame() {
 	this->frameStartTicks_ = (float)SDL_GetTicks();
 }
 
-const bool Evolve::Fps::endFrame(const bool printWarning /*= false*/) const {
+bool Evolve::Fps::endFrame(const bool printWarning /*= false*/) const {
 	float frameTick = (float)SDL_GetTicks() - frameStartTicks_;
 
 	float desiredFrameTime = 1000.0f / desiredFps_;

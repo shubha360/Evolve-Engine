@@ -6,14 +6,14 @@ namespace Evolve {
 	struct Size2D {
 		GLuint Width, Height;
 
-		void set(const GLint x, const GLint y) {
+		void set(const GLuint x, const GLuint y) {
 			this->Width = x;
 			this->Height = y;
 		}
 
 		void set(const glm::ivec2 pos) {
-			this->Width = pos.x;
-			this->Height = pos.y;
+			this->Width = (GLuint) pos.x;
+			this->Height = (GLuint) pos.y;
 		}
 
 		void set(const Size2D& newSize) {

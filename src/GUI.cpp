@@ -40,7 +40,7 @@ size_t Evolve::Gui::addFont(Font& font) {
 
 	if (!font.isInitialized()) {
 		EVOLVE_REPORT_ERROR("Font adding to Gui is not initailized.", addFont);
-		return -1;
+		return - 1;
 	}
 
 	fonts_.emplace_back(&font);

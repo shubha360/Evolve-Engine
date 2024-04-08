@@ -33,7 +33,7 @@ namespace Evolve {
 
 		bool init(float fps);
 		void beginFrame();
-		const bool endFrame(const bool printWarning = false) const;
+		bool endFrame(const bool printWarning = false) const;
 
 		float calculateFps();
 

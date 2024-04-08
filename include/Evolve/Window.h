@@ -49,8 +49,8 @@ namespace Evolve {
 
 		void setClearColor(const ColorRgba& clearColor);
 
-		const unsigned int getWindowWidth() const { return windowWidth_; }
-		const unsigned int getWindowHeight() const { return m_windowHeight; }
+		unsigned int getWindowWidth() const { return windowWidth_; }
+		unsigned int getWindowHeight() const { return m_windowHeight; }
 
 	private:
 		SDL_Window* window_ = nullptr;
