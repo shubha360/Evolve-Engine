@@ -20,6 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+/* DISCLAIMER: This class is heavily inefficient. Use TextureRenderer instead. */
+
 #pragma once
 
 #include "IncludeLibs.h"

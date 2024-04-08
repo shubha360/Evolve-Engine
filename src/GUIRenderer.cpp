@@ -30,15 +30,18 @@ Evolve::GuiRenderer::~GuiRenderer() {
 
 bool Evolve::GuiRenderer::init(const std::string& pathToAssets) {
 
-	if (!shapeRenderer_.init(pathToAssets)) {
-		EVOLVE_REPORT_ERROR("Failed to initialize gui shape renderer.", init);
-		return false;
-	}
-
 	if (!textureRenderer_.init(pathToAssets)) {
 		EVOLVE_REPORT_ERROR("Failed to initialize gui font renderer.", init);
 		return false;
 	}
+
+	ImageLoader::LoadTextureFromImage(pathToAssets + "/images/button_bg.png", buttonBgTexture_, 4);
+	ImageLoader::BufferTextureData(buttonBgTexture_);
+	ImageLoader::FreeTexture(buttonBgTexture_);
+
+	ImageLoader::LoadTextureFromImage(pathToAssets + "/images/panel.png", panelTexture_, 4);
+	ImageLoader::BufferTextureData(panelTexture_);
+	ImageLoader::FreeTexture(panelTexture_);
 
 	return true;
 }
@@ -46,7 +49,8 @@ bool Evolve::GuiRenderer::init(const std::string& pathToAssets) {
 void Evolve::GuiRenderer::renderGui(Gui& gui, Camera& camera) {
 
 	textureRenderer_.begin();
-	shapeRenderer_.begin();	
+
+	static UvDimension uv { 0.0f, 0.0f, 1.0f, 1.0f };
 
 	for (auto& comp : gui.components_) {
 
@@ -58,8 +62,10 @@ void Evolve::GuiRenderer::renderGui(Gui& gui, Camera& camera) {
 				Gui::Button* button = (Gui::Button*)comp.get();
 				Font* font = gui.fonts_[button->fontId_];
 
-				shapeRenderer_.drawRectangle(
+				textureRenderer_.draw(
 					button->dimension_,
+					uv,
+					buttonBgTexture_.id,
 					button->buttonColor_
 				);
 
@@ -111,24 +117,26 @@ void Evolve::GuiRenderer::renderGui(Gui& gui, Camera& camera) {
 
 			// PANEL
 			else if (comp->type_ == Gui::Component::ComponentType::PANEL) {
-				shapeRenderer_.drawRectangle(
+				textureRenderer_.draw(
 					comp->dimension_,
+					uv,
+					panelTexture_.id,
 					comp->primaryColor_
 				);
 			}
 		}
 	}
 
-	textureRenderer_.end();
-	shapeRenderer_.end();
+	textureRenderer_.end(GlyphSortType::BY_TEXTURE_ID_DECREMENTAL);
 
-	shapeRenderer_.renderShapes(camera);
 	textureRenderer_.renderTextures(camera);
 }
 
 void Evolve::GuiRenderer::freeGuiRenderer() {
-	shapeRenderer_.freeShapeRenderer();
 	textureRenderer_.freeTextureRenderer();
+
+	ImageLoader::DeleteTexture(buttonBgTexture_);
+	ImageLoader::DeleteTexture(panelTexture_);
 }
 
 void Evolve::GuiRenderer::getLabelCoordinates(int& X, int& y, const char* label,

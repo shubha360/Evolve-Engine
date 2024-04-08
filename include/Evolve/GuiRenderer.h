@@ -26,7 +26,6 @@ SOFTWARE.
 #include "Font.h"
 #include "ErrorReporter.h"
 #include "TextureRenderer.h"
-#include "ShapeRenderer.h"
 #include "ImageLoader.h"
 #include "Camera.h"
 #include "Gui.h"
@@ -46,7 +45,9 @@ namespace Evolve {
 
 	private:
 		TextureRenderer textureRenderer_;
-		ShapeRenderer shapeRenderer_;
+
+		TextureData buttonBgTexture_;
+		TextureData panelTexture_;
 
 		void getLabelCoordinates(int& X, int& y, const char* label,
 			const int componentCenterX, const int componentCenterY, Font& font);
