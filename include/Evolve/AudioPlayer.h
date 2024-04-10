@@ -22,21 +22,61 @@ SOFTWARE.
 
 #pragma once
 
-#define WIN32_LEAN_AND_MEAN
+#include "IncludeLibs.h"
+#include "ErrorReporter.h"
 
-#include <SDL/SDL.h>
-#include <GL/glew.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <freetype/ft2build.h>
-#include FT_FREETYPE_H
-#include <SDL_Mixer/SDL_mixer.h>
+namespace Evolve {
+	
+	/*class Music {
+	public:
+		friend class AudioPlayer;
 
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <vector>
-#include <map>
-#include <unordered_map>
-#include <functional>
-#include <algorithm>
+		void play(const int loops = 0);
+
+	private:
+		Mix_Music* music_ = nullptr;
+	};
+
+	class SoundEffect {
+	public:
+		friend class AudioPlayer;
+
+		void play(const int loops = 0);
+
+		void pause();
+		void resume();
+		void stop();
+
+	private:
+		Mix_Chunk* chunk_ = nullptr;
+	};*/
+
+	class AudioPlayer {
+	public:
+		AudioPlayer();
+		~AudioPlayer();
+
+		bool init();
+
+		size_t addSoundEffect(const std::string& path);
+		size_t addMusic(const std::string& path);		
+
+		void playSoundEffect(const size_t id, int loops);
+
+		void playMusic(const size_t id, int loops);
+		void pauseMusic(const size_t id);
+		void resumeMusic(const size_t id);
+		void stopMusic(const size_t id);
+
+		void freeAudioPlayer();		
+
+	private:
+		bool inited_ = false;
+		
+		std::vector<Mix_Chunk*> soundEffects_;
+		std::vector<Mix_Music*> musics_;
+
+		std::map<std::string, std::pair<Mix_Chunk*, size_t>> soundEffectCache_;
+		std::map<std::string, std::pair<Mix_Music*, size_t>> musicCache_;
+	};
+}
