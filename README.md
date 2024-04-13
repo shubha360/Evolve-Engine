@@ -2,7 +2,7 @@
 
 This is a C++ static library to build simple 2D games. This engine is currently under development. It uses **SDL2** as its windowing API and **GLEW** to access **OpenGL 3.3** as its graphics API.
 
-***Disclaimer:*** When considering performance, this engine might not offer the highest efficiency.
+***Disclaimer:*** This engine might not offer the highest efficiency when considering performance.
 
 This project takes inspiration from these learning materials - [MakingGamesWithBen](https://www.youtube.com/@makinggameswithben/featured), [LazyFoo's Tutorials](https://lazyfoo.net/), [The Cherno](https://www.youtube.com/@TheCherno)
 
@@ -15,6 +15,8 @@ This project takes inspiration from these learning materials - [MakingGamesWithB
 - Font loading from font files (TTF, OTF, etc) and 16 x 16 bitmap font files.
 
 - Simple GUI creation (buttons and plain text).
+
+- Adding music and sound effects.
 
 ### Dependencies
 
@@ -30,6 +32,8 @@ This project takes inspiration from these learning materials - [MakingGamesWithB
 
 - stb_image 2.29
 
+- SDL Mixer 2.8.0
+
 ### How To Use
 
 For use in Visual Studio on both 32-bit and 64-bit Windows systems, you can download the pre-built library bundled with the additional dependencies from [here](https://github.com/shubha360/Evolve-Engine/releases).
@@ -42,10 +46,12 @@ Else, this can be used in one of 2 ways -
 
 Either way, the dependencies stated above should already be installed in the system.
 
-Please contact me at ***shubha360@outlook.com*** if you're having trouble using it. I intend to convert it to a CMake project in the future.
+Please get in touch with me at ***shubha360@outlook.com*** if you're having trouble using it. I intend to convert it to a CMake project in the future.
 
 ### Games Created Using This Engine
 
 - [Tetris](https://github.com/shubha360/Tetris_Recreated)
+
+- [Snake](https://github.com/shubha360/Snake_Recreated)
 
 This project is licensed under the **[MIT License](LICENSE)**. You are welcome to make or propose any changes or improvements.
