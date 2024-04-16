@@ -3,7 +3,7 @@
 layout(location = 0) in vec2 vertexPos;
 layout(location = 1) in vec4 vertexColor;
 
-out vec4 fragmentColor;
+layout(location = 0) out vec4 fragmentColor;
 
 uniform mat4 u_mvpMatrix;
 

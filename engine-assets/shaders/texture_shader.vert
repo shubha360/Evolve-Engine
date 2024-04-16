@@ -4,8 +4,8 @@ layout(location = 0) in vec2 vertexPos;
 layout(location = 1) in vec4 vertexColor;
 layout(location = 2) in vec2 vertexUV;
 
-out vec4 fragmentColor;
-out vec2 fragmentUV;
+layout(location = 0) out vec4 fragmentColor;
+layout(location = 1) out vec2 fragmentUV;
 
 uniform mat4 u_mvpMatrix;
 
